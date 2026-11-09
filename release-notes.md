@@ -1,3 +1,3 @@
-- Mobile Layout now covers the phone's content area completely when the sidebar is open, preventing a strip of the chat panel from showing alongside it.
-- The documentation explains IP access without a domain, independent installation, and how Passkey login differs from Mobile Layout.
-- The repository and both packages include the MIT license and upstream attribution. The Passkey Proxy package is unchanged.
+- Aligns the two sidebar controls on the phone's empty conversation screen. Both controls use equal horizontal margins, icon size, and touch targets.
+- Keeps the full-width mobile sidebar fix and support for DSH 0.2.1-rc.5 and 0.2.2-rc.1.
+- The Passkey Proxy package is unchanged.

@@ -59,10 +59,43 @@ html[data-dsh-phone] [data-dsh-phone-nav] {
 }
 
 html[data-dsh-phone] [data-dsh-phone-nav][hidden] { display: none; }
-html[data-dsh-phone] [data-conversation-header-leading] .x8foHq_button {
-  display: inline-flex;
+html[data-dsh-phone] [data-conversation-header-leading] .x8foHq_button,
+html[data-dsh-phone] [data-conversation-header-corner] [data-sidebar-right-expand] {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
   min-width: 44px;
   min-height: 44px;
+  padding: 0;
+}
+
+/* The empty conversation header uses unequal native desktop gutters. */
+html[data-dsh-phone] [class*="_headerBlank"]:has(> [data-conversation-header-leading]):has([data-sidebar-right-expand]) {
+  --dsh-phone-toggle-edge: 14px;
+  position: relative;
+  min-height: 54px;
+}
+html[data-dsh-phone] [class*="_headerBlank"] :is(
+  [data-conversation-header-leading] .x8foHq_button,
+  [data-conversation-header-corner] [data-sidebar-right-expand]
+) {
+  position: absolute;
+  inset-block-start: 10px;
+  margin: 0;
+}
+html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-leading] .x8foHq_button {
+  left: var(--dsh-phone-toggle-edge, 14px);
+}
+html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-corner] [data-sidebar-right-expand] {
+  right: var(--dsh-phone-toggle-edge, 14px);
+}
+html[data-dsh-phone] :is(
+  [data-conversation-header-leading] .x8foHq_button,
+  [data-conversation-header-corner] [data-sidebar-right-expand]
+) > svg {
+  width: 16px;
+  height: 16px;
 }
 
 html[data-dsh-phone] [data-mobile-role=sidebar],

@@ -1,3 +1,4 @@
 - Aligns the two sidebar controls on the phone's empty conversation screen. Both controls use equal horizontal margins, icon size, and touch targets.
+- On DSH 0.2.2-rc.1, removes the extra grid offset and avoids a duplicate opener covering the left button.
 - Keeps the full-width mobile sidebar fix and support for DSH 0.2.1-rc.5 and 0.2.2-rc.1.
 - The Passkey Proxy package is unchanged.

@@ -38,6 +38,12 @@ html[data-dsh-phone] [data-mobile-role=center] {
   padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
 }
 
+/* On newer hosts the native center defaults to grid column 2. The phone
+   shell has just one content column; do not let an implicit rail offset it. */
+html[data-dsh-phone] [data-mobile-frame]:has(> [data-sidebar-mask]) > [data-mobile-role=center] {
+  grid-column: 1 / -1;
+}
+
 html[data-dsh-phone] [data-mobile-frame][data-dsh-phone-global-page] [data-mobile-role=center] {
   padding-block-start: calc(48px + env(safe-area-inset-top, 0px));
 }
@@ -89,6 +95,10 @@ html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-leading] 
 }
 html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-corner] [data-sidebar-right-expand] {
   right: var(--dsh-phone-toggle-edge, 14px);
+}
+html[data-dsh-phone] [data-mobile-frame]:has([class*="_headerBlank"] [data-conversation-header-leading] .x8foHq_button)
+  > [data-shell-leading] [data-sidebar-opener] {
+  display: none;
 }
 html[data-dsh-phone] :is(
   [data-conversation-header-leading] .x8foHq_button,

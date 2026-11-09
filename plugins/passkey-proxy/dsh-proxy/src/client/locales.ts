@@ -1,0 +1,136 @@
+/**
+ * `dsh-proxy` locale namespace: the settings-section copy. Chinese is the
+ * product copy; English mirrors it. The namespace is merged into the shared
+ * LocaleNamespaceMap so the section's `t` prop is fully typed.
+ */
+import type {} from '@deepseek-ai/dsh-client-ui-slots'
+
+/** The `dsh-proxy` locale namespace id. */
+export const NS = 'dsh-proxy'
+
+/** Simplified Chinese dictionary (the key-set source of truth). */
+export const zh = {
+  'nav': '局域网代理',
+  'status.title': '运行状态',
+  'status.proxyPort': '代理服务端口',
+  'status.proxyRunning': '运行中',
+  'status.proxyStopped': '未运行',
+  'status.targetPort': '默认服务端口',
+  'status.targetReachable': '可访问',
+  'status.targetUnreachable': '不可访问',
+  'status.username': '当前用户名',
+  'status.auth': '密码登录',
+  'status.managePasskeys': '管理 Passkey',
+  'status.authOn': '已启用',
+  'status.authOff': '未启用（局域网开放访问）',
+  'status.persistedOn': '存在已保存的运行配置（优先于 cordis 配置）',
+  'status.persistedOff': '使用 cordis 配置',
+  'status.skipToken': '免 token 登录',
+  'status.skipTokenOn': '已启用（首次访问自动登录）',
+  'status.skipTokenOff': '未启用（需手动带 token 访问一次）',
+  'status.loading': '加载中…',
+  'status.unreachable': '无法连接代理服务，请确认插件已启用并重启过 dsh web。',
+  'status.retry': '重试',
+  'control.start': '启动',
+  'control.stop': '停止',
+  'control.started': '代理服务已启动',
+  'control.stopped': '代理服务已停止',
+  'control.failed': '操作失败',
+  'control.startHintPort': '代理服务未能启动，请尝试更换代理服务端口（当前端口可能已被占用）。',
+  'form.title': '修改设置',
+  'form.subtitle': '启用密码登录后，浏览器会弹出原生 Basic Auth 登录框；保存修改会重启转发服务。',
+  'form.listenPort': '代理服务端口（监听端口）',
+  'form.listenPortHint': '1–65535',
+  'form.username': '用户名',
+  'form.usernameHint': '清空即设为空',
+  'form.password': '密码',
+  'form.passwordHint': '清空即设为空；用户名与密码需同时非空才会启用密码登录',
+  'form.skipToken': '免 token 登录',
+  'form.passkeyTitle': 'Passkey 登录',
+  'form.passkeyOrigin': '对外 HTTPS 域名',
+  'form.tlsProxyIPs': '受信任的反向代理 IP',
+  'form.passkeyHint': '先用自己的 HTTPS 域名反代到局域网代理端口。填写 DSH 实际看到的连接来源 IP（多个用英文逗号隔开），反代需保留原始 Host 并设置 X-Forwarded-Proto: https。两项留空时继续使用账号密码。',
+  'form.passkeyManaged': '这两项由服务器环境变量管理，网页仅显示当前值。',
+  'form.passkeyReconnecting': '已保存，代理即将重新连接。请通过配置的 HTTPS 域名管理 Passkey。',
+  'form.skipTokenHint': '开启后，首次访问会自动带上 DSH 启动 token 完成登录，无需手动复制 token。注意：这会让局域网内能连到本端口的设备都跳过 DSH 的 token 校验，请配合上面的用户名密码一起使用。',
+  'form.showPassword': '显示密码',
+  'form.hidePassword': '隐藏密码',
+  'form.save': '应用',
+  'form.saving': '应用中…',
+  'form.invalidPort': '端口必须是 1–65535 的整数',
+  'form.portConflict': '代理服务端口不能与默认服务端口相同',
+  'form.updated': '已保存并重启转发服务',
+  'form.updatedSaved': '已保存',
+  'form.updatedPartial': '已保存并重启转发服务（注意：需同时设置用户名和密码才会启用密码登录）',
+  'form.updatedSavedPartial': '已保存（注意：需同时设置用户名和密码才会启用密码登录）',
+  'form.updatedListenFailed': '已保存，但转发服务未能启动',
+  'form.failed': '保存失败',
+} satisfies Record<string, string>
+
+/** The `dsh-proxy` namespace key union. */
+export type LanProxyKey = keyof typeof zh
+
+declare module '@deepseek-ai/dsh-client-ui-slots' {
+  interface LocaleNamespaceMap {
+    'dsh-proxy': LanProxyKey
+  }
+}
+
+/** English dictionary, checked complete against the zh key set. */
+export const en: Record<LanProxyKey, string> = {
+  'nav': 'LAN Proxy',
+  'status.title': 'Status',
+  'status.proxyPort': 'Proxy port',
+  'status.proxyRunning': 'Running',
+  'status.proxyStopped': 'Not running',
+  'status.targetPort': 'Default service port',
+  'status.targetReachable': 'Reachable',
+  'status.targetUnreachable': 'Unreachable',
+  'status.username': 'Username',
+  'status.auth': 'Password login',
+  'status.managePasskeys': 'Manage Passkeys',
+  'status.authOn': 'Enabled',
+  'status.authOff': 'Not enabled (open access)',
+  'status.persistedOn': 'A saved runtime config overrides the cordis config',
+  'status.persistedOff': 'Using the cordis config',
+  'status.skipToken': 'Token-free login',
+  'status.skipTokenOn': 'Enabled (first visit signs in automatically)',
+  'status.skipTokenOff': 'Disabled (the first visit still needs the token once)',
+  'status.loading': 'Loading…',
+  'status.unreachable': 'Cannot reach the proxy service — make sure the plugin is enabled and dsh web was restarted.',
+  'status.retry': 'Retry',
+  'control.start': 'Start',
+  'control.stop': 'Stop',
+  'control.started': 'Proxy service started',
+  'control.stopped': 'Proxy service stopped',
+  'control.failed': 'Action failed',
+  'control.startHintPort': 'The proxy failed to start — try changing the proxy port (the current one may already be in use).',
+  'form.title': 'Edit settings',
+  'form.subtitle': 'With password login enabled, the browser shows its native Basic Auth dialog; saving restarts the forwarding service.',
+  'form.listenPort': 'Proxy port (listen)',
+  'form.listenPortHint': '1–65535',
+  'form.username': 'Username',
+  'form.usernameHint': 'Empty to set blank',
+  'form.password': 'Password',
+  'form.passwordHint': 'Empty to set blank; password login requires BOTH username and password',
+  'form.skipToken': 'Token-free login',
+  'form.passkeyTitle': 'Passkey sign-in',
+  'form.passkeyOrigin': 'Public HTTPS origin',
+  'form.tlsProxyIPs': 'Trusted reverse proxy IPs',
+  'form.passkeyHint': 'Forward your own HTTPS domain to the LAN proxy port. Enter the source IP addresses seen by DSH, separated by commas. Preserve Host and set X-Forwarded-Proto: https at the proxy. Leave both fields blank for password sign-in only.',
+  'form.passkeyManaged': 'These values are managed by server environment variables.',
+  'form.passkeyReconnecting': 'Saved. The proxy will reconnect shortly. Use the configured HTTPS origin to manage Passkeys.',
+  'form.skipTokenHint': 'When on, the first visit automatically carries the DSH launch token, so nobody has to copy it. Note: this lets any device that can reach this port skip DSH token validation — pair it with a username and password above.',
+  'form.showPassword': 'Show password',
+  'form.hidePassword': 'Hide password',
+  'form.save': 'Apply',
+  'form.saving': 'Applying…',
+  'form.invalidPort': 'Port must be an integer between 1 and 65535',
+  'form.portConflict': 'Proxy port must differ from the default service port',
+  'form.updated': 'Saved and the forwarding service restarted',
+  'form.updatedSaved': 'Saved',
+  'form.updatedPartial': 'Saved and restarted (note: password login requires BOTH username and password)',
+  'form.updatedSavedPartial': 'Saved (note: password login requires BOTH username and password)',
+  'form.updatedListenFailed': 'Saved, but the forwarding service failed to start',
+  'form.failed': 'Save failed',
+}

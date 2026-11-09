@@ -1,0 +1,6 @@
+dist/
+node_modules/
+lib/
+__pycache__/
+*.tgz
+.DS_Store

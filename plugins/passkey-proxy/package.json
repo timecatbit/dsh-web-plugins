@@ -1,0 +1,67 @@
+{
+  "name": "@smanx/dsh-proxy",
+  "description": "DSH LAN reverse proxy with password and HTTPS Passkey login, persistent browser sessions, and WebSocket forwarding.",
+  "version": "0.1.7-passkeys.2",
+  "license": "MIT",
+  "author": "smanx",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smanx/dsh-proxy.git"
+  },
+  "homepage": "https://github.com/smanx/dsh-proxy#readme",
+  "bugs": {
+    "url": "https://github.com/smanx/dsh-proxy/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "cordis",
+    "reverse-proxy",
+    "lan",
+    "basic-auth",
+    "websocket"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "type": "module",
+  "main": "dsh-proxy/lib/index.cjs",
+  "exports": {
+    ".": {
+      "types": "./dsh-proxy/lib/types/index.d.ts",
+      "default": "./dsh-proxy/lib/index.cjs"
+    },
+    "./client": {
+      "types": "./dsh-proxy/lib/types/client/index.d.ts",
+      "default": "./dsh-proxy/lib/client.js"
+    },
+    "./locale/*": "./dsh-proxy/locale/*",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "dsh-proxy/cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-connection"
+      ]
+    }
+  },
+  "files": [
+    "THIRD-PARTY-NOTICES.md",
+    "dsh-proxy/lib",
+    "dsh-proxy/locale",
+    "dsh-proxy/cordis.patch.yml",
+    "dsh-proxy/README.md",
+    "dsh-proxy/README.zh.md",
+    "dsh-proxy/LICENSE"
+  ]
+}

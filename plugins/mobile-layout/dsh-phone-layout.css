@@ -1,0 +1,307 @@
+html[data-dsh-phone] {
+  --dsh-phone-height: 100dvh;
+  --dsh-phone-top: 0px;
+  --dsh-phone-gutter: clamp(8px, 3vw, 16px);
+  --dsh-phone-safe-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+}
+
+html[data-dsh-phone],
+html[data-dsh-phone] body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html[data-dsh-phone] #root {
+  position: fixed;
+  inset: var(--dsh-phone-top) 0 auto;
+  height: var(--dsh-phone-height);
+  overflow: hidden;
+}
+
+html[data-dsh-phone] [data-mobile-frame] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  height: 100%;
+}
+
+html[data-dsh-phone] [data-mobile-frame] > [data-side],
+html[data-dsh-phone] .juySiW_button {
+  display: none;
+}
+
+html[data-dsh-phone] [data-mobile-role=center] {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+}
+
+html[data-dsh-phone] [data-mobile-frame][data-dsh-phone-global-page] [data-mobile-role=center] {
+  padding-block-start: calc(48px + env(safe-area-inset-top, 0px));
+}
+
+html[data-dsh-phone] [data-dsh-phone-nav] {
+  position: absolute;
+  inset-block-start: env(safe-area-inset-top, 0px);
+  inset-inline-start: max(6px, env(safe-area-inset-left, 0px));
+  z-index: 34;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  touch-action: manipulation;
+}
+
+html[data-dsh-phone] [data-dsh-phone-nav][hidden] { display: none; }
+html[data-dsh-phone] [data-conversation-header-leading] .x8foHq_button {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+html[data-dsh-phone] [data-mobile-role=sidebar],
+html[data-dsh-phone] [data-mobile-role=details] {
+  position: absolute !important;
+  inset-block: 0;
+  z-index: 40;
+  box-sizing: border-box;
+  width: min(340px, calc(100% - 44px));
+  min-width: 0;
+  max-height: 100%;
+  background: var(--dsw-alias-bg-layer-1);
+  box-shadow: 0 0 24px #0004;
+  transition: transform 180ms ease;
+}
+
+html[data-dsh-phone] [data-mobile-role=sidebar] {
+  left: 0;
+  width: min(320px, calc(100% - 48px));
+  padding-inline-start: env(safe-area-inset-left, 0px);
+}
+
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) [data-mobile-role=center] [data-conversation-header-leading],
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-dsh-phone-nav] {
+  visibility: hidden;
+}
+
+/* The host uses a desktop settings rail even when the app viewport is narrow. */
+html[data-dsh-phone] [data-shortcut-modal="settings"] {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(520px, calc(100% - 16px));
+  max-height: calc(var(--dsh-phone-height) - 16px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > nav {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 12px 12px 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > nav > [class*="_navTitle"] {
+  min-height: 44px;
+  padding: 10px 0 0;
+  margin: 0;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > nav > [class*="_navList"] {
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 4px 0 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > nav > [class*="_navList"] > button {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > nav button [class*="_navLabel"] {
+  overflow: visible;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > div:has(> [class$="_options"]) {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_header"]:has(> [class$="_close"]) {
+  position: absolute;
+  inset: 12px 12px auto auto;
+  width: auto;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  gap: 4px;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_header"] > button[class$="_close"] {
+  width: 44px;
+  height: 44px;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_options"]:has(> [data-slot="settings.section"]) {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: auto;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] ._8HJdBW_cubeRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] ._8HJdBW_cubeRow > button {
+  min-width: 0;
+  width: 100%;
+  min-height: 64px;
+  padding: 8px 2px;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [data-slot="settings.section"] > [class$="_section"] {
+  padding-inline: clamp(12px, 4vw, 20px);
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [data-slot="settings.general.item"] > [class$="_row"] {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+html[data-dsh-phone] [data-mobile-role=details] {
+  right: 0;
+  width: min(480px, calc(100% - 44px));
+  padding-inline-end: env(safe-area-inset-right, 0px);
+}
+html[data-dsh-phone] [data-rightbar-fullscreen] > [data-mobile-role=details] {
+  width: 100%;
+}
+html[data-dsh-phone] :is([data-mobile-role=sidebar], [data-mobile-role=details]) > * {
+  max-width: 100%;
+  width: 100% !important;
+  min-width: 0;
+}
+html[data-dsh-phone] [data-sidebar-collapsed] > [data-mobile-role=sidebar] {
+  transform: translateX(-100%);
+  visibility: hidden;
+  pointer-events: none;
+}
+html[data-dsh-phone] [data-rightbar-collapsed]:not([data-rightbar-fullscreen]) > [data-mobile-role=details] {
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+}
+html[data-dsh-phone] .gLgNoW_scrim {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  background: rgb(0 0 0 / 42%);
+}
+
+html[data-dsh-phone] [data-conversation-content] {
+  --dsh-chat-content-width: calc(100% - 2 * var(--dsh-phone-gutter));
+  --dsh-composer-card-max-width: 100%;
+  --dsh-composer-side-clearance: var(--dsh-phone-gutter);
+  min-width: 0;
+}
+html[data-dsh-phone] [data-conversation-scroll] {
+  box-sizing: border-box;
+  min-width: 0;
+  margin-inline: 0;
+  padding-bottom: 0;
+  scrollbar-gutter: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+}
+html[data-dsh-phone] [data-content-phase=hero] > [data-conversation-scroll] {
+  justify-content: safe center;
+}
+
+/* The host scrolls the composer seat with the transcript or sticks it at the
+   bottom. Leave that relationship intact as the visual viewport changes. */
+html[data-dsh-phone] [data-composer-seat] {
+  --dsh-composer-text-max-height: clamp(48px, calc(var(--dsh-phone-height) * .25), 160px);
+  box-sizing: border-box;
+  padding-block-end: var(--dsh-phone-safe-bottom);
+  min-width: 0;
+}
+html[data-dsh-phone] .wSkVaW_composerHero { padding-block-end: 8px; }
+html[data-dsh-phone] .wSkVaW_heroWorkspaceRow {
+  flex-wrap: wrap;
+  padding-inline: var(--dsh-phone-gutter);
+  row-gap: 4px;
+}
+html[data-dsh-phone] [data-composer-card] {
+  min-width: 0;
+  max-width: 100%;
+}
+html[data-dsh-phone] :is([contenteditable], input:not([type=checkbox]):not([type=radio]), textarea, select) {
+  font-size: max(16px, 1em);
+}
+/* Safari decides whether to zoom from the editable element's font size.
+   DSH's editor is a Lexical div, so an input/textarea rule misses it. */
+html[data-dsh-phone] [data-composer-card] [contenteditable="true"] {
+  font-size: 16px !important;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+html[data-dsh-phone] [data-composer-toolbar] {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+html[data-dsh-phone] [data-chat-flow] {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+html[data-dsh-phone] [data-chat-flow] :is(pre, table) {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+html[data-dsh-phone] [data-chat-flow] :is(img, video) {
+  max-width: 100%;
+  height: auto;
+}
+
+html[data-dsh-phone] [role=dialog] {
+  box-sizing: border-box;
+  min-width: 0 !important;
+  max-width: calc(100vw - 16px);
+  max-height: calc(var(--dsh-phone-height) - 16px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+html[data-dsh-phone] .X_2TxG_page {
+  padding-inline: var(--dsh-phone-gutter);
+  padding-bottom: var(--dsh-phone-safe-bottom);
+  gap: 18px;
+}
+html[data-dsh-phone] .X_2TxG_pageHead { padding-top: 12px; }
+html[data-dsh-phone] .X_2TxG_toolbar { flex-wrap: wrap; gap: 8px; }
+
+html[data-dsh-phone][data-dsh-phone-keyboard] {
+  --dsh-phone-safe-bottom: 4px;
+}
+html[data-dsh-phone][data-dsh-phone-keyboard] .wSkVaW_composerHero > :first-child {
+  display: none;
+}
+@media (max-height: 530px) {
+  html[data-dsh-phone] .wSkVaW_composerHero > :first-child { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-dsh-phone] :is([data-mobile-role=sidebar], [data-mobile-role=details]) { transition: none; }
+}

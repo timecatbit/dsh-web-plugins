@@ -33,6 +33,12 @@ function installPhoneLayout(layout) {
   close.setAttribute("aria-label", "关闭侧栏");
   close.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>';
   close.addEventListener("click", () => layout.toggleSidebar());
+  const backdrop = document.createElement("button");
+  backdrop.type = "button";
+  backdrop.dataset.dshPhoneSidebarDismiss = "";
+  backdrop.setAttribute("aria-label", "点击侧栏外关闭");
+  backdrop.tabIndex = -1;
+  backdrop.addEventListener("click", () => layout.toggleSidebar());
   let pending = 0;
   let previous;
   let sidebarNavigationUntil = 0;
@@ -64,15 +70,20 @@ function installPhoneLayout(layout) {
     if (!phone || !center) {
       if (nav.isConnected) nav.remove();
       if (close.isConnected) close.remove();
+      if (backdrop.isConnected) backdrop.remove();
       previous?.frame.removeAttribute("data-dsh-phone-global-page");
       previous = undefined;
       return;
     }
     const sidebar = frame.querySelector(":scope > [data-mobile-role=sidebar]");
+    const sidebarOpen = sidebar && !frame.hasAttribute("data-sidebar-collapsed");
+    if (sidebarOpen) {
+      if (backdrop.parentElement !== frame) frame.appendChild(backdrop);
+    } else if (backdrop.isConnected) backdrop.remove();
     const hostClose = sidebar && [...sidebar.querySelectorAll('button[aria-label], button[title]')].find(button =>
       button !== close && /(?:close|collapse)(?: left)? sidebar|(?:收起|关闭).*侧栏/i.test(
         button.getAttribute("aria-label") || button.getAttribute("title") || ""));
-    if (sidebar && !hostClose && !frame.hasAttribute("data-sidebar-collapsed")) {
+    if (sidebarOpen && !hostClose) {
       if (close.parentElement !== sidebar) sidebar.appendChild(close);
     } else if (close.isConnected) close.remove();
     const content = center.querySelector("[data-conversation-content]");
@@ -144,6 +155,7 @@ function installPhoneLayout(layout) {
     document.removeEventListener("click", onSidebarClick, true);
     nav.remove();
     close.remove();
+    backdrop.remove();
     previous?.frame.removeAttribute("data-dsh-phone-global-page");
     html.removeAttribute("data-dsh-phone");
     html.removeAttribute("data-dsh-phone-keyboard");

@@ -1,16 +1,16 @@
 # DSH Web Plugins
 
-[English](README.en.md) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
+[English](README.en.md) · [MIT 许可证](LICENSE) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
 
 给 DeepSeek Harness 网页版的两个插件，**可单独安装，也可一起安装**。手机布局只改网页界面；Passkey 登录由局域网代理处理。两者没有相互依赖，因此保留独立安装和回退。
 
 | 需求 | 安装包 | 作用 |
 | --- | --- | --- |
-| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.7.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
+| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.8.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
 | 用密码或 Passkey 访问 DSH | `smanx-dsh-proxy-0.1.7-passkeys.3.tgz` | 局域网代理、持久网页登录、HTTPS Passkey 和 WebSocket 转发 |
 | 两项都要 | 两个安装包 | 可装在同一个 `web` profile，无安装顺序要求 |
 
-本版在 **DSH 0.2.1-rc.5** 上验证。手机布局使用了该版本的页面结构，其他版本请先在测试实例验证。Passkey 代理的构建目标是 Node.js 22 或更新版本。
+本版支持 **DSH 0.2.1-rc.5 / 0.2.2-rc.1**。其他版本请先在测试实例验证。Passkey 代理的构建目标是 Node.js 22 或更新版本。
 
 ## 安装
 
@@ -18,13 +18,13 @@
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.7.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.8.tgz"
 
 # Passkey 代理
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
 ```
 
-重启现有的 DSH 网页进程。文件安装沿用上游插件 ID，已安装同名上游插件时，这是替换升级，不是另装一份；同一 profile 中保留每种插件的一个版本。手机布局插件单独安装后，直接打开原来的 DSH 网页即可。
+重启现有的 DSH 网页进程。文件安装沿用上游插件 ID，已安装同名上游插件时，这是替换升级，不是另装一份；同一 profile 中保留每种插件的一个版本。**手机布局不需要 Passkey、局域网代理插件或域名。** 单独装手机布局后，继续使用已有的 DSH 网址和原有登录方式；若原 DSH 已允许局域网访问，可用它的 IP 和端口。若想给局域网 IP 加上独立的账号密码登录，再安装代理插件。
 
 ## 配置 Passkey 代理
 

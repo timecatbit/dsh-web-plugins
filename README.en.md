@@ -1,20 +1,20 @@
 # DSH Web Plugins
 
-[简体中文](README.md) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
+[简体中文](README.md) · [MIT license](LICENSE) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
 
-Two optional extensions for the DeepSeek Harness web app. Install either or both; neither requires the other.
+Two optional extensions for the DeepSeek Harness web app. Mobile Layout does not require Passkeys, a proxy, or a domain. Open the original DSH address as usual, including an IP and port if DSH is already reachable on your LAN.
 
 | Extension | Release file |
 | --- | --- |
-| Mobile settings, drawers, and input layout | `dsh-ui-mobile-0.1.8-mobile.7.tgz` |
+| Mobile settings, drawers, and input layout | `dsh-ui-mobile-0.1.8-mobile.8.tgz` |
 | LAN reverse proxy with password and HTTPS Passkey sign-in | `smanx-dsh-proxy-0.1.7-passkeys.3.tgz` |
 
-Tested with **DSH 0.2.1-rc.5**. The mobile layout is tied to that web app version. The proxy targets Node.js 22 or later.
+Supported DSH versions: **0.2.1-rc.5 and 0.2.2-rc.1**. Verify other versions before use. The proxy targets Node.js 22 or later.
 
 From the directory containing the downloaded assets, run either or both commands, then restart the existing DSH web process:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.7.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.8.tgz"
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
 ```
 

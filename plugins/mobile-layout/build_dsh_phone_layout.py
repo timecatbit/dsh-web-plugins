@@ -10,7 +10,8 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.8-mobile.7"
+VERSION = "0.1.8-mobile.8"
+HOST_RANGE = "0.2.1-rc.5 || 0.2.2-rc.1"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent
 
@@ -33,6 +34,10 @@ def main(source, target):
         '["data-sidebar-collapsed", "data-rightbar-collapsed", "data-rightbar-fullscreen"]')
     s = replace(s, 'detailsOpen: !frame.hasAttribute("data-rightbar-collapsed")',
         'detailsOpen: frame.hasAttribute("data-rightbar-fullscreen") || !frame.hasAttribute("data-rightbar-collapsed")')
+    s = replace(s, 'if (frame === null || frame === this.frame) return;',
+        'if (frame === null) return;\n\t\t\t\tstampDshPhoneColumns(frame);\n\t\t\t\tif (frame === this.frame) return;')
+    s, removed = re.subn(r'\n\t{4}for \(const \[index, role\] of COLUMN_ROLES\.entries\(\)\) \{.*?\n\t{4}\}', '', s, flags=re.S)
+    assert removed == 1
     css = (ROOT / "dsh-phone-layout.css").read_text()
     s, changed = re.subn(r'(?m)^\t\tconst css = ".*?";$', lambda _: "\t\tconst css = " + json.dumps(css) + ";", s)
     assert changed == 1, changed
@@ -54,6 +59,10 @@ def main(source, target):
     assert pkg["version"] == "0.1.8-subuntu.4"
     pkg["version"] = VERSION
     pkg["license"] = "MIT"
+    pkg["engines"]["dsh"] = HOST_RANGE
+    for name, version in pkg["peerDependencies"].items():
+        if name.startswith("@deepseek-ai/dsh-") and version == "0.2.1-rc.5":
+            pkg["peerDependencies"][name] = HOST_RANGE
     files["package/package.json"] = (json.dumps(pkg, indent=2) + "\n").encode()
     del files["package/SUBUNTU-PATCH.txt"]
     files["package/README.md"] = (ROOT / "README.md").read_bytes()

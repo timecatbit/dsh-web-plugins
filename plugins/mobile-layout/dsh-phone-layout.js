@@ -1,3 +1,21 @@
+function stampDshPhoneColumns(frame) {
+  const columns = [...frame.children].filter(column => column instanceof HTMLElement);
+  // The newer shell may insert a native mask before the actual sidebar.
+  const sidebar = columns.find(column => column.querySelector(':scope > [data-slot="sidebar"]'));
+  const details = columns.find(column => column.hasAttribute("data-rightbar-col") ||
+    column.querySelector(':scope > [data-slot="rightbar"]'));
+  const center = sidebar && columns[columns.indexOf(sidebar) + 1];
+  const roles = ["sidebar", "center", "details"];
+  const parts = sidebar && details && center && center !== details
+    ? [sidebar, center, details]
+    : columns.filter(column => !column.hasAttribute("data-sidebar-mask")).slice(0, 3);
+  for (const column of columns) {
+    const role = roles[parts.indexOf(column)];
+    if (role && column.dataset.mobileRole !== role) column.dataset.mobileRole = role;
+    else if (!role && column.hasAttribute("data-mobile-role")) column.removeAttribute("data-mobile-role");
+  }
+}
+
 function installPhoneLayout(layout) {
   const html = document.documentElement;
   const media = window.matchMedia(MOBILE_QUERY$2);
@@ -9,6 +27,12 @@ function installPhoneLayout(layout) {
   nav.setAttribute("aria-label", "菜单");
   nav.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
   nav.addEventListener("click", () => layout.toggleSidebar());
+  const close = document.createElement("button");
+  close.type = "button";
+  close.dataset.dshPhoneClose = "";
+  close.setAttribute("aria-label", "关闭侧栏");
+  close.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>';
+  close.addEventListener("click", () => layout.toggleSidebar());
   let pending = 0;
   let previous;
   let sidebarNavigationUntil = 0;
@@ -39,10 +63,18 @@ function installPhoneLayout(layout) {
     const center = frame?.querySelector(":scope > [data-mobile-role=center]");
     if (!phone || !center) {
       if (nav.isConnected) nav.remove();
+      if (close.isConnected) close.remove();
       previous?.frame.removeAttribute("data-dsh-phone-global-page");
       previous = undefined;
       return;
     }
+    const sidebar = frame.querySelector(":scope > [data-mobile-role=sidebar]");
+    const hostClose = sidebar && [...sidebar.querySelectorAll('button[aria-label], button[title]')].find(button =>
+      button !== close && /(?:close|collapse)(?: left)? sidebar|(?:收起|关闭).*侧栏/i.test(
+        button.getAttribute("aria-label") || button.getAttribute("title") || ""));
+    if (sidebar && !hostClose && !frame.hasAttribute("data-sidebar-collapsed")) {
+      if (close.parentElement !== sidebar) sidebar.appendChild(close);
+    } else if (close.isConnected) close.remove();
     const content = center.querySelector("[data-conversation-content]");
     const session = content?.getAttribute("data-conversation-session") ?? null;
     const panel = center.firstElementChild;
@@ -111,6 +143,7 @@ function installPhoneLayout(layout) {
     document.removeEventListener("keydown", onEscape);
     document.removeEventListener("click", onSidebarClick, true);
     nav.remove();
+    close.remove();
     previous?.frame.removeAttribute("data-dsh-phone-global-page");
     html.removeAttribute("data-dsh-phone");
     html.removeAttribute("data-dsh-phone-keyboard");

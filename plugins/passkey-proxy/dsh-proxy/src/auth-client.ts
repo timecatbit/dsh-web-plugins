@@ -45,11 +45,11 @@ function completeLogin(next: string) {
 
 const login = get<HTMLButtonElement>('passkey-login')
 if (login) {
-  const fallback = get<HTMLDetailsElement>('password-fallback')!
+  const fallback = get<HTMLDetailsElement>('password-fallback')
   if (!supports) {
     login.disabled = true
-    fallback.open = true
-    message('此浏览器不能使用 Passkey，请用账号密码。')
+    if (fallback) fallback.open = true
+    message(fallback ? '此浏览器不能使用 Passkey，请用账号密码。' : '此浏览器不能使用 Passkey，请换用支持 Passkey 的浏览器或设备。')
   }
   login.addEventListener('click', () => void action(async () => {
     try {
@@ -58,7 +58,7 @@ if (login) {
       const { next } = await post('/passkey/verify', { id, credential, resumeKeys })
       completeLogin(next)
     } catch (error) {
-      if (error instanceof RequestError && error.status === 409) fallback.open = true
+      if (error instanceof RequestError && error.status === 409 && fallback) fallback.open = true
       throw error
     }
   }, login))

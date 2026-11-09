@@ -90,7 +90,8 @@ describe('ProxyController status', () => {
     expect(status.username).toBe('admin')
     expect(status.authEnabled).toBe(true)
     expect(status.persisted).toBe(false)
-    expect(status.password).toBe('admin')
+    expect(status.password).toBe('')
+    expect(status.passwordConfigured).toBe(true)
     expect(logs.some((line) => line.includes('listening'))).toBe(true)
 
     const fresh = await controller.refreshStatus()
@@ -180,7 +181,7 @@ describe('ProxyController update', () => {
     expect(controller.status().authEnabled).toBe(true)
   })
 
-  it('disables password login when credentials are cleared to empty (set-empty semantics)', async () => {
+  it('rejects clearing credentials and disabling both login methods', async () => {
     const upstreamPort = await startUpstream('UPSTREAM')
     controller = new ProxyController({
       base: baseOptions(upstreamPort),
@@ -188,27 +189,31 @@ describe('ProxyController update', () => {
       log: () => {},
     })
     await controller.start()
-    const listenPort = controller.status().listenPort
-
     const cleared = await controller.update({ username: '', password: '' })
-    expect(cleared.ok).toBe(true)
-    if (!cleared.ok) return
-    expect(cleared.result.status.authEnabled).toBe(false)
-    expect(cleared.result.status.username).toBe('')
-    expect(cleared.result.status.password).toBe('')
+    expect(cleared.ok).toBe(false)
+    expect(await controller.update({ passwordLoginEnabled: false, passkeyLoginEnabled: false }))
+      .toMatchObject({ ok: false, message: '至少保留一种登录方式。' })
+    expect(await controller.update({ passkeyLoginEnabled: true })).toMatchObject({ ok: false })
+    const saved = await controller.update({ passkeyOrigin: 'https://dsh.example.com', passkeyLoginEnabled: true })
+    expect(saved).toMatchObject({ ok: true })
+    expect(await controller.update({ passwordLoginEnabled: false })).toMatchObject({ ok: false,
+      message: '请先用当前 HTTPS 域名添加至少一个 Passkey，再关闭密码登录。' })
+    expect((await fetchThrough(`http://127.0.0.1:${controller.status().listenPort}/api/private`)).status).toBe(401)
+  })
 
-    // The gate is open again: an anonymous request passes through.
-    const anon = await fetchThrough(`http://127.0.0.1:${cleared.result.status.listenPort}/`)
-    expect(anon.status).toBe(200)
-    expect(anon.text).toBe('UPSTREAM')
-
-    // Setting only one credential keeps password login off and warns.
-    const partial = await controller.update({ username: 'half', password: '' })
-    expect(partial.ok).toBe(true)
-    if (!partial.ok) return
-    expect(partial.result.status.authEnabled).toBe(false)
-    expect(partial.result.message).toContain('需同时设置用户名和密码')
-    expect(listenPort).toBeGreaterThan(0)
+  it('keeps the proxy closed on a fresh install without credentials', async () => {
+    const upstreamPort = await startUpstream('UPSTREAM')
+    controller = new ProxyController({
+      base: { ...baseOptions(upstreamPort), username: '', password: '' },
+      settingsFile: tempSettingsFile(),
+      log: () => {},
+    })
+    await controller.start()
+    const port = controller.status().listenPort
+    expect(controller.status().authEnabled).toBe(false)
+    const response = await fetch(`http://127.0.0.1:${port}/api/private`)
+    expect(response.status).toBe(401)
+    expect(response.headers.has('www-authenticate')).toBe(false)
   })
 
   it('persists the listen port and credentials across controller instances', async () => {

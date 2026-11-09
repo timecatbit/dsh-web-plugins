@@ -7,7 +7,8 @@
  * real in-process upstream.
  */
 import { lanAddresses, startLanProxy, type LanProxyHandle } from './proxy.ts'
-import { RuntimeSettingsFile, normalizeRuntimeSettings, validateUpdate } from './settings.ts'
+import { RuntimeSettingsFile, trustedProxyIPs, validateUpdate } from './settings.ts'
+import { registeredPasskeyCount } from './browser-auth.ts'
 import type { LanProxyStatus, LanProxyUpdatePayload, LanProxyUpdateResult } from './contract.ts'
 import { dirname, join } from 'node:path'
 
@@ -24,6 +25,8 @@ export interface EffectiveProxyOptions {
   skipLaunchToken?: boolean
   passkeyOrigin?: string
   tlsProxyIPs?: string
+  passwordLoginEnabled?: boolean
+  passkeyLoginEnabled?: boolean
 }
 
 export interface ProxyControllerOptions {
@@ -81,7 +84,11 @@ export class ProxyController {
     if (persisted.skipLaunchToken !== undefined) this.options.skipLaunchToken = persisted.skipLaunchToken
     this.options.passkeyOrigin = process.env.DSH_PROXY_PASSKEY_ORIGIN ?? persisted.passkeyOrigin
     this.options.tlsProxyIPs = process.env.DSH_PROXY_TLS_PROXIES ?? persisted.tlsProxyIPs
+    this.options.passwordLoginEnabled = persisted.passwordLoginEnabled ?? true
+    this.options.passkeyLoginEnabled = persisted.passkeyLoginEnabled ?? Boolean(this.options.passkeyOrigin)
   }
+
+  private get authFile(): string { return join(dirname(this.opts.settingsFile), 'dsh-proxy-auth.json') }
 
   /** Whether a persisted runtime override exists (drives the status flag). */
   private persisted(): boolean {
@@ -93,6 +100,8 @@ export class ProxyController {
       || current.skipLaunchToken !== undefined
       || current.passkeyOrigin !== undefined
       || current.tlsProxyIPs !== undefined
+      || current.passwordLoginEnabled !== undefined
+      || current.passkeyLoginEnabled !== undefined
   }
 
   /**
@@ -124,9 +133,13 @@ export class ProxyController {
       username: this.options.username,
       password: this.options.password,
       launchToken: this.options.launchToken,
-      authFile: join(dirname(this.opts.settingsFile), 'dsh-proxy-auth.json'),
+      authFile: this.authFile,
       passkeyOrigin: this.options.passkeyOrigin || undefined,
-      trustedTLSProxyIPs: (this.options.tlsProxyIPs ?? '').split(',').map(x => x.trim()).filter(Boolean),
+      trustedTLSProxyIPs: trustedProxyIPs(this.options.tlsProxyIPs),
+      loginPolicy: {
+        password: this.options.passwordLoginEnabled === true,
+        passkey: this.options.passkeyLoginEnabled === true,
+      },
       log,
     })
     this.handle = handle
@@ -137,13 +150,7 @@ export class ProxyController {
       log('info', `dsh-proxy: listening on ${this.options.listenHost}:${bound} -> http://${this.options.upstreamHost}:${this.options.upstreamPort}`)
       log('info', `dsh-proxy: 本机访问 ${urls.local}`)
       for (const url of urls.lan) log('info', `dsh-proxy: 局域网访问 ${url}`)
-      if (this.options.username !== '' && this.options.password !== '') {
-        log('info', 'dsh-proxy: password login enabled')
-      } else if (this.options.username !== '' || this.options.password !== '') {
-        log('warn', 'dsh-proxy: password login NOT enabled — username and password must BOTH be set (only one is configured); the LAN surface is open')
-      } else {
-        log('warn', 'dsh-proxy: password login is disabled (username and password are both empty); the LAN surface is open')
-      }
+      if (!this.options.username || !this.options.password) log('warn', 'dsh-proxy: set proxy credentials from the original DSH page before using the proxy')
       if (this.options.launchToken !== undefined && this.options.launchToken !== '') {
         log('info', 'dsh-proxy: launch-token auto-login ON — a first-time browser is authenticated without the token')
       }
@@ -203,13 +210,19 @@ export class ProxyController {
       upstreamPort: this.options.upstreamPort,
       upstreamReachable: this.probeCache?.reachable ?? false,
       username: this.options.username,
-      password: this.options.password,
-      authEnabled: this.options.username !== '' && this.options.password !== '',
+      password: '',
+      passwordConfigured: !!this.options.password,
+      passwordLoginEnabled: this.options.passwordLoginEnabled,
+      passkeyLoginEnabled: this.options.passkeyLoginEnabled,
+      authEnabled: Boolean((this.options.passwordLoginEnabled && this.options.username && this.options.password) ||
+        (this.options.passkeyLoginEnabled && this.options.passkeyOrigin)),
       skipLaunchToken: this.options.skipLaunchToken === true,
       persisted: this.persisted(),
       passkeyOrigin: this.options.passkeyOrigin ?? '',
       tlsProxyIPs: this.options.tlsProxyIPs ?? '',
       passkeySettingsManaged: this.passkeySettingsManaged,
+      registeredPasskeys: registeredPasskeyCount(this.authFile, this.options.username, this.options.passkeyOrigin),
+      observedProxyIPs: this.handle?.observedProxyIPs() ?? [],
     }
   }
 
@@ -257,7 +270,7 @@ export class ProxyController {
    * @param payload - raw RPC payload from the settings page.
    * @returns the new status, or a user-facing rejection message.
    */
-  async update(payload: unknown): Promise<UpdateOutcome> {
+  async update(payload: unknown, deferRestart = false): Promise<UpdateOutcome> {
     // Validate against the actually bound port: with listenPort 0 the OS
     // assigns the port, and the configured 0 must never be the comparison.
     const check = validateUpdate(
@@ -274,11 +287,23 @@ export class ProxyController {
     }
     const origin = patch.passkeyOrigin ?? this.options.passkeyOrigin
     const proxies = patch.tlsProxyIPs ?? this.options.tlsProxyIPs
-    if ((patch.passkeyOrigin !== undefined || patch.tlsProxyIPs !== undefined) && Boolean(origin) !== Boolean(proxies)) {
-      return { ok: false, message: '同时填写 HTTPS 域名和受信任的代理 IP，或同时清空以关闭 Passkey。' }
+    const passwordLogin = patch.passwordLoginEnabled ?? this.options.passwordLoginEnabled
+    const passkeyLogin = patch.passkeyLoginEnabled ?? this.options.passkeyLoginEnabled
+    const username = patch.username ?? this.options.username
+    const password = patch.password ?? this.options.password
+    if (!passwordLogin && !passkeyLogin) return { ok: false, message: '至少保留一种登录方式。' }
+    if (passkeyLogin && !origin) return { ok: false, message: '开启 Passkey 前，请先填写 HTTPS 域名。' }
+    if (proxies && !origin) return { ok: false, message: '填写反代来源 IP 前，请先填写 HTTPS 域名。' }
+    if (!username || !password) {
+      return { ok: false, message: '请设置账号和密码。关闭密码登录时，密码仍用于管理 Passkey。' }
     }
-    if (origin && (!(patch.username ?? this.options.username) || !(patch.password ?? this.options.password))) {
-      return { ok: false, message: '启用 Passkey 时必须保留账号和密码作为备用登录。' }
+    if (!passwordLogin && (origin !== this.options.passkeyOrigin ||
+      trustedProxyIPs(proxies).join(',') !== trustedProxyIPs(this.options.tlsProxyIPs).join(',') ||
+      username !== this.options.username)) {
+      return { ok: false, message: '请先保留或重新开启密码登录，再更改 HTTPS 域名、反代来源或账号。' }
+    }
+    if (!passwordLogin && registeredPasskeyCount(this.authFile, username, origin) < 1) {
+      return { ok: false, message: '请先用当前 HTTPS 域名添加至少一个 Passkey，再关闭密码登录。' }
     }
 
     const next: LanProxyUpdatePayload = { ...this.settings.read(), ...patch }
@@ -291,6 +316,8 @@ export class ProxyController {
     if (patch.skipLaunchToken !== undefined) this.options.skipLaunchToken = patch.skipLaunchToken
     if (patch.passkeyOrigin !== undefined) this.options.passkeyOrigin = patch.passkeyOrigin
     if (patch.tlsProxyIPs !== undefined) this.options.tlsProxyIPs = patch.tlsProxyIPs
+    if (patch.passwordLoginEnabled !== undefined) this.options.passwordLoginEnabled = patch.passwordLoginEnabled
+    if (patch.passkeyLoginEnabled !== undefined) this.options.passkeyLoginEnabled = patch.passkeyLoginEnabled
     // Auto-login needs the actual token, which is read from the host (lazily,
     // because BrowserAuth only exists once the harness is serving). Re-read it
     // whenever the flag is being turned on so the settings page takes effect
@@ -307,10 +334,11 @@ export class ProxyController {
     // stopped service is just saved and stays stopped (starting it is the
     // explicit start control's job).
     const wasListening = this.boundPort !== null
-    if (wasListening && (patch.passkeyOrigin !== undefined || patch.tlsProxyIPs !== undefined) &&
+    if (wasListening && (deferRestart || patch.passkeyOrigin !== undefined || patch.tlsProxyIPs !== undefined ||
+      patch.passwordLoginEnabled !== undefined || patch.passkeyLoginEnabled !== undefined) &&
       this.options.listenPort === currentListenPort && this.options.upstreamPort === currentUpstreamPort) {
       // An RPC served through this very listener cannot finish if we close it
-      // before replying. Only the same-port Passkey update uses a deferred restart.
+      // before replying. A same-port web update uses a deferred restart.
       const currentHandle = this.handle
       const timer = setTimeout(() => {
         if (this.handle === currentHandle) void this.restart()

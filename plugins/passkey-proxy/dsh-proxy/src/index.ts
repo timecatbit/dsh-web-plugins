@@ -47,7 +47,7 @@ export interface Config {
   username: string
   /** Login / Basic Auth password; password login is enabled only when both it and `username` are set. */
   password: string
-  /** Auto-attach the launch token on 401 (off by default). */
+  /** Auto-attach the launch token only after the proxy authenticates the browser. */
   skipLaunchToken: boolean
 }
 
@@ -62,11 +62,10 @@ export const Config = z.object({
   /**
    * Auto-attach the DSH launch token to requests the upstream rejects with
    * 401, so a first-time LAN browser completes the token→cookie exchange
-   * without being handed the token. OFF by default: enabling it removes
-   * DSH's token check for the proxied surface, leaving the proxy's Basic Auth
-   * (if configured) as the only barrier.
+   * without being handed the token. The proxy never forwards an unauthenticated
+   * browser to this exchange. Deployments can still retain the separate check.
    */
-  skipLaunchToken: z.boolean().default(false),
+  skipLaunchToken: z.boolean().default(true),
 })
 
 /**
@@ -192,7 +191,7 @@ export function apply(ctx: Context, config?: Config): void {
           return { ok: true, value: controller.stopDeferred() }
         }
         if (endpoint === RPC_UPDATE_ENDPOINT) {
-          const outcome = await controller.update(payload)
+          const outcome = await controller.update(payload, true)
           if (outcome.ok) return { ok: true, value: outcome.result }
           return {
             ok: false,

@@ -95,7 +95,7 @@ try {
     protocol: 'ctap2', transport: 'internal', hasResidentKey: true, hasUserVerification: true,
     isUserVerified: true, automaticPresenceSimulation: true,
   } })).authenticatorId
-  let first
+  let first, second
   for (let i = 1; i <= 5; i++) {
     const authenticatorId = await authenticator()
     await page.locator('#show-add').click()
@@ -104,6 +104,7 @@ try {
     await page.locator('#add-key').click()
     await page.locator('#key-count').filter({ hasText: i + ' / 5' }).waitFor()
     if (i === 1) [first] = (await cdp.send('WebAuthn.getCredentials', { authenticatorId })).credentials
+    if (i === 2) [second] = (await cdp.send('WebAuthn.getCredentials', { authenticatorId })).credentials
     await cdp.send('WebAuthn.removeVirtualAuthenticator', { authenticatorId })
   }
   assert.equal(await page.locator('#show-add').isDisabled(), true)
@@ -184,10 +185,50 @@ try {
   await Promise.all([page.waitForURL(target + '/'), page.locator('#password-form button').click()])
   await page.getByRole('heading', { name: 'DSH upstream' }).waitFor()
   await proxy.close()
+  await boot({ ...config, loginPolicy: { password: false, passkey: true } })
+  await page.goto(https)
+  assert.equal(new URL(page.url()).pathname, loginPath, 'password sessions must stop working')
+  assert.equal(await page.locator('#password-form').count(), 0)
+  assert.equal((await post('/password', { username: config.username, password: config.password })).status, 403)
+  const onlyCDP = await ctx.newCDPSession(page)
+  await onlyCDP.send('WebAuthn.enable')
+  const { authenticatorId: secondAuthenticator } = await onlyCDP.send('WebAuthn.addVirtualAuthenticator', { options: {
+    protocol: 'ctap2', transport: 'internal', hasResidentKey: true, hasUserVerification: true,
+    isUserVerified: true, automaticPresenceSimulation: true,
+  } })
+  await onlyCDP.send('WebAuthn.addCredential', { authenticatorId: secondAuthenticator, credential: second })
+  await Promise.all([page.waitForURL(https + '/'), page.locator('#passkey-login').click()])
+  await page.getByRole('heading', { name: 'DSH upstream' }).waitFor()
+  await page.goto(https + loginPath + '/keys')
+  const keyList = (await post('/keys/list', {})).data.keys
+  const secondID = Buffer.from(second.credentialId, 'base64').toString('base64url')
+  for (const key of keyList.filter(k => k.id !== secondID)) {
+    assert.equal((await post('/keys/remove', { id: key.id, password: config.password })).status, 200)
+  }
+  assert.equal((await post('/keys/remove', { id: secondID, password: config.password })).status, 409)
+  cliResult = await cli({ Authorization: basic })
+  assert.equal(cliResult.status, 303)
+  assert.equal(cliResult.headers['www-authenticate'], undefined)
+  await page.goto(target)
+  assert.equal(await page.locator('#password-form').count(), 0)
+  assert.equal(await page.locator('a[href="' + https + '/"]').count(), 1)
+  assert.equal((await post('/password', { username: config.username, password: config.password })).status, 403)
+  await proxy.close()
+  await boot({ ...config, loginPolicy: { password: true, passkey: false } })
+  await page.goto(https)
+  assert.equal(new URL(page.url()).pathname, loginPath, 'Passkey sessions must stop working')
+  assert.equal(await page.locator('#passkey-login').count(), 0)
+  assert.equal((await post('/passkey/options', {})).status, 403)
+  await page.locator('#username').fill(config.username)
+  await page.locator('#password').fill(config.password)
+  await Promise.all([page.waitForURL(https + '/'), page.locator('#password-form button').click()])
+  await page.getByRole('heading', { name: 'DSH upstream' }).waitFor()
+  await proxy.close()
   await boot({ ...config, trustedTLSProxyIPs: [] })
   const res = await ctx.request.get(https + loginPath)
-  assert.doesNotMatch(await res.text(), /id="passkey-login"/)
-  console.log('HTTP: CLI Basic Auth, browser password form and cookies passed; untrusted proxy could not turn on Passkey.')
+  assert.doesNotMatch(await res.text(), /id="(?:passkey-login|password-form)"/)
+  assert.deepEqual(proxy.observedProxyIPs(), ['127.0.0.1'])
+  console.log('Login toggles enforced on HTTPS and LAN; stale sessions and last-key deletion rejected; untrusted forwarding only observed.')
 } finally {
   await browser?.close()
   await proxy?.close()

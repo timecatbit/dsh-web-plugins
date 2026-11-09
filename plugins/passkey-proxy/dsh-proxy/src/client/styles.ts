@@ -146,6 +146,19 @@ export const cssText = `
   gap: 12px;
   min-width: 0;
 }
+.dsh_lanproxy_group {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--dsw-alias-border-normal, #68717e55);
+  border-radius: 10px;
+}
+.dsh_lanproxy_group > legend { padding-inline: 6px; font-weight: 650; }
+.dsh_lanproxy_trust > summary { cursor: pointer; padding-block: 8px; }
+.dsh_lanproxy_trust > :not(summary) { margin-top: 6px; }
+.dsh_lanproxy_group :is(p, code) { overflow-wrap: anywhere; }
 .dsh_lanproxy_field {
   display: flex;
   flex-direction: column;

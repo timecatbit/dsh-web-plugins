@@ -56,13 +56,19 @@ const css = `
 
 const keyIcon = '<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15.5" r="4.2"/><path d="m11 12.5 8-8 2 2-1.6 1.6M16.1 7.4l2 2"/></svg></span>'
 
-export function authPage(management: boolean, passkey: boolean, resumeKeys = false): string {
+export function authPage(management: boolean, passkey: boolean, resumeKeys = false, allowPassword = true,
+  httpsOrigin?: string, untrustedExternal = false): string {
   const password = `<form id="password-form" method="post"><label for="username">账号</label>
     <input id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required maxlength="256">
     <label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="1024">
     <button class="primary full" type="submit">登录</button></form>`
-  const login = passkey ? `<button class="primary full" type="button" id="passkey-login">使用 Passkey 登录</button>
-    <details id="password-fallback"><summary>改用账号密码</summary>${password}</details>` : password
+  const login = passkey
+    ? '<button class="primary full" type="button" id="passkey-login">使用 Passkey 登录</button>' +
+      (allowPassword ? '<details id="password-fallback"><summary>改用账号密码</summary>' + password + '</details>' : '')
+    : allowPassword ? password
+    : untrustedExternal ? '<p>这个 HTTPS 入口还未通过反代来源检查。请在服务器上的 DSH 设置中核对来源 IP 和转发协议。</p>'
+    : httpsOrigin ? `<p>此入口不接受密码登录。请从 <a href="${httpsOrigin}/">HTTPS 入口</a> 使用 Passkey。</p>`
+    : '<p>代理还没有可用的登录方式。请在服务器上打开原来的 DSH 页面，先配置代理账号和密码。</p>'
   const keys = passkey ? `<section class="card" aria-labelledby="registered">
     <div class="row"><h2 id="registered">已添加的 Passkey</h2><span id="key-count" class="count" aria-live="polite"></span></div>
     <p id="key-empty" class="empty" hidden>还没有 Passkey。添加后，下次可以用设备上的 Face ID、指纹或屏幕锁登录。</p>
@@ -75,7 +81,7 @@ export function authPage(management: boolean, passkey: boolean, resumeKeys = fal
       <p id="action-detail"></p>
       <form id="key-form" method="post">
         <div id="key-label-field"><label for="key-label">设备名称（可选）</label><input id="key-label" placeholder="例如：我的 iPhone" maxlength="60"></div>
-        <label for="key-password">当前密码</label><input id="key-password" type="password" autocomplete="current-password" required maxlength="1024">
+        <label for="key-password">管理验证密码</label><input id="key-password" type="password" autocomplete="current-password" required maxlength="1024">
         <div class="form-actions"><button class="primary" id="add-key" type="submit">继续</button><button id="cancel-action" type="button">取消</button></div>
       </form>
     </section>` : '<section class="card"><p>此地址可以用账号密码登录。请从管理员配置的 HTTPS 域名打开此页，才能管理 Passkey。</p></section>'
@@ -85,7 +91,9 @@ export function authPage(management: boolean, passkey: boolean, resumeKeys = fal
     <title>${title} · DSH</title><style>${css}</style></head>
     <body><main class="${management ? 'management' : 'login'}"${resumeKeys ? ' data-resume-keys' : ''}>
     ${management ? back : ''}
-    <header>${keyIcon}<h1>${title}</h1><p>${management ? '使用设备验证登录。每个账号最多添加 5 个。' : passkey ? '已有 Passkey 可直接登录。首次设置请先用账号密码。' : '请输入局域网代理的账号密码。'}</p></header>
+    <header>${keyIcon}<h1>${title}</h1><p>${management ? '使用设备验证登录。每个账号最多添加 5 个。' : passkey
+      ? allowPassword ? '已有 Passkey 可直接登录。首次设置请先用账号密码。' : '使用已添加的 Passkey 登录。'
+      : allowPassword ? '请输入局域网代理的账号密码。' : '这里暂时没有可用的登录方式。'}</p></header>
     ${management ? keys : '<section class="card">' + login + '</section>'}
     <p id="message" role="status" aria-live="polite"></p>
     ${management ? '<footer><button class="link danger" type="button" id="logout">退出登录</button></footer>' : ''}

@@ -1,6 +1,5 @@
-Two independent plugins for DeepSeek Harness web, tested on DSH 0.2.1-rc.5.
+The Passkey Proxy now has separate password and Passkey switches. It rejects unsafe settings that would disable both methods or leave a Passkey-only account without a registered credential for its configured origin.
 
-- **Mobile Layout:** single-column phone settings, horizontal categories, and adapted sidebar and composer.
-- **Passkey Proxy:** a configurable HTTPS origin, up to five Passkeys, password fallback, persistent sessions, and streamlined credential management.
+The LAN Proxy settings separate access addresses, sign-in methods, and credential management. A blank reverse proxy IP list trusts only loopback; remote peers can be identified from the settings page and must be approved explicitly. Existing configurations keep their current methods on upgrade.
 
-Download either or both `.tgz` assets. See the repository README for installation, reverse proxy settings, and rollback. SHA-256 checksums are included.
+The Mobile Layout package is unchanged and can still be installed independently. The README explains LAN HTTP, HTTPS, installation, and rollback.

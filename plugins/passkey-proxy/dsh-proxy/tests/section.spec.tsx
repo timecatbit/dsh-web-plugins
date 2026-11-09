@@ -33,7 +33,8 @@ const STATUS: LanProxyStatus = {
   upstreamPort: 3080,
   upstreamReachable: true,
   username: 'admin',
-  password: 's3cret',
+  password: '',
+  passwordConfigured: true,
   authEnabled: true,
   persisted: false,
 }
@@ -249,44 +250,41 @@ describe('update form', () => {
     mounted = mount(<SettingsSection {...props(rpc)} />)
     await flush()
 
-    const inputs = mounted.container.querySelectorAll('input')
-    expect((inputs[0] as HTMLInputElement).value).toBe('3081')
-    expect((inputs[1] as HTMLInputElement).value).toBe('admin')
-    expect((inputs[2] as HTMLInputElement).value).toBe('s3cret')
+    const port = mounted.container.querySelector<HTMLInputElement>('#dsh-lanproxy-listen-port')!
+    const user = mounted.container.querySelector<HTMLInputElement>('#dsh-lanproxy-username')!
+    const password = mounted.container.querySelector<HTMLInputElement>('#dsh-lanproxy-password')!
+    expect(port.value).toBe('3081')
+    expect(user.value).toBe('admin')
+    expect(password.value).toBe('')
 
-    setInputValue(inputs[0], '3091')
-    setInputValue(inputs[1], 'alice')
+    setInputValue(port, '3091')
+    setInputValue(user, 'alice')
     flushSync(() => {})
     submitForm(mounted.container)
     await flush()
 
     const updateCall = calls.find((call) => call.endpoint === RPC_UPDATE_ENDPOINT)
-    expect(updateCall).toEqual({ channel: RPC_CHANNEL, endpoint: RPC_UPDATE_ENDPOINT, payload: { listenPort: 3091, username: 'alice', password: 's3cret' } })
+    expect(updateCall).toEqual({ channel: RPC_CHANNEL, endpoint: RPC_UPDATE_ENDPOINT, payload: { listenPort: 3091, username: 'alice' } })
     expect(mounted.container.textContent ?? '').toContain('已保存并重启转发服务')
     expect(mounted.container.textContent ?? '').toContain('0.0.0.0:3091')
     // After saving, the form is re-seeded with the returned status.
-    expect((inputs[0] as HTMLInputElement).value).toBe('3091')
-    expect((inputs[1] as HTMLInputElement).value).toBe('alice')
+    expect(port.value).toBe('3091')
+    expect(user.value).toBe('alice')
   })
 
-  it('submits empty strings when credentials are cleared (set-empty semantics)', async () => {
-    const cleared = { ...STATUS, username: '', password: '', authEnabled: false }
-    const { rpc, calls } = makeRpc({
-      update: () => Promise.resolve({ ok: true, value: { status: cleared, notice: 'saved-restarted', message: '已保存并重启转发服务' } }),
-    })
+  it('does not submit a policy with both methods disabled', async () => {
+    const { rpc, calls } = makeRpc()
     mounted = mount(<SettingsSection {...props(rpc)} />)
     await flush()
 
-    const inputs = mounted.container.querySelectorAll('input')
-    setInputValue(inputs[1], '')
-    setInputValue(inputs[2], '')
+    const enabled = mounted.container.querySelector<HTMLInputElement>('#dsh-password-enabled')!
+    enabled.click()
     flushSync(() => {})
     submitForm(mounted.container)
     await flush()
 
-    const updateCall = calls.find((call) => call.endpoint === RPC_UPDATE_ENDPOINT)
-    expect(updateCall).toEqual({ channel: RPC_CHANNEL, endpoint: RPC_UPDATE_ENDPOINT, payload: { listenPort: 3081, username: '', password: '' } })
-    expect(mounted.container.textContent ?? '').toContain('未启用')
+    expect(calls.some((call) => call.endpoint === RPC_UPDATE_ENDPOINT)).toBe(false)
+    expect(mounted.container.querySelector('.dsh_lanproxy_error')?.textContent).toContain('至少保留一种登录方式')
   })
 
   it('localizes the credentials-partial notice from the host', async () => {
@@ -352,21 +350,21 @@ describe('update form', () => {
     expect(calls.some((call) => call.endpoint === RPC_UPDATE_ENDPOINT)).toBe(false)
   })
 
-  it('toggles password visibility with the eye button (value stays pre-filled)', async () => {
+  it('toggles visibility of a newly typed password without exposing the stored one', async () => {
     const { rpc } = makeRpc()
     mounted = mount(<SettingsSection {...props(rpc)} />)
     await flush()
 
-    const inputs = mounted.container.querySelectorAll('input')
-    const password = inputs[2]
+    const password = mounted.container.querySelector<HTMLInputElement>('#dsh-lanproxy-password')!
     expect(password.type).toBe('password')
-    expect((password as HTMLInputElement).value).toBe('s3cret')
+    expect(password.value).toBe('')
+    setInputValue(password, 'new-password')
 
     const eye = mounted.container.querySelector('.dsh_lanproxy_eye') as HTMLButtonElement
     eye.click()
     flushSync(() => {})
     expect(password.type).toBe('text')
-    expect((password as HTMLInputElement).value).toBe('s3cret')
+    expect(password.value).toBe('new-password')
 
     eye.click()
     flushSync(() => {})

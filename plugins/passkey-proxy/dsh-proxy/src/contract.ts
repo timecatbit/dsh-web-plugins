@@ -32,15 +32,7 @@ export interface LanProxyStatus {
   upstreamReachable: boolean
   /** Login username currently enforced. */
   username: string
-  /**
-   * The CURRENT password, so the settings form can pre-fill (write back) the
-   * credential fields and empty means "set empty". The status channel sits
-   * behind Connection's Host/Origin trust fence and browser authentication
-   * (DSH 0.1.7 dropped the per-channel `authority: 'loopback'` option in favour
-   * of that uniform fence), and through the proxy the Host is rewritten to
-   * loopback, so a caller reaching it already holds the same credentials (or is
-   * on the host, where the persisted $DSH_HOME file is equally readable).
-   */
+  /** Legacy response field; current servers return an empty string. */
   password: string
   /** Whether the auth gate is on (both credentials non-empty). */
   authEnabled: boolean
@@ -51,6 +43,11 @@ export interface LanProxyStatus {
   passkeyOrigin?: string
   tlsProxyIPs?: string
   passkeySettingsManaged?: boolean
+  passwordLoginEnabled?: boolean
+  passkeyLoginEnabled?: boolean
+  passwordConfigured?: boolean
+  registeredPasskeys?: number
+  observedProxyIPs?: string[]
 }
 
 /** Settings-section patch: only fields present are changed; omitted fields keep their values. */
@@ -77,6 +74,8 @@ export interface LanProxyUpdatePayload {
   skipLaunchToken?: boolean
   passkeyOrigin?: string
   tlsProxyIPs?: string
+  passwordLoginEnabled?: boolean
+  passkeyLoginEnabled?: boolean
 }
 
 /** Successful update response. */

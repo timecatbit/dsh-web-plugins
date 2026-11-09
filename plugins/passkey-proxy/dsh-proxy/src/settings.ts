@@ -21,6 +21,24 @@ export interface PersistedRuntimeSettings {
   skipLaunchToken?: boolean
   passkeyOrigin?: string
   tlsProxyIPs?: string
+  passwordLoginEnabled?: boolean
+  passkeyLoginEnabled?: boolean
+}
+
+/** Match equivalent IPv6 spellings and dual-stack IPv4 sockets consistently. */
+export function canonicalProxyIP(value: string): string | undefined {
+  const family = isIP(value)
+  if (family === 4) return value
+  if (family !== 6 || value.includes('%')) return undefined
+  const normalized = new URL('http://[' + value + ']').hostname.slice(1, -1)
+  const mapped = /^::ffff:([0-9a-f]+):([0-9a-f]+)$/.exec(normalized)
+  if (!mapped) return normalized
+  return mapped.slice(1).flatMap(x => [parseInt(x, 16) >> 8, parseInt(x, 16) & 255]).join('.')
+}
+
+export function trustedProxyIPs(value?: string): string[] {
+  const ips = (value ?? '').split(',').map(ip => ip.trim()).filter(Boolean)
+  return ips.length ? [...new Set(ips.map(ip => canonicalProxyIP(ip) ?? ip))] : ['127.0.0.1', '::1']
 }
 
 export function parsePasskeyOrigin(value: string): URL {
@@ -48,6 +66,8 @@ export function normalizeRuntimeSettings(raw: unknown): PersistedRuntimeSettings
   if (typeof source.skipLaunchToken === 'boolean') out.skipLaunchToken = source.skipLaunchToken
   if (typeof source.passkeyOrigin === 'string') out.passkeyOrigin = source.passkeyOrigin
   if (typeof source.tlsProxyIPs === 'string') out.tlsProxyIPs = source.tlsProxyIPs
+  if (typeof source.passwordLoginEnabled === 'boolean') out.passwordLoginEnabled = source.passwordLoginEnabled
+  if (typeof source.passkeyLoginEnabled === 'boolean') out.passkeyLoginEnabled = source.passkeyLoginEnabled
   return out
 }
 
@@ -164,8 +184,13 @@ export function validateUpdate(
   if (input.tlsProxyIPs !== undefined) {
     if (typeof input.tlsProxyIPs !== 'string' || input.tlsProxyIPs.length > 512) return { ok: false, message: '请输入反向代理的实际 IP。' }
     const ips = input.tlsProxyIPs.split(',').map(ip => ip.trim()).filter(Boolean)
-    if (ips.length > 8 || ips.some(ip => !isIP(ip))) return { ok: false, message: '请填写实际 IPv4 或 IPv6 地址，多个用英文逗号隔开，不支持网段。' }
-    patch.tlsProxyIPs = [...new Set(ips)].join(', ')
+    if (ips.length > 8 || ips.some(ip => !canonicalProxyIP(ip))) return { ok: false, message: '请填写实际 IPv4 或 IPv6 地址，多个用英文逗号隔开，不支持网段。' }
+    patch.tlsProxyIPs = [...new Set(ips.map(ip => canonicalProxyIP(ip)))].join(', ')
+  }
+  for (const key of ['passwordLoginEnabled', 'passkeyLoginEnabled'] as const) {
+    if (input[key] === undefined) continue
+    if (typeof input[key] !== 'boolean') return { ok: false, message: '登录开关必须是布尔值。' }
+    patch[key] = input[key]
   }
 
   if (
@@ -176,6 +201,8 @@ export function validateUpdate(
     && patch.skipLaunchToken === undefined
     && patch.passkeyOrigin === undefined
     && patch.tlsProxyIPs === undefined
+    && patch.passwordLoginEnabled === undefined
+    && patch.passkeyLoginEnabled === undefined
   ) {
     return { ok: false, message: '没有可保存的修改' }
   }

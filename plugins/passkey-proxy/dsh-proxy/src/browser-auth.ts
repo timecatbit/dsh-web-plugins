@@ -10,7 +10,7 @@ import {
 } from '@simplewebauthn/server'
 import { Authenticator, checkBasicAuth } from './session.ts'
 import { authPage } from './auth-page.ts'
-import { parsePasskeyOrigin } from './settings.ts'
+import { canonicalProxyIP, parsePasskeyOrigin } from './settings.ts'
 
 export const LOGIN = '/_dsh_login'
 export const MAX_PASSKEYS = 5
@@ -27,6 +27,7 @@ interface Key {
   transports?: AuthenticatorTransport[]; label: string; created: number
 }
 interface State { version: 1; secret: string; keys: Key[]; sessions: Record<string, Session> }
+export interface LoginPolicy { password: boolean; passkey: boolean }
 interface Pending {
   kind: 'login' | 'register'; challenge: string; origin: string; expires: number
   session?: string; label?: string; client: string
@@ -34,6 +35,21 @@ interface Pending {
 
 class AuthError extends Error {
   constructor(readonly status: number, message: string) { super(message) }
+}
+
+function ownerID(secret: string, username: string): string {
+  return createHmac('sha256', secret).update(JSON.stringify(['owner', username])).digest('hex')
+}
+
+export function registeredPasskeyCount(file: string, username: string, origin?: string): number {
+  if (!origin || !username) return 0
+  try {
+    const rpID = parsePasskeyOrigin(origin).hostname
+    const state = JSON.parse(readFileSync(file, 'utf8')) as State
+    if (state.version !== 1 || !Array.isArray(state.keys) || !/^[\w-]{43}$/.test(state.secret)) return 0
+    const owner = ownerID(state.secret, username)
+    return state.keys.filter(k => k?.owner === owner && k.rpID === rpID && k.id && k.publicKey).length
+  } catch { return 0 }
 }
 
 function json(res: ServerResponse, status: number, data: object): void {
@@ -63,10 +79,13 @@ export class BrowserAuth {
   private readonly origin?: URL
   private readonly owner: string
   private readonly account: string
+  private readonly observed = new Map<string, number>()
+  private readonly policy: LoginPolicy
 
   constructor(private readonly file: string, private readonly username: string, private readonly password: string,
-    configuredOrigin?: string, private readonly tlsProxyAddresses: ReadonlySet<string> = new Set()) {
+    configuredOrigin?: string, private readonly tlsProxyAddresses: ReadonlySet<string> = new Set(), policy?: LoginPolicy) {
     this.auth = new Authenticator({ username, password })
+    this.policy = policy ?? { password: true, passkey: !!configuredOrigin }
     if (configuredOrigin) {
       this.origin = parsePasskeyOrigin(configuredOrigin)
     }
@@ -82,8 +101,11 @@ export class BrowserAuth {
       this.state = { version: 1, secret: token(), keys: [], sessions: {} }
       this.save(this.state)
     }
-    this.owner = this.sign(['owner', username])
+    this.owner = ownerID(this.state.secret, username)
     this.account = this.sign(['session', username, password])
+    const sessions = Object.fromEntries(Object.entries(this.state.sessions)
+      .filter(([, s]) => s?.credential ? this.policy.passkey : this.policy.password))
+    if (Object.keys(sessions).length !== Object.keys(this.state.sessions).length) this.save({ ...this.state, sessions })
   }
 
   private sign(fields: string[]): string {
@@ -102,10 +124,38 @@ export class BrowserAuth {
     }
   }
 
+  private peer(req: IncomingMessage): string {
+    return canonicalProxyIP(req.socket.remoteAddress ?? '') ?? ''
+  }
+
+  observedProxyIPs(): string[] {
+    const now = Date.now()
+    return [...this.observed].filter(([, until]) => until > now).map(([ip]) => ip)
+  }
+
+  observeProxy(req: IncomingMessage): void {
+    const peer = this.peer(req)
+    if (req.method !== 'GET' || !peer || !this.matchesExternalHost(req) ||
+      req.headers['x-forwarded-proto'] !== 'https' || this.tlsProxyAddresses.has(peer)) return
+    this.observed.delete(peer)
+    this.observed.set(peer, Date.now() + 10 * 60_000)
+    if (this.observed.size > 4) this.observed.delete(this.observed.keys().next().value!)
+  }
+
+  private matchesExternalHost(req: IncomingMessage): boolean {
+    if (!this.origin || !req.headers.host) return false
+    try { return new URL('https://' + req.headers.host).origin === this.origin.origin }
+    catch { return false }
+  }
+
+  untrustedExternal(req: IncomingMessage): boolean {
+    return this.matchesExternalHost(req) && this.requestOrigin(req) !== this.origin!.origin
+  }
+
   requestOrigin(req: IncomingMessage): string | undefined {
     const host = req.headers.host
     if (!host || !/^[a-z0-9.:[\]-]+$/i.test(host)) return
-    const addr = req.socket.remoteAddress?.replace(/^::ffff:/, '') ?? ''
+    const addr = this.peer(req)
     const forwarded = this.tlsProxyAddresses.has(addr) && req.headers['x-forwarded-proto'] === 'https'
     const secure = (req.socket as { encrypted?: boolean }).encrypted === true || forwarded
     try {
@@ -117,7 +167,15 @@ export class BrowserAuth {
   }
 
   passkeysAvailable(req: IncomingMessage): boolean {
-    return this.origin !== undefined && this.requestOrigin(req) === this.origin.origin
+    return this.policy.passkey && this.origin !== undefined && this.requestOrigin(req) === this.origin.origin
+  }
+
+  passwordAvailable(req: IncomingMessage): boolean {
+    return this.policy.password && this.auth.enabled && !this.untrustedExternal(req)
+  }
+
+  basicAvailable(req: IncomingMessage): boolean {
+    return this.passwordAvailable(req) && !this.requestOrigin(req)?.startsWith('https:')
   }
 
   sameOrigin(req: IncomingMessage, required = false): boolean {
@@ -130,7 +188,7 @@ export class BrowserAuth {
   }
 
   acceptsBasic(req: IncomingMessage): boolean {
-    if (this.passkeysAvailable(req)) return false
+    if (!this.basicAvailable(req)) return false
     const value = req.headers.authorization
     if (!value || value.length > 4096) return false
     try {
@@ -162,13 +220,14 @@ export class BrowserAuth {
   hasSession(req: IncomingMessage): boolean {
     const id = this.sessionID(req)
     const s = id && this.state.sessions[id]
-    return !!s && s.expires > Date.now() && s.account === this.account &&
-      s.origin === this.requestOrigin(req) && (!s.credential || this.state.keys.some(k => k.id === s.credential && k.owner === this.owner))
+    return !!s && s.expires > Date.now() && s.account === this.account && s.origin === this.requestOrigin(req) &&
+      (s.credential ? this.passkeysAvailable(req) && this.state.keys.some(k => k.id === s.credential && k.owner === this.owner)
+        : this.passwordAvailable(req))
   }
 
   issue(req: IncomingMessage, credential?: string): string {
     const origin = this.requestOrigin(req)
-    if (!origin || !this.auth.enabled) throw new AuthError(400, '登录入口无效。')
+    if (!origin || (credential ? !this.passkeysAvailable(req) : !this.passwordAvailable(req))) throw new AuthError(400, '登录入口无效。')
     const value = token()
     const now = Date.now()
     const sessions = Object.fromEntries(Object.entries(this.state.sessions)
@@ -228,6 +287,7 @@ export class BrowserAuth {
     try {
       if (!this.requestOrigin(req)) throw new AuthError(400, '登录入口无效。')
       const passkey = this.passkeysAvailable(req)
+      const password = this.passwordAvailable(req)
       const session = this.hasSession(req)
       const method = req.method
       if ((method === 'GET' || method === 'HEAD') && (path === LOGIN || path === LOGIN + '/keys' || path === LOGIN + '/client.js')) {
@@ -247,13 +307,15 @@ export class BrowserAuth {
         })
         res.end(method === 'HEAD' ? undefined : js
           ? (typeof DSH_PROXY_AUTH_CLIENT_JS === 'string' ? DSH_PROXY_AUTH_CLIENT_JS : '')
-          : authPage(path.endsWith('/keys'), passkey, resumeKeys))
+          : authPage(path.endsWith('/keys'), passkey, resumeKeys, password, this.origin?.origin,
+            this.untrustedExternal(req)))
         return
       }
       if (method !== 'POST') throw new AuthError(404, '页面不存在。')
       if (!this.sameOrigin(req, true)) throw new AuthError(403, '请求来源不匹配。')
       const body = await readJSON(req)
       if (path === LOGIN + '/password') {
+        if (!password) throw new AuthError(403, '此入口未启用密码登录。')
         this.limited(req, 'password', 12)
         if (typeof body.username !== 'string') throw new AuthError(401, '账号或密码不正确。')
         this.checkPassword(body.password, body.username)
@@ -330,6 +392,9 @@ export class BrowserAuth {
         this.checkPassword(body.password)
         const key = this.keys().find(k => k.id === body.id)
         if (!key) throw new AuthError(404, '没有找到这个 Passkey。')
+        if (!this.policy.password && key.rpID === rpID && keys.length <= 1) {
+          throw new AuthError(409, '当前仅允许 Passkey 登录，不能移除最后一个可用的 Passkey。')
+        }
         this.save({ ...this.state, keys: this.state.keys.filter(k => k !== key),
           sessions: Object.fromEntries(Object.entries(this.state.sessions).filter(([, s]) => s.credential !== key.id)) })
         json(res, 200, { ok: true, reauthenticate: !this.hasSession(req) }); return

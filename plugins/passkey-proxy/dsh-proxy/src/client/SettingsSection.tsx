@@ -104,6 +104,8 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
   const [skipLaunchToken, setSkipLaunchToken] = useState(false)
   const [passkeyOrigin, setPasskeyOrigin] = useState('')
   const [tlsProxyIPs, setTlsProxyIPs] = useState('')
+  const [passwordLoginEnabled, setPasswordLoginEnabled] = useState(true)
+  const [passkeyLoginEnabled, setPasskeyLoginEnabled] = useState(false)
   // Ref (not state): the form is seeded from the first successful status
   // load only; a state dependency here would re-run the load effect.
   const formSeededRef = useRef(false)
@@ -117,10 +119,12 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
   const applyStatusToForm = useCallback((next: LanProxyStatus): void => {
     setListenPort(String(next.listenPort))
     setUsername(next.username)
-    setPassword(next.password ?? '')
+    setPassword('')
     setSkipLaunchToken(next.skipLaunchToken)
     setPasskeyOrigin(next.passkeyOrigin ?? '')
     setTlsProxyIPs(next.tlsProxyIPs ?? '')
+    setPasswordLoginEnabled(next.passwordLoginEnabled ?? true)
+    setPasskeyLoginEnabled(next.passkeyLoginEnabled ?? Boolean(next.passkeyOrigin))
   }, [])
 
   /** Fetch the current proxy status; every outcome is rendered, never thrown. */
@@ -217,8 +221,14 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
       const payload: LanProxyUpdatePayload = {
         listenPort: port,
         username: username.trim(),
-        password,
         skipLaunchToken,
+      }
+      if (password) payload.password = password
+      if (passwordLoginEnabled !== (status?.passwordLoginEnabled ?? true)) payload.passwordLoginEnabled = passwordLoginEnabled
+      if (passkeyLoginEnabled !== (status?.passkeyLoginEnabled ?? Boolean(status?.passkeyOrigin))) payload.passkeyLoginEnabled = passkeyLoginEnabled
+      if (!passwordLoginEnabled && !passkeyLoginEnabled) {
+        setError(t('form.atLeastOne'))
+        return
       }
       if (!status?.passkeySettingsManaged && (
         passkeyOrigin.trim() !== (status?.passkeyOrigin ?? '') || tlsProxyIPs.trim() !== (status?.tlsProxyIPs ?? '')
@@ -322,10 +332,6 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
         {statusCard}
         {controlMessage !== null ? <p className="dsh_lanproxy_message">{controlMessage}</p> : null}
         {controlError !== null ? <p className="dsh_lanproxy_error">{controlError}</p> : null}
-        {status?.authEnabled && status.proxyListening && typeof location !== 'undefined' &&
-          location.origin === status.passkeyOrigin ? (
-            <p><a href="/_dsh_login/keys?from=settings" referrerPolicy="same-origin">{t('status.managePasskeys')}</a></p>
-          ) : null}
       </div>
 
       <form className="dsh_lanproxy_card dsh_lanproxy_form" onSubmit={(event) => { void submit(event) }}>
@@ -333,6 +339,8 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
           <div className="dsh_lanproxy_cardTitle">{t('form.title')}</div>
         </div>
 
+        <fieldset className="dsh_lanproxy_group">
+          <legend>{t('form.accessSection')}</legend>
         <div className="dsh_lanproxy_field">
           <label className="dsh_lanproxy_fieldLabel" htmlFor="dsh-lanproxy-listen-port">{t('form.listenPort')}</label>
           <input
@@ -347,7 +355,49 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
             onChange={(event) => { setListenPort(event.target.value) }}
           />
         </div>
+        <p className="dsh_lanproxy_fieldHint">{t('form.lanHint')}</p>
+        <div className="dsh_lanproxy_field">
+          <label className="dsh_lanproxy_fieldLabel" htmlFor="dsh-passkey-origin">{t('form.passkeyOrigin')}</label>
+          <input id="dsh-passkey-origin" className="dsh_lanproxy_input" type="url" inputMode="url"
+            autoCapitalize="none" spellCheck={false} placeholder="https://dsh.example.com"
+            readOnly={status?.passkeySettingsManaged} value={passkeyOrigin}
+            onChange={(event) => setPasskeyOrigin(event.target.value)} />
+        </div>
+        <p className="dsh_lanproxy_fieldHint">{t('form.passkeyHint')}</p>
+        <details className="dsh_lanproxy_trust" open={status?.passkeySettingsManaged || Boolean(tlsProxyIPs) || undefined}>
+          <summary>{t('form.tlsProxyIPs')}</summary>
+          <div className="dsh_lanproxy_field">
+            <input id="dsh-passkey-proxies" className="dsh_lanproxy_input" aria-label={t('form.tlsProxyIPs')}
+              autoCapitalize="none" spellCheck={false} placeholder="192.0.2.10"
+              readOnly={status?.passkeySettingsManaged} value={tlsProxyIPs}
+              onChange={(event) => setTlsProxyIPs(event.target.value)} />
+          </div>
+          <p className="dsh_lanproxy_fieldHint">{t('form.trustHint')}</p>
+          {status?.passkeySettingsManaged ? <p className="dsh_lanproxy_fieldHint">{t('form.passkeyManaged')}</p>
+            : passkeyOrigin ? <>
+              <p className="dsh_lanproxy_fieldHint">{t('form.observeHint')}</p>
+              <button type="button" className="dsh_lanproxy_button" onClick={() => void loadStatus()}>{t('form.checkPeer')}</button>
+              {!!status?.observedProxyIPs?.length && <p className="dsh_lanproxy_fieldHint">
+                {t('form.observedPeers')}: <code>{status.observedProxyIPs.join(', ')}</code>
+              </p>}
+            </> : null}
+        </details>
+        </fieldset>
 
+        <fieldset className="dsh_lanproxy_group">
+          <legend>{t('form.loginSection')}</legend>
+          <p className="dsh_lanproxy_fieldHint">{t('form.atLeastOne')}</p>
+          <label className="dsh_lanproxy_checkRow">
+            <input id="dsh-password-enabled" className="dsh_lanproxy_checkbox" type="checkbox"
+              checked={passwordLoginEnabled} onChange={event => setPasswordLoginEnabled(event.target.checked)} />
+            {t('form.passwordLogin')}
+          </label>
+          <label className="dsh_lanproxy_checkRow">
+            <input id="dsh-passkey-enabled" className="dsh_lanproxy_checkbox" type="checkbox"
+              checked={passkeyLoginEnabled} onChange={event => setPasskeyLoginEnabled(event.target.checked)} />
+            {t('form.passkeyTitle')}
+          </label>
+          <p className="dsh_lanproxy_fieldHint">{t('form.policyHint')}</p>
         <div className="dsh_lanproxy_field">
           <label className="dsh_lanproxy_fieldLabel" htmlFor="dsh-lanproxy-username">{t('form.username')}</label>
           <input
@@ -369,7 +419,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
               className="dsh_lanproxy_input dsh_lanproxy_passwordInput"
               type={showPassword ? 'text' : 'password'}
               autoComplete="new-password"
-              placeholder={t('form.passwordHint')}
+              placeholder={status?.passwordConfigured ? t('form.passwordHint') : t('form.passwordNew')}
               value={password}
               onChange={(event) => { setPassword(event.target.value) }}
             />
@@ -384,7 +434,24 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
             </button>
           </div>
         </div>
+        </fieldset>
 
+        <fieldset className="dsh_lanproxy_group">
+          <legend>{t('status.managePasskeys')}</legend>
+          <p className="dsh_lanproxy_fieldHint">{t('form.manageHint')}</p>
+          {status?.passkeyLoginEnabled && status.proxyListening && typeof location !== 'undefined' &&
+            (location.origin === status.passkeyOrigin ? (
+              <a href="/_dsh_login/keys?from=settings" referrerPolicy="same-origin">{t('status.managePasskeys')}</a>
+            ) : status.passkeyOrigin?.startsWith('https://') ? (
+              <a href={status.passkeyOrigin + '/_dsh_login/keys'}>{t('form.openHTTPS')}</a>
+            ) : null)}
+          {status?.registeredPasskeys !== undefined && <p className="dsh_lanproxy_fieldHint">
+            {t('form.registeredKeys')}: {status.registeredPasskeys} / 5
+          </p>}
+        </fieldset>
+
+        <details className="dsh_lanproxy_trust">
+        <summary>{t('form.advanced')}</summary>
         <div className="dsh_lanproxy_field">
           <div className="dsh_lanproxy_checkRow">
             <input
@@ -398,24 +465,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
           </div>
           <p className="dsh_lanproxy_fieldHint">{t('form.skipTokenHint')}</p>
         </div>
-
-        <div className="dsh_lanproxy_cardTitle">{t('form.passkeyTitle')}</div>
-        <p className="dsh_lanproxy_fieldHint">{t('form.passkeyHint')}</p>
-        {status?.passkeySettingsManaged ? <p className="dsh_lanproxy_fieldHint">{t('form.passkeyManaged')}</p> : null}
-        <div className="dsh_lanproxy_field">
-          <label className="dsh_lanproxy_fieldLabel" htmlFor="dsh-passkey-origin">{t('form.passkeyOrigin')}</label>
-          <input id="dsh-passkey-origin" className="dsh_lanproxy_input" type="url" inputMode="url"
-            autoCapitalize="none" spellCheck={false} placeholder="https://dsh.example.com"
-            readOnly={status?.passkeySettingsManaged} value={passkeyOrigin}
-            onChange={(event) => setPasskeyOrigin(event.target.value)} />
-        </div>
-        <div className="dsh_lanproxy_field">
-          <label className="dsh_lanproxy_fieldLabel" htmlFor="dsh-passkey-proxies">{t('form.tlsProxyIPs')}</label>
-          <input id="dsh-passkey-proxies" className="dsh_lanproxy_input"
-            autoCapitalize="none" spellCheck={false} placeholder="192.0.2.10"
-            readOnly={status?.passkeySettingsManaged} value={tlsProxyIPs}
-            onChange={(event) => setTlsProxyIPs(event.target.value)} />
-        </div>
+        </details>
 
         <div className="dsh_lanproxy_actions">
           <button type="submit" className="dsh_lanproxy_button" disabled={saving}>

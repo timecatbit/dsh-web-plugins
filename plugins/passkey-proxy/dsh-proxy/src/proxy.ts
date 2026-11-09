@@ -45,7 +45,7 @@ import { injectPolyfill, RANDOM_UUID_POLYFILL } from './polyfill.ts'
 import { isJavaScriptContentType, patchClientScript } from './clientpatch.ts'
 import { attachBodyTransform } from './compression.ts'
 import { LaunchTokenAutoLogin } from './tokenretry.ts'
-import { BrowserAuth, LOGIN } from './browser-auth.ts'
+import { BrowserAuth, LOGIN, type LoginPolicy } from './browser-auth.ts'
 
 export interface LanProxyOptions {
   /** Interface the proxy binds (0.0.0.0 for LAN access). */
@@ -70,6 +70,7 @@ export interface LanProxyOptions {
   authFile?: string
   passkeyOrigin?: string
   trustedTLSProxyIPs?: string[]
+  loginPolicy?: LoginPolicy
   /** Optional sink for human-readable lifecycle messages. */
   log?: (level: 'info' | 'warn' | 'error', message: string) => void
 }
@@ -81,6 +82,7 @@ export interface LanProxyHandle {
   close: () => Promise<void>
   /** Human-readable access URLs (local + LAN) for the configured port. */
   describeUrls: (boundPort: number) => { local: string; lan: string[] }
+  observedProxyIPs: () => string[]
 }
 
 /** Basic Auth realm presented to unauthenticated clients. */
@@ -119,17 +121,21 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
   const targetOrigin = `http://${upstreamHost}:${upstreamPort}`
   const auth = new Authenticator({ username, password })
   let browser: BrowserAuth | undefined
-  if (options.authFile && auth.enabled) {
+  if (options.authFile && (auth.enabled || options.loginPolicy)) {
     try {
       const ips = options.trustedTLSProxyIPs ?? []
       if (ips.some(ip => !isIP(ip))) throw new Error('trusted TLS proxies must be explicit IP addresses')
-      browser = new BrowserAuth(options.authFile, username, password, options.passkeyOrigin, new Set(ips))
+      browser = new BrowserAuth(options.authFile, username, password, options.passkeyOrigin, new Set(ips), options.loginPolicy)
     } catch {
-      // Retain the existing password protection if the new auth store or TLS
-      // settings are invalid. Never expose the upstream unauthenticated.
-      log('error', 'dsh-proxy: persistent authentication could not initialize; retaining Basic Auth')
+      log('error', 'dsh-proxy: persistent authentication could not initialize')
     }
   }
+  const fallbackBasic = !options.loginPolicy || (options.loginPolicy.password && auth.enabled)
+  // Managed installations fail closed when their authentication store or
+  // policy cannot be loaded. Preserve the legacy low-level helper for tests
+  // and callers that deliberately use it without browser authentication.
+  const fallbackAllowed = (req: http.IncomingMessage): boolean =>
+    (!options.loginPolicy || !options.authFile) && fallbackBasic && auth.isAuthenticated(req.headers.authorization)
   const sessionCookies = new WeakMap<http.IncomingMessage, string>()
 
   const proxy = httpProxy.createProxyServer({
@@ -239,6 +245,7 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
 
   const server = http.createServer((req, res) => {
     const pathname = new URL(req.url ?? '/', 'http://proxy.local').pathname
+    if (pathname === '/' || pathname === LOGIN) browser?.observeProxy(req)
     if (browser && (pathname === LOGIN || pathname.startsWith(LOGIN + '/'))) {
       void browser.route(req, res, pathname)
       return
@@ -256,19 +263,19 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
       return
     }
     const session = browser?.hasSession(req) === true
-    const allowed = session || (browser ? browser.acceptsBasic(req) : auth.isAuthenticated(req.headers.authorization))
+    const allowed = session || (browser ? browser.acceptsBasic(req) : fallbackAllowed(req))
     const navigation = req.method === 'GET' && pathname === '/' &&
       (!req.headers['sec-fetch-mode'] || req.headers['sec-fetch-mode'] === 'navigate') &&
       (!req.headers['sec-fetch-dest'] || req.headers['sec-fetch-dest'] === 'document')
     if (!allowed) {
       const browserNavigation = req.headers['sec-fetch-mode'] === 'navigate' ||
         req.headers.accept?.includes('text/html') === true
-      if (browser && navigation && (browserNavigation || browser.passkeysAvailable(req))) {
+      if (browser && navigation && (browserNavigation || !browser.basicAvailable(req))) {
         res.writeHead(303, { location: LOGIN, 'cache-control': 'no-store' })
         res.end()
         return
       }
-      challenge(res, !browser || (navigation && !browserNavigation && !browser.passkeysAvailable(req)))
+      challenge(res, browser ? navigation && !browserNavigation && browser.basicAvailable(req) : !options.loginPolicy)
       return
     }
     if (browser) {
@@ -301,8 +308,8 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
       socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n')
       return
     }
-    if (!(browser ? browser.hasSession(req) || browser.acceptsBasic(req) : auth.isAuthenticated(req.headers.authorization))) {
-      socket.end(`HTTP/1.1 401 Unauthorized\r\n${browser ? '' : `www-authenticate: Basic realm="${AUTH_REALM}"\r\n`}Connection: close\r\n\r\n`)
+    if (!(browser ? browser.hasSession(req) || browser.acceptsBasic(req) : fallbackAllowed(req))) {
+      socket.end(`HTTP/1.1 401 Unauthorized\r\n${browser || options.loginPolicy ? '' : `www-authenticate: Basic realm="${AUTH_REALM}"\r\n`}Connection: close\r\n\r\n`)
       return
     }
     browser?.stripCookie(req)
@@ -344,6 +351,7 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
   return {
     ready,
     close,
+    observedProxyIPs: () => browser?.observedProxyIPs() ?? [],
     describeUrls: (boundPort) => ({
       local: `http://127.0.0.1:${boundPort}`,
       lan: lanAddresses(boundPort),

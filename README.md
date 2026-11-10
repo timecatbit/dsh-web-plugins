@@ -4,36 +4,45 @@
 
 给 DeepSeek Harness 网页版的两个插件，**可单独安装，也可一起安装**。手机布局只改网页界面；Passkey 登录由局域网代理处理。两者没有相互依赖，因此保留独立安装和回退。
 
+**推荐用法：在运行 `dsh web` 的机器上装插件，再用 Safari 把网页加到主屏幕或程序坞。** 本仓库只支持 `dsh web`；不提供 Electron 桌面 App 的插件安装渠道。Electron 自己管理 `desktop` profile，CLI 会拒绝 `--profile desktop`。
+
 | 需求 | 安装包 | 作用 |
 | --- | --- | --- |
-| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.13.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
+| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.14.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
 | 用密码或 Passkey 访问 DSH | `smanx-dsh-proxy-0.1.7-passkeys.3.tgz` | 局域网代理、持久网页登录、HTTPS Passkey 和 WebSocket 转发 |
 | 两项都要 | 两个安装包 | 装到同一个正在使用的 profile，无安装顺序要求 |
 
-本版支持 **DSH 0.2.1-rc.5 / 0.2.2-rc.1**。其他版本请先在测试实例验证。Passkey 代理的构建目标是 Node.js 22 或更新版本。
+已验证的 `dsh web` 版本：**0.2.1-rc.5 / 0.2.2-rc.1**。手机布局依赖这些版本的客户端接口，新 RC 要验证后才加入支持范围。Node.js 版本以你安装的 DSH CLI 要求为准。
 
 ## 安装
 
-先确认**提供当前页面的 DSH 实例**使用哪个 profile。服务器若以 `web` profile 运行，就装到 `web`；桌面 GUI 若以 `desktop` profile 运行，就装到 `desktop`。用手机或浏览器打开页面，不会改变服务器的 profile。安装时用与该实例相同的系统账号和 `DSH_HOME`（默认 `~/.dsh`）。
+在运行 `dsh web` 的机器上安装。用与网页进程相同的系统账号和 `DSH_HOME`（默认 `~/.dsh`）；如果用了自定义网页 profile，将命令中的 `web` 换成实际名称。
 
 从 [Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest) 下载需要的 `.tgz`，进入下载目录，然后按需执行：
 
 ```bash
-# 改成实际使用的 profile：例如 web 或 desktop
-dsh_profile=web
-
 # 手机布局
-dsh plugin --profile "$dsh_profile" add "$PWD/dsh-ui-mobile-0.1.8-mobile.13.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.14.tgz"
 
 # Passkey 代理
-dsh plugin --profile "$dsh_profile" add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
 ```
 
-重启提供该页面的 DSH 实例；如果用的是桌面 GUI，完全退出后重开。文件安装沿用上游插件 ID，已安装同名上游插件时会替换原版本。**手机布局不需要 Passkey、局域网代理插件或域名。** 单独装手机布局后，继续使用已有的 DSH 网址和原有登录方式；若原 DSH 已允许局域网访问，可用它的 IP 和端口。若想给局域网 IP 加上独立的账号密码登录，再安装代理插件。
+安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、局域网代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。
+
+## 用 Safari 保存为网页 App
+
+1. 用 Safari 打开手机或 Mac 能访问的 **DSH 网页地址**。已配置 Passkey 代理的，打开平时登录用的 HTTPS 地址。保存日常访问地址，避免把带 `?token=` 的启动链接加到桌面。
+2. **iPhone / iPad**：点「分享」→「添加到主屏幕」，如果看到「作为网页 App 打开」，将它开启，再点「添加」。以后从主屏幕图标打开。[Apple 操作说明](https://support.apple.com/guide/iphone/bookmark-a-website-iph42ab2f3a7/ios)
+3. **Mac（macOS Sonoma 14 或更新版本）**：Safari 菜单栏选「文件 → 添加到程序坞」，或点分享按钮后选「添加到程序坞」。[Apple 操作说明](https://support.apple.com/104996)
+
+图标打开的仍是同一个 `dsh web` 网站。Safari 不会安装服务端插件，也不会修改 Electron 的 profile。布局主要在宽度小于 768 CSS 像素时生效，也适配部分触屏横屏窗口；普通桌面宽窗口看不到手机侧栏等变化。
 
 ## 配置 Passkey 代理
 
 代理会读取 DSH 数据根目录里的 `dsh-proxy.json`（默认 `~/.dsh/dsh-proxy.json`），不是 `profiles/<名称>/` 下的文件。共用同一数据根目录的不同 profile 会读到同一份设置和凭据记录。旧配置会继续生效；默认端口是 `3081`，如另一实例已在监听同一地址和端口，第二个代理会启动失败。只需要一个入口时，只在提供该入口的实例安装代理。
+
+本版代理默认监听 `0.0.0.0:3081`。只在本机试用时，可在加载插件前把 `listenHost` 显式设为 `127.0.0.1`；如需保留 DSH 的独立启动令牌校验，在「高级」关闭代理代办令牌校验。代理自己的认证始终有效。不要把未加 TLS 的入口直接暴露到公网。
 
 1. 第一次在**服务器原来的 DSH 网页**打开「设置 → 局域网代理」，设置代理账号和密码。未配置时代理拒绝未登录请求。密码登录默认开启，Passkey 可选。
 2. **只用局域网**：打开 `http://服务器IP:3081`（或自己的代理端口）。浏览器把账号密码交给代理，代理验证后签发登录 Cookie，再把请求转发给 DSH。HTTP 不加密，只在可信局域网使用。默认情况下，代理认证成功后会自动完成 DSH 自己的启动令牌校验；如旧配置关闭了这项功能，可在「高级」开启。

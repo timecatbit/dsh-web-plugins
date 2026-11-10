@@ -1,4 +1,4 @@
-- The compact phone sidebar pushes the existing page to the right at its original width. The exposed page remains visible; tapping it closes the sidebar.
-- Removes the mobile plugin's duplicate back-to-bottom control and keeps the native one.
-- Uses a consistent system font and type scale throughout mobile settings.
-- Keeps the previous header alignment, right sidebar controls, and standalone installation. The Passkey Proxy package is unchanged.
+Install the plugins on the machine running `dsh web`, then use Safari to save the website to your iPhone/iPad Home Screen or Mac Dock. The Electron desktop app owns its own profile and is not supported by these packages. See the [installation guide](https://github.com/timecatbit/dsh-web-plugins#安装).
+
+- Mobile Layout `0.1.8-mobile.14` removes the obsolete `ui-mobile` patch entry. The plugin adds only its own layout bundle and leaves the host's web app support alone.
+- The tested DSH web versions remain `0.2.1-rc.5` and `0.2.2-rc.1`. The Passkey Proxy archive is unchanged.

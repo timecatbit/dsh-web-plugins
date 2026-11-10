@@ -1,6 +1,6 @@
 # DSH 局域网代理与 Passkey
 
-基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7。与手机布局插件独立，可单独安装。用 `dsh plugin --profile <实际使用的profile> add /绝对路径/安装包.tgz` 安装并重启对应的 DSH 实例。将命令里的 profile 替换成实例实际使用的名称，例如 `web` 或 `desktop`。
+基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7。与手机布局插件独立，可单独安装。用 `dsh plugin --profile web add /绝对路径/安装包.tgz` 安装并重启 `dsh web` 进程。若网页进程使用自定义 profile，请将 `web` 换成实际名称。Electron 的 `desktop` profile 不支持通过 CLI 安装。
 
 - **访问入口**：第一次从服务器原来的 DSH 页面进入「设置 → 局域网代理」设置账号密码。代理默认端口为 `3081`。未配置凭据时拒绝未登录请求。局域网 HTTP 可在密码登录开启时直接使用，但不加密。
 - **对外 HTTPS**：反代应保留 `Host`，设置 `X-Forwarded-Proto: https`，并支持 WebSocket。同机回环可留空；跨机器或容器来源需要核对实际来源 IP。先保存域名、打开域名，再用「检查最近的反代来源」定位候选地址。插件不会自动信任观察到的来源。

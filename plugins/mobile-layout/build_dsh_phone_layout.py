@@ -10,7 +10,7 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.8-mobile.13"
+VERSION = "0.1.8-mobile.14"
 HOST_RANGE = "0.2.1-rc.5 || 0.2.2-rc.1"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent
@@ -74,6 +74,13 @@ def main(source, target):
         if name.startswith("@deepseek-ai/dsh-") and version == "0.2.1-rc.5":
             pkg["peerDependencies"][name] = HOST_RANGE
     files["package/package.json"] = (json.dumps(pkg, indent=2) + "\n").encode()
+    # This derivative only adds a layout bundle; it does not replace host PWA support.
+    patch_name = "package/cordis.patch.yml"
+    patch = files[patch_name].decode()
+    files[patch_name] = replace(patch,
+        "# Standalone bundle layer: this plugin owns the mobile PWA surface, so it\n"
+        "# replaces the Web bundle's built-in ui-mobile entry before mounting itself.\n"
+        "- id: ui-mobile\n  disabled: true\n\n", "").encode()
     del files["package/SUBUNTU-PATCH.txt"]
     files["package/README.md"] = (ROOT / "README.md").read_bytes()
     files["package/README.en.md"] = (ROOT / "README.en.md").read_bytes()

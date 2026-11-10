@@ -2,7 +2,7 @@
 
 [English](README.en.md) · [MIT 许可证](LICENSE) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
 
-给 DeepSeek Harness 网页版的两个插件，**可单独安装，也可一起安装**。手机布局只改网页界面；Passkey 登录由局域网代理处理。两者没有相互依赖，因此保留独立安装和回退。
+DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单独安装、更新和回退：手机布局只改网页界面，局域网代理负责提供访问入口和登录。无需把本仓库作为第三个插件安装。
 
 本仓库提供独立 `dsh web` 和 [DeepSeek Harness 官方桌面 App](https://www.deepseek.com/en/harness/) 的安装说明。桌面版用它自己的插件管理器安装；Safari 则用于把可访问的 DSH 网页加到主屏幕或程序坞。
 
@@ -10,6 +10,12 @@
 | --- | --- | --- |
 | [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` | 手机布局、侧栏和聊天输入 |
 | [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` | 局域网代理、密码和 HTTPS Passkey 登录 |
+
+## 三个仓库怎么用
+
+- **本仓库**维护 [统一插件索引](plugin-index.json)、[手机布局补丁](plugins/mobile-layout)、[代理源码](plugins/passkey-proxy/dsh-proxy)、[构建说明](BUILDING.md)和[合集发行记录](https://github.com/timecatbit/dsh-web-plugins/releases)。DSH 的「发现」从这里读取两个插件的版本；已添加过的索引地址可以继续用。
+- **两个独立仓库**各自发布可直接安装的构建包、单插件使用说明和问题反馈入口。只想下载或使用其中一个插件，去对应仓库即可；不需要克隆本仓库。
+- **怎么选**：网页已经能访问，只想优化手机界面，装 Pocket UI；需要局域网访问、密码或 Passkey，装 Passkey Proxy；两个都需要就分别安装。
 
 ## 测试范围
 
@@ -27,14 +33,14 @@
 
 ### 在 DSH 里安装和更新
 
-1. 从 DSH 左侧栏打开「插件」，找到「实验性插件」一栏。如果列表里没有「自定义插件索引」，点该栏右侧的「更多」。在 DSH `0.2.1-rc.5` 里，开关叫「自定义插件市场」；在 `0.2.2-rc.1` 里叫「自定义插件索引」。 把它打开。
-2. 进入「发现 → 添加索引源」，添加以下地址。只需添加一次：
+1. 从 **DSH 左侧栏**打开「插件」。找到「实验性插件」一栏，列表里没有目标开关就点该栏右侧「更多」。DSH `0.2.1-rc.5` 的开关叫 **「自定义插件市场」**，`0.2.2-rc.1` 叫 **「自定义插件索引」**。打开开关。
+2. 进入「发现 → 添加索引源」，粘贴下面的地址。一个 profile 只需添加一次，两个插件共用：
 
    ```text
    https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
    ```
 
-3. 点开 **DSH Pocket UI** 或 **DSH Passkey Proxy** 的卡片标题，在「版本」里选择新版并安装。原来通过本仓库的 `.tgz` 安装过，也可以按此操作，包名和设置路径保持一致。若 DSH 提示重启，重启当前实例。 看到「有更新」时，仍然点卡片标题进入「版本」；更新由你确认。
+3. 点 **DSH Pocket UI** 或 **DSH Passkey Proxy** 的卡片标题，进入「版本」选新版并安装。看到「有更新」时也走这条路径，由你确认更新。之前通过 `.tgz` 安装过，可直接覆盖，不用先卸载。按 DSH 提示启用插件或重启当前实例。
 
 ### 手动安装：官方桌面 App
 
@@ -94,4 +100,6 @@ HTTPS 域名和 Passkey 开关相互独立：可以保留 HTTPS、关闭 Passkey
 - 代理设置和凭据记录保存在各自部署的 DSH 数据目录。备份时妥善保管；不要把数据文件或服务配置提交到仓库。
 - [代理源码](plugins/passkey-proxy) · [手机布局构建补丁](plugins/mobile-layout) · [构建说明](BUILDING.md)
 
-代理基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7；手机布局基于 [jasondu/dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8。两个衍生包均保留上游 MIT 许可证；代理随包附带第三方依赖许可。
+## 许可证与致谢
+
+本仓库和两个独立发布仓库均采用 [MIT 许可证](LICENSE)。代理基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7；手机布局基于 [jasondu/dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8。两个安装包保留各自的上游版权声明；代理另附[第三方依赖许可证](plugins/passkey-proxy/THIRD-PARTY-NOTICES.md)。

@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [MIT license](LICENSE) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
 
-Two optional extensions for the DeepSeek Harness web app. Mobile Layout does not require Passkeys, a proxy, or a domain. Open the original DSH address as usual, including an IP and port if DSH is already reachable on your LAN.
+The **source and update index repository** for two optional DeepSeek Harness (DSH) plugins. Install, update, and roll them back separately. There is no third plugin to install from this repository.
 
 This repository provides installation instructions for standalone `dsh web` and the [official DeepSeek Harness desktop app](https://www.deepseek.com/en/harness/). Use the desktop app's own plugin manager to install the packages. In Safari, you can save a reachable DSH website to your Home Screen or Dock.
 
@@ -10,6 +10,12 @@ This repository provides installation instructions for standalone `dsh web` and 
 | --- | --- |
 | [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` |
 | [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` |
+
+## What each repository is for
+
+- **This repository** maintains the [shared Discover index](plugin-index.json), [mobile layout patches](plugins/mobile-layout), [proxy source](plugins/passkey-proxy/dsh-proxy), [build instructions](BUILDING.md), and [combined release history](https://github.com/timecatbit/dsh-web-plugins/releases). Keep using the same index URL if you already added it.
+- **The two plugin repositories** publish prebuilt bundles, detailed guides, and issue trackers for each plugin. You do not need to clone this repository to install either one.
+- **Which should I install?** Use Pocket UI if the DSH website is already reachable and you want a better phone layout. Use Passkey Proxy if you need a LAN entry, password sign-in, or Passkeys. Install both if you need both.
 
 ## Tested environments
 
@@ -78,4 +84,6 @@ For HTTPS, preserve `Host`, set `X-Forwarded-Proto: https`, and forward WebSocke
 
 Password and Passkey sign-in have separate switches, and at least one must stay on. Enable Passkeys, then enroll and test one at the HTTPS site before turning off passwords. With password sign-in off, LAN HTTP sign-in also stops; the password can still authorize credential management. In Passkey-only mode the final usable credential cannot be removed. HTTPS remains usable with password-only sign-in. Environment variables `DSH_PROXY_PASSKEY_ORIGIN` and `DSH_PROXY_TLS_PROXIES` override the two address fields, not the sign-in switches.
 
-Derived from [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) and [jasondu/dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile). Upstream MIT licenses are included in both packages. See [BUILDING.md](BUILDING.md) for reproducible build inputs and verification steps.
+## License and credits
+
+All three repositories use the [MIT license](LICENSE). Passkey Proxy is derived from [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7, and Pocket UI from [jasondu/dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8. The packages retain their upstream copyright notices. The proxy also ships [third-party dependency notices](plugins/passkey-proxy/THIRD-PARTY-NOTICES.md).

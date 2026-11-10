@@ -1,2 +1,2 @@
-- Restores the compact mobile sidebar to the width of its content. A separate tappable backdrop covers underlying controls, with no extra strip attached to the drawer.
-- Preserves the previous header alignment and standalone installation. The Passkey Proxy package is unchanged.
+- The compact phone sidebar pushes the existing page to the right at its original width. The exposed page remains visible; tapping it closes the sidebar.
+- Keeps the previous header alignment, right sidebar controls, and standalone installation. The Passkey Proxy package is unchanged.

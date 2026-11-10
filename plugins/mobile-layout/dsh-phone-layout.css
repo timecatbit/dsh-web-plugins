@@ -38,6 +38,21 @@ html[data-dsh-phone] [data-mobile-role=center] {
   min-width: 0;
   min-height: 0;
   padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+  transition: translate 180ms ease, border-radius 180ms ease;
+}
+
+/* Keep the page at its original width and slide it beside the drawer. */
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-mobile-role=center] {
+  translate: var(--dsh-phone-sidebar-width) 0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  overflow: clip;
+  background: var(--dsw-alias-bg-layer-1, Canvas);
+  box-shadow: -1px 0 0 color-mix(in srgb, currentColor 12%, transparent);
+  cursor: pointer;
+}
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-mobile-role=center] > * {
+  pointer-events: none;
 }
 
 /* On newer hosts the native center defaults to grid column 2. The phone
@@ -136,18 +151,6 @@ html[data-dsh-phone] [data-mobile-role=sidebar] {
   box-shadow: none;
   overflow-x: clip;
 }
-html[data-dsh-phone] [data-dsh-phone-sidebar-dismiss] {
-  position: absolute;
-  inset: 0;
-  z-index: 41;
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: color-mix(in srgb, var(--dsw-alias-bg-layer-1, Canvas) 55%, #000);
-  touch-action: manipulation;
-}
 html[data-dsh-phone] [data-dsh-phone-close] {
   position: absolute;
   inset-block-start: max(6px, env(safe-area-inset-top, 0px));
@@ -164,7 +167,6 @@ html[data-dsh-phone] [data-dsh-phone-close] {
   touch-action: manipulation;
 }
 
-html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) [data-mobile-role=center] [data-conversation-header-leading],
 html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-shell-leading],
 html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-dsh-phone-nav] {
   visibility: hidden;
@@ -387,5 +389,5 @@ html[data-dsh-phone][data-dsh-phone-keyboard] .wSkVaW_composerHero > :first-chil
   html[data-dsh-phone] .wSkVaW_composerHero > :first-child { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[data-dsh-phone] :is([data-mobile-role=sidebar], [data-mobile-role=details]) { transition: none; }
+  html[data-dsh-phone] :is([data-mobile-role=sidebar], [data-mobile-role=center], [data-mobile-role=details]) { transition: none; }
 }

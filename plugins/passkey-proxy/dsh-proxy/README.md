@@ -2,7 +2,7 @@
 
 [简体中文](README.zh.md). A derivative of [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7. It does not require the mobile layout plugin.
 
-Install the Release package with `dsh plugin --profile web add /absolute/path/package.tgz` and restart the DSH web process. Open the original DSH page on the server to configure the proxy username and password before use. The proxy port defaults to 3081. Password sign-in works on a trusted LAN over HTTP; HTTP does not encrypt credentials.
+Install the Release package with `dsh plugin --profile <active-profile> add /absolute/path/package.tgz`, replacing `<active-profile>` with the profile serving your page (for example, `web` or `desktop`). Restart that DSH instance. Open the original DSH page on the server to configure the proxy username and password before use. The proxy port defaults to 3081. Password sign-in works on a trusted LAN over HTTP; HTTP does not encrypt credentials.
 
 For external HTTPS, preserve Host and X-Forwarded-Proto, and forward WebSocket upgrades. Enter the HTTPS origin in LAN Proxy settings. Blank source IPs trust only loopback. Remote or container proxies need their exact source IPs; use **Check recent proxy sources** after visiting the configured address. Suggestions are not trusted automatically.
 

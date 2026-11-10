@@ -11,14 +11,18 @@ Two optional extensions for the DeepSeek Harness web app. Mobile Layout does not
 
 Supported DSH versions: **0.2.1-rc.5 and 0.2.2-rc.1**. Verify other versions before use. The proxy targets Node.js 22 or later.
 
-From the directory containing the downloaded assets, run either or both commands, then restart the existing DSH web process:
+Install into the profile of the DSH instance serving your page. Use `web` for a server running the `web` profile, or `desktop` for a desktop GUI running the `desktop` profile. Use the same OS account and `DSH_HOME` (default: `~/.dsh`) as that instance. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.13.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
+# Set this to the actual profile, such as web or desktop.
+dsh_profile=web
+dsh plugin --profile "$dsh_profile" add "$PWD/dsh-ui-mobile-0.1.8-mobile.13.tgz"
+dsh plugin --profile "$dsh_profile" add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
 ```
 
-The packages use their upstream plugin IDs and replace the corresponding upstream version in the same profile. To roll back, reinstall the previous trusted package with the same command and restart DSH. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.
+Restart the same DSH instance. If using the desktop GUI, quit and reopen it. The packages use their upstream plugin IDs and replace the corresponding upstream version in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the instance. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.
+
+The proxy reads `dsh-proxy.json` from the DSH data root (default: `~/.dsh/dsh-proxy.json`). Profiles sharing that root also share the proxy settings and credential records. Existing settings still apply. If another instance already listens on the same address and port (default: `3081`), the second proxy cannot start. For a single access point, install the proxy only into the profile that serves it.
 
 Set the proxy username and password from the original DSH page under **Settings → LAN Proxy**. The proxy blocks unauthenticated access before setup. On a trusted LAN, you can use password sign-in at `http://SERVER-IP:3081`; the proxy verifies its own password and issues a session cookie before forwarding to DSH. Plain HTTP does not encrypt credentials. The advanced launch-token option allows the proxy to complete DSH's separate check after authenticating the visitor.
 

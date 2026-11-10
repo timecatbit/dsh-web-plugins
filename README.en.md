@@ -25,7 +25,7 @@ New release candidates must be verified before expanding the Mobile Layout compa
 
 ### Install and update in DSH
 
-1. In **Plugins**, enable the experimental **Custom plugin indexes** bundle.
+1. Open **Plugins** from the sidebar and find the **Experimental plugins** section. If the custom plugin index bundle is not listed, click **More** in that section. Look for **Custom plugin markets** (「自定义插件市场」) on DSH `0.2.1-rc.5`, or **Custom plugin indexes** (「自定义插件索引」) on `0.2.2-rc.1`. Turn the bundle on.
 2. In **Discover**, add this index source once:
 
    ```text

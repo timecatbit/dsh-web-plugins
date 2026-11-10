@@ -82,7 +82,7 @@ html[data-dsh-phone] [data-dsh-phone-nav] {
 }
 
 html[data-dsh-phone] [data-dsh-phone-nav][hidden] { display: none; }
-html[data-dsh-phone] [data-conversation-header-leading] .x8foHq_button,
+html[data-dsh-phone] [data-conversation-header-leading] [data-dsh-phone-header-menu],
 html[data-dsh-phone] [data-conversation-header-corner] [data-sidebar-right-expand] {
   display: inline-grid;
   place-items: center;
@@ -100,25 +100,36 @@ html[data-dsh-phone] [class*="_headerBlank"]:has(> [data-conversation-header-lea
   min-height: 54px;
 }
 html[data-dsh-phone] [class*="_headerBlank"] :is(
-  [data-conversation-header-leading] .x8foHq_button,
+  [data-conversation-header-leading] [data-dsh-phone-header-menu],
   [data-conversation-header-corner] [data-sidebar-right-expand]
 ) {
   position: absolute;
   inset-block-start: 10px;
   margin: 0;
 }
-html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-leading] .x8foHq_button {
+html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-leading] [data-dsh-phone-header-menu] {
   left: var(--dsh-phone-toggle-edge, 14px);
 }
 html[data-dsh-phone] [class*="_headerBlank"] [data-conversation-header-corner] [data-sidebar-right-expand] {
   right: var(--dsh-phone-toggle-edge, 14px);
 }
-html[data-dsh-phone] [data-mobile-frame]:has([class*="_headerBlank"] [data-conversation-header-leading] .x8foHq_button)
+/* Newer hosts render a second opener outside the conversation header. */
+html[data-dsh-phone] [data-mobile-frame]:has(
+  > [data-mobile-role=center] [data-dsh-phone-header-menu],
+  > [data-dsh-phone-nav]:not([hidden])
+)
   > [data-shell-leading] [data-sidebar-opener] {
   display: none;
 }
+
+/* Better Sidebar uses a floating fallback when the blank header has no toolbar. */
+html[data-dsh-phone] [data-slot="conversation.session.header.utilities"] [data-dsh-bottom-toggle],
+html[data-dsh-phone] [data-dsh-dock-fallback] {
+  display: none;
+}
+
 html[data-dsh-phone] :is(
-  [data-conversation-header-leading] .x8foHq_button,
+  [data-conversation-header-leading] [data-dsh-phone-header-menu],
   [data-conversation-header-corner] [data-sidebar-right-expand]
 ) > svg {
   width: 16px;

@@ -6,11 +6,10 @@
 
 本仓库提供独立 `dsh web` 和 [DeepSeek Harness 官方桌面 App](https://www.deepseek.com/en/harness/) 的安装说明。桌面版用它自己的插件管理器安装；Safari 则用于把可访问的 DSH 网页加到主屏幕或程序坞。
 
-| 需求 | 安装包 | 作用 |
+| 插件 | 包名 | 作用 |
 | --- | --- | --- |
-| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.16.tgz` | 窄屏单栏设置、手机侧栏和点按后才聚焦的聊天输入框 |
-| 用密码或 Passkey 访问 DSH | `smanx-dsh-proxy-0.1.7-passkeys.4.tgz` | 局域网代理、持久网页登录、HTTPS Passkey 和 WebSocket 转发 |
-| 两项都要 | 两个安装包 | 装到同一个正在使用的 profile，无安装顺序要求 |
+| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` | 手机布局、侧栏和聊天输入 |
+| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` | 局域网代理、密码和 HTTPS Passkey 登录 |
 
 ## 测试范围
 
@@ -22,22 +21,35 @@
 
 手机布局依赖 DSH 的客户端接口，新 RC 要验证后才加入支持范围。命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
 
-## 安装
+<a id="安装"></a>
 
-### 官方桌面 App
+## 安装与更新
+
+### 在 DSH 里安装和更新
+
+1. 打开「插件」，在实验性插件中启用「自定义插件索引」。
+2. 进入「发现 → 添加索引源」，添加以下地址。只需添加一次：
+
+   ```text
+   https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
+   ```
+
+3. 点开 **DSH Pocket UI** 或 **DSH Passkey Proxy** 的卡片标题，在「版本」里选择新版并安装。原来通过本仓库的 `.tgz` 安装过，也可以按此操作，包名和设置路径保持一致。若 DSH 提示重启，重启当前实例。 看到「有更新」时，仍然点卡片标题进入「版本」；更新由你确认。
+
+### 手动安装：官方桌面 App
 
 1. 在 App 左侧点「插件 → 添加插件」；「设置 → 内置插件」是查看列表的入口。
 2. 粘贴所需安装包的完整地址，一次装一个：
 
    ```text
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/dsh-ui-mobile-0.1.8-mobile.16.tgz
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/smanx-dsh-proxy-0.1.7-passkeys.4.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.9/dsh-ui-mobile-0.1.9.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
 4. 若要让手机访问**这个桌面实例**，还要给它提供一个手机能访问的网页入口。用本仓库代理时，在桌面 App 的「设置 → 局域网代理」里设置账号密码，开启「允许局域网设备访问」，并在「高级」里开启「认证后自动进入 DSH」。保存后用手机打开 `http://电脑的局域网IP:代理端口`。也可给代理配置 HTTPS 后使用 Passkey。两个插件不相互依赖；Mobile UI 单独安装不会开启远程入口。
 
-### 独立 `dsh web`
+### 手动安装：独立 `dsh web`
 
 在运行 `dsh web` 的机器上安装。用与网页进程相同的系统账号和 `DSH_HOME`（默认 `~/.dsh`）；如果用了自定义网页 profile，将命令中的 `web` 换成实际名称。
 
@@ -45,10 +57,10 @@
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.16.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.9.tgz"
 
 # Passkey 代理
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.4.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
 ```
 
 安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、局域网代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。

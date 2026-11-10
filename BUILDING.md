@@ -8,6 +8,17 @@ bash scripts/build-release.sh
 
 The script checks and bundles the proxy source, fetches the integrity-pinned mobile UI package from npm, applies the compatibility and layout patches, and writes both installable archives and `SHA256SUMS` to `dist/`.
 
+For each release, unpack the archive's `package/` contents at the root of its release repository (`dsh-pocket-ui` or `dsh-passkey-proxy`). Commit, tag with the package version, and publish the matching tarball as a release asset. These Git repositories ship prebuilt files so DSH can install them without a build script. Keep package names unchanged so previous installations remain updatable.
+
+After the commits are public, update the Discover index in this repository:
+
+```bash
+python3 scripts/update-plugin-index.py plugin-index.json dist/dsh-ui-mobile-<version>.tgz <mobile-commit-sha>
+python3 scripts/update-plugin-index.py plugin-index.json dist/smanx-dsh-proxy-<version>.tgz <proxy-commit-sha>
+```
+
+Each entry pins the release repository's full commit and takes the compatibility range from the built package. Keep previous versions in the index so users can select an earlier release.
+
 - **Passkey proxy:** derived from `smanx/dsh-proxy` commit `36954a30af329f4f4d54b6961c75f018e93eb873`. TypeScript sources and the pnpm lockfile are in `plugins/passkey-proxy/dsh-proxy`. The dependency license notices are at `plugins/passkey-proxy/THIRD-PARTY-NOTICES.md`.
 - **Mobile layout:** based on the published `dsh-ui-mobile@0.1.8` distribution. The scripts pin the upstream SHA-512 integrity and verify both intermediate file manifests. The added layout CSS and JavaScript are in `plugins/mobile-layout`.
 

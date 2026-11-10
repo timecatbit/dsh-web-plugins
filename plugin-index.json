@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "title": {
+    "en": "DSH Web Plugins",
+    "zh": "DSH 网页插件"
+  },
+  "plugins": [
+    {
+      "name": "dsh-ui-mobile",
+      "title": {
+        "en": "DSH Pocket UI",
+        "zh": "DSH Pocket UI · 手机界面"
+      },
+      "description": {
+        "en": "Mobile conversation layout, touch drawers, and tap-to-focus chat input.",
+        "zh": "适配手机的对话页面、侧栏和输入框。"
+      },
+      "author": "timecatbit",
+      "homepage": "https://github.com/timecatbit/dsh-pocket-ui",
+      "repository": {
+        "url": "https://github.com/timecatbit/dsh-pocket-ui"
+      },
+      "versions": [
+        {
+          "publishTimestamp": 1794308546,
+          "version": "0.1.9",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-pocket-ui",
+            "commit": "d1363d392f322cfb5ed771a7583f6f9a3a0b2e93"
+          },
+          "engines": {
+            "dsh": "0.2.1-rc.5 || 0.2.2-rc.1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "@smanx/dsh-proxy",
+      "title": {
+        "en": "DSH Passkey Proxy",
+        "zh": "DSH Passkey Proxy · 局域网代理"
+      },
+      "description": {
+        "en": "LAN reverse proxy with password and HTTPS Passkey sign-in.",
+        "zh": "提供局域网代理、密码和 HTTPS Passkey 登录。"
+      },
+      "author": "timecatbit",
+      "homepage": "https://github.com/timecatbit/dsh-passkey-proxy",
+      "repository": {
+        "url": "https://github.com/timecatbit/dsh-passkey-proxy"
+      },
+      "versions": [
+        {
+          "publishTimestamp": 1794308546,
+          "version": "0.1.8",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
+            "commit": "c6befa067d7c568168b5825fd37cd7a1b075e894"
+          },
+          "engines": {
+            "dsh": "0.2.1-rc.5 || 0.2.2-rc.1"
+          }
+        }
+      ]
+    }
+  ]
+}

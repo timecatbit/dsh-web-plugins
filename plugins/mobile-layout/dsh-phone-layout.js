@@ -150,7 +150,7 @@ function installPhoneLayout(layout) {
       if (!frame.hasAttribute("data-sidebar-collapsed")) layout.toggleSidebar();
       if (rightOpen(frame)) layout.closeRightbar();
     }
-    const needsNav = !center.querySelector("[data-conversation-header-leading] .x8foHq_button");
+    const needsNav = !center.querySelector("[data-dsh-phone-header-menu]");
     frame.toggleAttribute("data-dsh-phone-global-page", needsNav);
     nav.hidden = !needsNav;
     nav.setAttribute("aria-expanded", String(!frame.hasAttribute("data-sidebar-collapsed")));

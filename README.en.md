@@ -6,10 +6,10 @@ Two optional extensions for the DeepSeek Harness web app. Mobile Layout does not
 
 This repository provides installation instructions for standalone `dsh web` and the [official DeepSeek Harness desktop app](https://www.deepseek.com/en/harness/). Use the desktop app's own plugin manager to install the packages. In Safari, you can save a reachable DSH website to your Home Screen or Dock.
 
-| Extension | Release file |
+| Extension | Package name |
 | --- | --- |
-| Mobile settings, drawers, and tap-to-focus composer | `dsh-ui-mobile-0.1.8-mobile.16.tgz` |
-| LAN reverse proxy with password and HTTPS Passkey sign-in | `smanx-dsh-proxy-0.1.7-passkeys.4.tgz` |
+| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` |
+| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` |
 
 ## Tested environments
 
@@ -23,26 +23,37 @@ New release candidates must be verified before expanding the Mobile Layout compa
 
 ## Installation
 
-### Official desktop app
+### Install and update in DSH
+
+1. In **Plugins**, enable the experimental **Custom plugin indexes** bundle.
+2. In **Discover**, add this index source once:
+
+   ```text
+   https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
+   ```
+
+3. Open the **DSH Pocket UI** or **DSH Passkey Proxy** card by clicking its title. In **Versions**, select the newer release and install it. Existing tarball installations can update this way because the package names and settings paths stay the same. Restart the current instance if DSH asks. When the card shows **Update available**, click its title to open **Versions** and confirm the update yourself.
+
+### Manual install: Official desktop app
 
 1. Open **Plugins → Add plugin** from the sidebar. The built-in plugin list under Settings is an inventory.
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/dsh-ui-mobile-0.1.8-mobile.16.tgz
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/smanx-dsh-proxy-0.1.7-passkeys.4.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.9/dsh-ui-mobile-0.1.9.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
 4. To reach this desktop instance from your phone using our proxy, open **Settings → LAN Proxy**, set a proxy username and password, and enable **Allow access from devices on the local network**. Under **Advanced**, enable **Open DSH automatically after sign-in**, then save. Open `http://COMPUTER-LAN-IP:PROXY-PORT` on your phone, or configure HTTPS for Passkeys. The plugins are independent; installing Mobile Layout alone does not enable remote access.
 
-### Standalone `dsh web`
+### Manual install: Standalone `dsh web`
 
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.16.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.4.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.9.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
 ```
 
 Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. The packages replace the corresponding upstream plugin in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.

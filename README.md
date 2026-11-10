@@ -4,7 +4,7 @@
 
 给 DeepSeek Harness 网页版的两个插件，**可单独安装，也可一起安装**。手机布局只改网页界面；Passkey 登录由局域网代理处理。两者没有相互依赖，因此保留独立安装和回退。
 
-两个插件都可以装在独立的 `dsh web` 服务，也可以装进 [DeepSeek Harness 官方桌面 App](https://www.deepseek.com/en/harness/)。桌面版用它自己的插件管理器安装；Safari 则用于把可访问的 DSH 网页加到主屏幕或程序坞。
+本仓库提供独立 `dsh web` 和 [DeepSeek Harness 官方桌面 App](https://www.deepseek.com/en/harness/) 的安装说明。桌面版用它自己的插件管理器安装；Safari 则用于把可访问的 DSH 网页加到主屏幕或程序坞。
 
 | 需求 | 安装包 | 作用 |
 | --- | --- | --- |
@@ -12,7 +12,15 @@
 | 用密码或 Passkey 访问 DSH | `smanx-dsh-proxy-0.1.7-passkeys.4.tgz` | 局域网代理、持久网页登录、HTTPS Passkey 和 WebSocket 转发 |
 | 两项都要 | 两个安装包 | 装到同一个正在使用的 profile，无安装顺序要求 |
 
-已验证的 `dsh web` 版本：**0.2.1-rc.5 / 0.2.2-rc.1**；桌面版验证的是 **macOS Apple Silicon 0.2.2-rc.1**，Windows 未实测。手机布局依赖这些版本的客户端接口，新 RC 要验证后才加入支持范围。命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
+## 测试范围
+
+| 环境 | 状态 | 实测 DSH 版本 |
+| --- | --- | --- |
+| 独立 Web 版（`dsh web`） | **已测试** | `0.2.1-rc.5`、`0.2.2-rc.1` |
+| 官方 macOS 桌面版（Apple Silicon） | **已测试** | `0.2.2-rc.1` |
+| 官方 Windows 桌面版 | **未测试，兼容性未确认** | — |
+
+手机布局依赖 DSH 的客户端接口，新 RC 要验证后才加入支持范围。命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
 
 ## 安装
 

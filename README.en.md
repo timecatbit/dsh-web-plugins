@@ -4,14 +4,22 @@
 
 Two optional extensions for the DeepSeek Harness web app. Mobile Layout does not require Passkeys, a proxy, or a domain. Open the original DSH address as usual, including an IP and port if DSH is already reachable on your LAN.
 
-Both packages work with a standalone `dsh web` service or the [official DeepSeek Harness desktop app](https://www.deepseek.com/en/harness/). Use the desktop app's own plugin manager to install them. In Safari, you can save a reachable DSH website to your Home Screen or Dock.
+This repository provides installation instructions for standalone `dsh web` and the [official DeepSeek Harness desktop app](https://www.deepseek.com/en/harness/). Use the desktop app's own plugin manager to install the packages. In Safari, you can save a reachable DSH website to your Home Screen or Dock.
 
 | Extension | Release file |
 | --- | --- |
 | Mobile settings, drawers, and input layout | `dsh-ui-mobile-0.1.8-mobile.15.tgz` |
 | LAN reverse proxy with password and HTTPS Passkey sign-in | `smanx-dsh-proxy-0.1.7-passkeys.4.tgz` |
 
-Tested with **`dsh web` 0.2.1-rc.5 / 0.2.2-rc.1** and **Desktop 0.2.2-rc.1 on Apple Silicon macOS**. Windows has not been tested. New release candidates must be verified before expanding the Mobile Layout compatibility range. The official desktop app ships its own runtime; for CLI installs, follow the Node.js requirement of your DSH version.
+## Tested environments
+
+| Environment | Status | Tested DSH versions |
+| --- | --- | --- |
+| Standalone Web (`dsh web`) | **Tested** | `0.2.1-rc.5`, `0.2.2-rc.1` |
+| Official macOS Desktop (Apple Silicon) | **Tested** | `0.2.2-rc.1` |
+| Official Windows Desktop | **Not tested; compatibility unconfirmed** | — |
+
+New release candidates must be verified before expanding the Mobile Layout compatibility range. The official desktop app ships its own runtime; for CLI installs, follow the Node.js requirement of your DSH version.
 
 ## Installation
 

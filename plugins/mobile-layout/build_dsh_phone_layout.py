@@ -10,7 +10,7 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.8-mobile.12"
+VERSION = "0.1.8-mobile.13"
 HOST_RANGE = "0.2.1-rc.5 || 0.2.2-rc.1"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent
@@ -49,6 +49,16 @@ def main(source, target):
         '\t\t\tctx.effect(() => installPhoneLayout(ctx.layout), "ui-mobile: adaptive phone layout");')
     s = replace(s, "if (!state.mobile || !state.sidebarOpen) return null;",
         "if (!state.mobile || (!state.sidebarOpen && !state.detailsOpen)) return null;")
+    # The host's ChatView already owns a scroll-to-bottom button and follow state.
+    bottom_css = re.search(r'(?m)^\t\t//#region [^\n]*BackToBottom\.module\.css\.mjs\n', s)
+    drawer_css = re.search(r'(?m)^\t\t//#region [^\n]*DrawerScrim\.module\.css\.mjs\n', s)
+    assert bottom_css and drawer_css and bottom_css.start() < drawer_css.start()
+    s = s[:bottom_css.start()] + s[drawer_css.start():]
+    register = s.index("\t\t\t\tconst registerBackToBottom = ctx.slots.register({")
+    teardown = s.index("\t\t\t\treturn () => {", register)
+    s = s[:register] + s[teardown:]
+    s = replace(s, "\t\t\t\t\tregisterBackToBottom();\n", "")
+    assert "mobile-back-to-bottom" not in s
     s = replace(s, "inject: () => drawerControls()\n\t\t\t\t}, DrawerScrim);",
         "inject: () => ({\n"
         "\t\t\t\t\t\t...drawerControls(),\n"

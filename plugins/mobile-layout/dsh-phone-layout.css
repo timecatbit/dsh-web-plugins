@@ -177,12 +177,41 @@ html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) .gLgNoW_s
 
 /* The host uses a desktop settings rail even when the app viewport is narrow. */
 html[data-dsh-phone] [data-shortcut-modal="settings"] {
+  --dsh-phone-settings-font: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --dsh-phone-settings-text: 16px;
+  --dsh-phone-settings-note: 14px;
   position: relative;
   display: flex;
   flex-direction: column;
   width: min(520px, calc(100% - 16px));
   max-height: calc(var(--dsh-phone-height) - 16px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   overflow: hidden;
+  font-family: var(--dsh-phone-settings-font);
+  font-size: var(--dsh-phone-settings-text);
+  line-height: 1.375;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] :is(
+  button, :where(input:not([type=checkbox], [type=radio])), select, textarea, label, legend, summary,
+  [class$="_navLabel"], [class$="_title"], [class$="_settingTitle"], [class$="_fieldLabel"],
+  [class$="_cardTitle"], [class$="_rowLabel"], [class$="_rowValue"], [class$="_value"],
+  [class$="_unit"], [class$="_statusText"]
+) {
+  font-family: var(--dsh-phone-settings-font);
+  font-size: var(--dsh-phone-settings-text);
+  line-height: 1.375;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] :is(
+  [class$="_desc"], [class$="_description"], [class$="_settingDescription"], [class$="_subtitle"],
+  [class$="_hint"], [class$="_fieldHint"], [class$="_message"], [class$="_error"]
+) {
+  font-family: var(--dsh-phone-settings-font);
+  font-size: var(--dsh-phone-settings-note);
+  line-height: 1.43;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] :is(h1, h2, [class$="_navTitle"]) {
+  font-family: var(--dsh-phone-settings-font);
+  font-size: 20px;
+  line-height: 1.3;
 }
 html[data-dsh-phone] [data-shortcut-modal="settings"] > nav {
   flex: 0 0 auto;
@@ -236,6 +265,12 @@ html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_header"]:has(> [
 html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_header"] > button[class$="_close"] {
   width: 44px;
   height: 44px;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [data-slot="settings.action"] button {
+  max-width: min(50vw, 200px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_options"]:has(> [data-slot="settings.section"]) {
   flex: 1 1 auto;

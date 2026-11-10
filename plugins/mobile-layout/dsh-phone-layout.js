@@ -103,8 +103,14 @@ function installPhoneLayout(layout) {
 
   function onPhoneClick(event) {
     if (!media.matches || !(event.target instanceof Element)) return;
-    const preview = event.target.closest('[data-mobile-role=center]');
-    if (preview?.parentElement?.matches('[data-mobile-frame]:not([data-sidebar-collapsed])')) {
+    const openFrame = event.target.closest('[data-mobile-frame]:not([data-sidebar-collapsed])');
+    const preview = openFrame?.querySelector(':scope > [data-mobile-role=center]');
+    // Newer hosts keep the page inert while the sidebar owns keyboard focus.
+    // Those taps land on the frame itself instead of the still-visible page.
+    const bounds = preview && event.target === openFrame && event.detail > 0
+      ? preview.getBoundingClientRect() : null;
+    if (preview?.contains(event.target) || (bounds && event.clientX >= bounds.left &&
+      event.clientX < bounds.right && event.clientY >= bounds.top && event.clientY < bounds.bottom)) {
       event.preventDefault();
       event.stopPropagation();
       layout.toggleSidebar();

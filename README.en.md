@@ -6,7 +6,7 @@ Two optional extensions for the DeepSeek Harness web app. Mobile Layout does not
 
 | Extension | Release file |
 | --- | --- |
-| Mobile settings, drawers, and input layout | `dsh-ui-mobile-0.1.8-mobile.12.tgz` |
+| Mobile settings, drawers, and input layout | `dsh-ui-mobile-0.1.8-mobile.13.tgz` |
 | LAN reverse proxy with password and HTTPS Passkey sign-in | `smanx-dsh-proxy-0.1.7-passkeys.3.tgz` |
 
 Supported DSH versions: **0.2.1-rc.5 and 0.2.2-rc.1**. Verify other versions before use. The proxy targets Node.js 22 or later.
@@ -14,7 +14,7 @@ Supported DSH versions: **0.2.1-rc.5 and 0.2.2-rc.1**. Verify other versions bef
 From the directory containing the downloaded assets, run either or both commands, then restart the existing DSH web process:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.12.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.13.tgz"
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"
 ```
 

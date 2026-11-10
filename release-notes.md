@@ -1,2 +1,4 @@
 - The compact phone sidebar pushes the existing page to the right at its original width. The exposed page remains visible; tapping it closes the sidebar.
+- Removes the mobile plugin's duplicate back-to-bottom control and keeps the native one.
+- Uses a consistent system font and type scale throughout mobile settings.
 - Keeps the previous header alignment, right sidebar controls, and standalone installation. The Passkey Proxy package is unchanged.

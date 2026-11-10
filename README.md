@@ -6,7 +6,7 @@
 
 | 需求 | 安装包 | 作用 |
 | --- | --- | --- |
-| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.12.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
+| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.13.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
 | 用密码或 Passkey 访问 DSH | `smanx-dsh-proxy-0.1.7-passkeys.3.tgz` | 局域网代理、持久网页登录、HTTPS Passkey 和 WebSocket 转发 |
 | 两项都要 | 两个安装包 | 可装在同一个 `web` profile，无安装顺序要求 |
 
@@ -18,7 +18,7 @@
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.12.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.13.tgz"
 
 # Passkey 代理
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.3.tgz"

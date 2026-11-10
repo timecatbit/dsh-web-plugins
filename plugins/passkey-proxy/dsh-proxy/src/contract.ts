@@ -18,6 +18,8 @@ export const RPC_STOP_ENDPOINT = 'stop'
 
 /** Read-only status the settings section shows. */
 export interface LanProxyStatus {
+  /** Whether the Desktop-specific LAN binding control is available. */
+  desktopProfile?: boolean
   /** Interface the proxy binds (0.0.0.0 = LAN reachable). */
   listenHost: string
   /** Port the proxy listens on (the OS-assigned value when 0 was configured). */
@@ -52,6 +54,8 @@ export interface LanProxyStatus {
 
 /** Settings-section patch: only fields present are changed; omitted fields keep their values. */
 export interface LanProxyUpdatePayload {
+  /** Desktop only: explicitly listen on the LAN rather than loopback. */
+  lanAccessEnabled?: boolean
   /** New proxy listen port (1–65535, must differ from the default service port). */
   listenPort?: number
   /**

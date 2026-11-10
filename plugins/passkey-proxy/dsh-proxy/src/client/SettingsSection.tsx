@@ -99,6 +99,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
   const [controlMessage, setControlMessage] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [listenPort, setListenPort] = useState('')
+  const [lanAccessEnabled, setLanAccessEnabled] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [skipLaunchToken, setSkipLaunchToken] = useState(false)
@@ -118,6 +119,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
   /** Write the current values back into the form (empty means "set empty"). */
   const applyStatusToForm = useCallback((next: LanProxyStatus): void => {
     setListenPort(String(next.listenPort))
+    setLanAccessEnabled(next.listenHost === '0.0.0.0')
     setUsername(next.username)
     setPassword('')
     setSkipLaunchToken(next.skipLaunchToken)
@@ -224,6 +226,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
         skipLaunchToken,
       }
       if (password) payload.password = password
+      if (status?.desktopProfile && lanAccessEnabled !== (status.listenHost === '0.0.0.0')) payload.lanAccessEnabled = lanAccessEnabled
       if (passwordLoginEnabled !== (status?.passwordLoginEnabled ?? true)) payload.passwordLoginEnabled = passwordLoginEnabled
       if (passkeyLoginEnabled !== (status?.passkeyLoginEnabled ?? Boolean(status?.passkeyOrigin))) payload.passkeyLoginEnabled = passkeyLoginEnabled
       if (!passwordLoginEnabled && !passkeyLoginEnabled) {
@@ -355,6 +358,14 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
             onChange={(event) => { setListenPort(event.target.value) }}
           />
         </div>
+        {status?.desktopProfile ? <>
+          <label className="dsh_lanproxy_checkRow" htmlFor="dsh-lanproxy-lan-access">
+            <input id="dsh-lanproxy-lan-access" className="dsh_lanproxy_checkbox" type="checkbox" checked={lanAccessEnabled}
+              onChange={(event) => setLanAccessEnabled(event.target.checked)} />
+            <span>{t('form.lanAccess')}</span>
+          </label>
+          <p className="dsh_lanproxy_fieldHint">{t('form.lanAccessHint')}</p>
+        </> : null}
         <p className="dsh_lanproxy_fieldHint">{t('form.lanHint')}</p>
         <div className="dsh_lanproxy_field">
           <label className="dsh_lanproxy_fieldLabel" htmlFor="dsh-passkey-origin">{t('form.passkeyOrigin')}</label>

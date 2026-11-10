@@ -42,6 +42,8 @@ export interface ProxyControllerOptions {
    * — the token is per-process, so it is never persisted, only the flag is.
    */
   readLaunchToken?: () => string | undefined
+  /** Desktop owns the loopback listener and may pick a different port every run. */
+  readDesktopPort?: () => number | undefined
 }
 
 export type UpdateOutcome =
@@ -74,7 +76,9 @@ export class ProxyController {
     this.options = { ...opts.base }
     const persisted = this.settings.read()
     if (persisted.listenPort !== undefined) this.options.listenPort = persisted.listenPort
-    if (persisted.upstreamPort !== undefined) this.options.upstreamPort = persisted.upstreamPort
+    if (opts.readDesktopPort) {
+      if (persisted.lanAccessEnabled !== undefined) this.options.listenHost = persisted.lanAccessEnabled ? '0.0.0.0' : '127.0.0.1'
+    } else if (persisted.upstreamPort !== undefined) this.options.upstreamPort = persisted.upstreamPort
     if (persisted.username !== undefined) this.options.username = persisted.username
     if (persisted.password !== undefined) this.options.password = persisted.password
     // The launch token itself is never persisted (it is per-process and the
@@ -102,6 +106,7 @@ export class ProxyController {
       || current.tlsProxyIPs !== undefined
       || current.passwordLoginEnabled !== undefined
       || current.passkeyLoginEnabled !== undefined
+      || current.lanAccessEnabled !== undefined
   }
 
   /**
@@ -113,6 +118,16 @@ export class ProxyController {
   async start(): Promise<StartOutcome> {
     if (this.handle !== null) return { ok: true }
     const log = this.log
+    if (this.opts.readDesktopPort) {
+      const port = this.opts.readDesktopPort()
+      if (!port || port === this.options.listenPort) {
+        const message = port ? '代理端口不能与桌面服务端口相同。' : '桌面网页服务尚未就绪，请稍后再启动代理。'
+        log('warn', message)
+        return { ok: false, message }
+      }
+      if (this.options.upstreamPort !== port) this.probeCache = null
+      this.options.upstreamPort = port
+    }
     // Resolve the launch token HERE, not at construction: the read is deferred
     // until the harness is serving, and `start()` is the first point where the
     // webServer (and therefore BrowserAuth behind `connection`) is fully up.
@@ -204,6 +219,7 @@ export class ProxyController {
   status(): LanProxyStatus {
     return {
       listenHost: this.options.listenHost,
+      ...(this.opts.readDesktopPort ? { desktopProfile: true } : {}),
       listenPort: this.boundPort ?? this.options.listenPort,
       proxyListening: this.boundPort !== null,
       upstreamHost: this.options.upstreamHost,
@@ -282,6 +298,12 @@ export class ProxyController {
     const patch = check.patch as LanProxyUpdatePayload
     const currentListenPort = this.boundPort ?? this.options.listenPort
     const currentUpstreamPort = this.options.upstreamPort
+    if (patch.lanAccessEnabled !== undefined && !this.opts.readDesktopPort) {
+      return { ok: false, message: '网页实例的监听地址由 Cordis 配置管理。' }
+    }
+    if (patch.upstreamPort !== undefined && this.opts.readDesktopPort) {
+      return { ok: false, message: '桌面实例的转发端口由 DSH 管理。' }
+    }
     if (this.passkeySettingsManaged && (patch.passkeyOrigin !== undefined || patch.tlsProxyIPs !== undefined)) {
       return { ok: false, message: 'Passkey 入口由服务环境变量管理。' }
     }
@@ -310,6 +332,7 @@ export class ProxyController {
     this.settings.write(next)
 
     if (patch.listenPort !== undefined) this.options.listenPort = patch.listenPort
+    if (patch.lanAccessEnabled !== undefined) this.options.listenHost = patch.lanAccessEnabled ? '0.0.0.0' : '127.0.0.1'
     if (patch.upstreamPort !== undefined) this.options.upstreamPort = patch.upstreamPort
     if (patch.username !== undefined) this.options.username = patch.username
     if (patch.password !== undefined) this.options.password = patch.password

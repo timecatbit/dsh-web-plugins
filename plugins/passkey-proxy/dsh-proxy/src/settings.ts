@@ -11,6 +11,7 @@ import type { LanProxyUpdatePayload } from './contract.ts'
 
 /** The on-disk shape (a subset of the update payload; no derived fields). */
 export interface PersistedRuntimeSettings {
+  lanAccessEnabled?: boolean
   /** Proxy listen port override. */
   listenPort?: number
   /** Deprecated forward-target override, kept for legacy persisted files. */
@@ -68,6 +69,7 @@ export function normalizeRuntimeSettings(raw: unknown): PersistedRuntimeSettings
   if (typeof source.tlsProxyIPs === 'string') out.tlsProxyIPs = source.tlsProxyIPs
   if (typeof source.passwordLoginEnabled === 'boolean') out.passwordLoginEnabled = source.passwordLoginEnabled
   if (typeof source.passkeyLoginEnabled === 'boolean') out.passkeyLoginEnabled = source.passkeyLoginEnabled
+  if (typeof source.lanAccessEnabled === 'boolean') out.lanAccessEnabled = source.lanAccessEnabled
   return out
 }
 
@@ -187,7 +189,7 @@ export function validateUpdate(
     if (ips.length > 8 || ips.some(ip => !canonicalProxyIP(ip))) return { ok: false, message: '请填写实际 IPv4 或 IPv6 地址，多个用英文逗号隔开，不支持网段。' }
     patch.tlsProxyIPs = [...new Set(ips.map(ip => canonicalProxyIP(ip)))].join(', ')
   }
-  for (const key of ['passwordLoginEnabled', 'passkeyLoginEnabled'] as const) {
+  for (const key of ['passwordLoginEnabled', 'passkeyLoginEnabled', 'lanAccessEnabled'] as const) {
     if (input[key] === undefined) continue
     if (typeof input[key] !== 'boolean') return { ok: false, message: '登录开关必须是布尔值。' }
     patch[key] = input[key]
@@ -203,6 +205,7 @@ export function validateUpdate(
     && patch.tlsProxyIPs === undefined
     && patch.passwordLoginEnabled === undefined
     && patch.passkeyLoginEnabled === undefined
+    && patch.lanAccessEnabled === undefined
   ) {
     return { ok: false, message: '没有可保存的修改' }
   }

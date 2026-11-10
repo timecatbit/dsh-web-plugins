@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { AddressInfo } from 'node:net'
@@ -373,6 +373,47 @@ describe('ProxyController start/stop controls', () => {
 function basic(username: string, password: string): string {
   return `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
 }
+
+describe('Desktop proxy', () => {
+  it('waits for the actual host port, ignores stale upstream overrides and follows a new port on restart', async () => {
+    const stalePort = await startUpstream('stale upstream')
+    const settingsFile = tempSettingsFile()
+    writeFileSync(settingsFile, JSON.stringify({ upstreamPort: stalePort }))
+    let currentPort: number | undefined
+    controller = new ProxyController({
+      base: baseOptions(0), settingsFile, log: () => {}, readDesktopPort: () => currentPort,
+    })
+    expect(await controller.start()).toMatchObject({ ok: false })
+    expect(controller.status().proxyListening).toBe(false)
+    currentPort = await startUpstream('desktop one')
+    expect(await controller.start()).toEqual({ ok: true })
+    const fetchProxy = () => fetchThrough(`http://127.0.0.1:${controller!.status().listenPort}/`, {
+      authorization: basic('admin', 'admin'),
+    })
+    expect(await fetchProxy()).toEqual({ status: 200, text: 'desktop one' })
+    expect(await controller.update({ upstreamPort: stalePort })).toMatchObject({ ok: false })
+    await controller.stop()
+    currentPort = await startUpstream('desktop two')
+    expect(await controller.start()).toEqual({ ok: true })
+    expect(await fetchProxy()).toEqual({ status: 200, text: 'desktop two' })
+  })
+
+  it('requires credentials before saving the desktop LAN opt-in', async () => {
+    const upstreamPort = await startUpstream('desktop')
+    const settingsFile = tempSettingsFile()
+    controller = new ProxyController({
+      base: { ...baseOptions(upstreamPort), username: '', password: '' },
+      settingsFile, log: () => {}, readDesktopPort: () => upstreamPort,
+    })
+    expect(await controller.update({ lanAccessEnabled: true })).toMatchObject({ ok: false })
+    expect(controller.status()).toMatchObject({ desktopProfile: true, listenHost: '127.0.0.1' })
+    expect(await controller.update({ lanAccessEnabled: true, username: 'desktop', password: 'configured' })).toMatchObject({ ok: true })
+    expect(controller.status().listenHost).toBe('0.0.0.0')
+    expect(JSON.parse(readFileSync(settingsFile, 'utf8')).lanAccessEnabled).toBe(true)
+    expect(await controller.update({ lanAccessEnabled: false })).toMatchObject({ ok: true })
+    expect(controller.status().listenHost).toBe('127.0.0.1')
+  })
+})
 
 describe('ProxyController launch-token auto-login', () => {
   it('reads the token from the host when auto-login is on', async () => {

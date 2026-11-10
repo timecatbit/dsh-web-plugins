@@ -19,6 +19,7 @@ import type {} from '@deepseek-ai/dsh-host-webserver'
 // the decoded-endpoint handler the channel registration accepts.
 import type { ConnectionRpcHandler } from '@deepseek-ai/dsh-client-connection'
 import { dshHomePath } from '@deepseek-ai/dsh-home-paths'
+import { join } from 'node:path'
 import { ProxyController } from './controller.ts'
 import { RPC_CHANNEL, RPC_START_ENDPOINT, RPC_STATUS_ENDPOINT, RPC_STOP_ENDPOINT, RPC_UPDATE_ENDPOINT } from './contract.ts'
 
@@ -30,13 +31,15 @@ export type { LanProxyHandle, LanProxyOptions } from './proxy.ts'
 /** Stable Cordis plugin name (the Loader entry and package name). */
 export const name = '@smanx/dsh-proxy'
 
-/** Services required before load: the web server (upstream port source) and the Connection RPC registry. */
-export const inject = ['webServer', 'connection']
+/** The launcher supplies the actual profile independently of the working directory. */
+export const inject = ['webServer', 'connection', 'profileContext']
+
+type LauncherProfile = { name: string; dir: string }
 
 /** Plugin configuration, validated at load by the Loader. */
 export interface Config {
   /** Interface the proxy binds; 0.0.0.0 exposes the LAN. */
-  listenHost: string
+  listenHost?: string
   /** Port the proxy listens on (must differ from the web app's port). */
   listenPort: number
   /** Upstream DSH bind host. */
@@ -48,12 +51,12 @@ export interface Config {
   /** Login / Basic Auth password; password login is enabled only when both it and `username` are set. */
   password: string
   /** Auto-attach the launch token only after the proxy authenticates the browser. */
-  skipLaunchToken: boolean
+  skipLaunchToken?: boolean
 }
 
 /** Configuration schema; deployment-varying bounds stay tunable from cordis.yml. */
 export const Config = z.object({
-  listenHost: z.string().default('0.0.0.0'),
+  listenHost: z.string(),
   listenPort: z.natural().max(65535).default(3081),
   upstreamHost: z.string().default('127.0.0.1'),
   upstreamPort: z.natural().max(65535).default(0),
@@ -65,7 +68,7 @@ export const Config = z.object({
    * without being handed the token. The proxy never forwards an unauthenticated
    * browser to this exchange. Deployments can still retain the separate check.
    */
-  skipLaunchToken: z.boolean().default(true),
+  skipLaunchToken: z.boolean(),
 })
 
 /**
@@ -128,6 +131,8 @@ function readLaunchToken(ctx: Context): string | undefined {
  */
 export function apply(ctx: Context, config?: Config): void {
   const resolved = Config(config ?? {})
+  const profile = (ctx as unknown as { profileContext?: LauncherProfile }).profileContext
+  const desktop = profile?.name === 'desktop'
   const log = (level: 'info' | 'warn' | 'error', message: string): void => {
     ctx.logger[level](message)
   }
@@ -143,15 +148,16 @@ export function apply(ctx: Context, config?: Config): void {
   const readToken = (): string | undefined => readLaunchToken(ctx)
   const controller = new ProxyController({
     base: {
-      listenHost: resolved.listenHost,
+      listenHost: resolved.listenHost ?? (desktop ? '127.0.0.1' : '0.0.0.0'),
       listenPort: resolved.listenPort,
-      upstreamHost: resolved.upstreamHost,
-      upstreamPort: resolved.upstreamPort || ctx.webServer.port || 3080,
+      upstreamHost: desktop ? '127.0.0.1' : resolved.upstreamHost,
+      upstreamPort: desktop ? (ctx.webServer.port ?? 0) : (resolved.upstreamPort || ctx.webServer.port || 3080),
       username: resolved.username,
       password: resolved.password,
-      skipLaunchToken: resolved.skipLaunchToken,
+      skipLaunchToken: resolved.skipLaunchToken ?? !desktop,
     },
-    settingsFile: dshHomePath('dsh-proxy.json'),
+    settingsFile: desktop ? join(profile.dir, 'dsh-proxy.json') : dshHomePath('dsh-proxy.json'),
+    ...(desktop ? { readDesktopPort: () => ctx.webServer.port } : {}),
     log,
     readLaunchToken: readToken,
   })

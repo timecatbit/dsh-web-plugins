@@ -10,7 +10,7 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.8-mobile.14"
+VERSION = "0.1.8-mobile.15"
 HOST_RANGE = "0.2.1-rc.5 || 0.2.2-rc.1"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent

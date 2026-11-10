@@ -1,7 +1,6 @@
-Both plugins can now be installed through the official macOS desktop app's **Plugins → Add plugin** dialog using a release tarball URL or absolute local path. Standalone `dsh web` installation still works. See the [installation guide](https://github.com/timecatbit/dsh-web-plugins#安装).
+Mobile Layout `0.1.8-mobile.16` keeps the mobile keyboard closed when opening a conversation. Tap the composer to type. The full-screen right sidebar appears as soon as the host opens it, without waiting for a second slide. Desktop keyboard behavior and the Passkey Proxy archive are unchanged.
 
-- Passkey Proxy `0.1.7-passkeys.4` follows Desktop's current loopback port and keeps its settings separate from standalone Web. Desktop requires an explicit opt-in for LAN binding and automatic entry after proxy sign-in.
-- Mobile Layout `0.1.8-mobile.15` includes Desktop installation guidance and retains the same narrow-screen layout.
+手机上进入对话后，点输入框才聚焦；右侧全屏面板去掉了外层重复的等待和滑动。安装或升级方法见[说明](https://github.com/timecatbit/dsh-web-plugins#安装)。
 
 ### 测试范围 / Tested environments
 

@@ -329,6 +329,27 @@ html[data-dsh-phone] .gLgNoW_scrim {
   background: rgb(0 0 0 / 42%);
 }
 
+/* The native fullscreen dock already slides its own content and reports its
+   open state after that animation. Do not hide or slide its outer column
+   during that time. The native dock controls visibility and hit testing. */
+html[data-dsh-phone] [data-mobile-frame] > [data-mobile-role=details]:has(
+  [data-sidebar-right-session]:not([hidden]) [data-sidebar-right-panel=fullscreen]
+) {
+  width: 100%;
+  transform: none;
+  visibility: visible;
+  pointer-events: none;
+  transition: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-dsh-phone] [data-mobile-frame]:has(
+  > [data-mobile-role=details] [data-sidebar-right-session]:not([hidden]) [data-sidebar-right-panel=fullscreen]
+) .gLgNoW_scrim {
+  display: none;
+}
+
 html[data-dsh-phone] [data-conversation-content] {
   --dsh-chat-content-width: calc(100% - 2 * var(--dsh-phone-gutter));
   --dsh-composer-card-max-width: 100%;

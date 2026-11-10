@@ -8,7 +8,7 @@
 
 | 需求 | 安装包 | 作用 |
 | --- | --- | --- |
-| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.15.tgz` | 窄屏单栏设置、可横滑的分类、手机抽屉和输入区适配 |
+| 手机设置和侧栏更好用 | `dsh-ui-mobile-0.1.8-mobile.16.tgz` | 窄屏单栏设置、手机侧栏和点按后才聚焦的聊天输入框 |
 | 用密码或 Passkey 访问 DSH | `smanx-dsh-proxy-0.1.7-passkeys.4.tgz` | 局域网代理、持久网页登录、HTTPS Passkey 和 WebSocket 转发 |
 | 两项都要 | 两个安装包 | 装到同一个正在使用的 profile，无安装顺序要求 |
 
@@ -30,8 +30,8 @@
 2. 粘贴所需安装包的完整地址，一次装一个：
 
    ```text
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.0/dsh-ui-mobile-0.1.8-mobile.15.tgz
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.0/smanx-dsh-proxy-0.1.7-passkeys.4.tgz
+   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/dsh-ui-mobile-0.1.8-mobile.16.tgz
+   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/smanx-dsh-proxy-0.1.7-passkeys.4.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
@@ -45,7 +45,7 @@
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.15.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.16.tgz"
 
 # Passkey 代理
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.4.tgz"

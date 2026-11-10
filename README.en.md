@@ -8,7 +8,7 @@ This repository provides installation instructions for standalone `dsh web` and 
 
 | Extension | Release file |
 | --- | --- |
-| Mobile settings, drawers, and input layout | `dsh-ui-mobile-0.1.8-mobile.15.tgz` |
+| Mobile settings, drawers, and tap-to-focus composer | `dsh-ui-mobile-0.1.8-mobile.16.tgz` |
 | LAN reverse proxy with password and HTTPS Passkey sign-in | `smanx-dsh-proxy-0.1.7-passkeys.4.tgz` |
 
 ## Tested environments
@@ -29,8 +29,8 @@ New release candidates must be verified before expanding the Mobile Layout compa
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.0/dsh-ui-mobile-0.1.8-mobile.15.tgz
-   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.0/smanx-dsh-proxy-0.1.7-passkeys.4.tgz
+   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/dsh-ui-mobile-0.1.8-mobile.16.tgz
+   https://github.com/timecatbit/dsh-web-plugins/releases/download/v1.3.1/smanx-dsh-proxy-0.1.7-passkeys.4.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
@@ -41,7 +41,7 @@ New release candidates must be verified before expanding the Mobile Layout compa
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.15.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.8-mobile.16.tgz"
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.7-passkeys.4.tgz"
 ```
 

@@ -1,3 +1,65 @@
+const dshPhoneComposerEditor = '[data-composer-card] [contenteditable="true"]';
+
+function installPhoneComposerFocus(media) {
+  // Older DSH runs its mount/session-switch focus effect before a mutation
+  // observer can mark a new editor. Stop only that composer focus at the DOM
+  // call so iOS never sees the focus/blur pair that can flash the keyboard.
+  const prototype = HTMLElement.prototype;
+  const focus = prototype.focus;
+  const coarsePointer = window.matchMedia("(pointer: coarse)");
+  const requiresTap = () => coarsePointer.matches || (media.matches && navigator.maxTouchPoints > 0);
+  let tappedEditor;
+  let tappedUntil = 0;
+  let tabUntil = 0;
+
+  function authorized(editor) {
+    const now = performance.now();
+    return now < tabUntil || (editor === tappedEditor && now < tappedUntil);
+  }
+
+  function onInputGesture(event) {
+    tappedEditor = undefined;
+    tabUntil = 0;
+    if (!requiresTap() || !event.isTrusted || !(event.target instanceof Element)) return;
+    const target = event.target;
+    const card = target.closest("[data-composer-card]");
+    const direct = target.closest(dshPhoneComposerEditor);
+    const otherControl = target.closest('button, a, input, select, textarea, [role="button"], [tabindex], [data-composer-overlay]');
+    if (!card || (!direct && otherControl && card.contains(otherControl))) return;
+    tappedEditor = direct ?? card.querySelector(dshPhoneComposerEditor);
+    tappedUntil = performance.now() + 650;
+  }
+
+  function phoneComposerFocus(...args) {
+    if (requiresTap() && this instanceof HTMLElement && this.matches(dshPhoneComposerEditor) &&
+      document.activeElement !== this && !authorized(this)) return;
+    return focus.apply(this, args);
+  }
+
+  function onTab(event) {
+    if (event.isTrusted && event.key === "Tab") tabUntil = performance.now() + 400;
+  }
+
+  function onComposerFocus(event) {
+    // WebKit can also focus contenteditable as a side effect of restoring
+    // the DOM selection, without calling HTMLElement.focus().
+    const editor = event.target;
+    if (requiresTap() && editor instanceof HTMLElement && editor.matches(dshPhoneComposerEditor) &&
+      !authorized(editor)) editor.blur();
+  }
+
+  prototype.focus = phoneComposerFocus;
+  for (const type of ["pointerdown", "click"]) document.addEventListener(type, onInputGesture, true);
+  document.addEventListener("keydown", onTab, true);
+  document.addEventListener("focus", onComposerFocus, true);
+  return () => {
+    if (prototype.focus === phoneComposerFocus) prototype.focus = focus;
+    for (const type of ["pointerdown", "click"]) document.removeEventListener(type, onInputGesture, true);
+    document.removeEventListener("keydown", onTab, true);
+    document.removeEventListener("focus", onComposerFocus, true);
+  };
+}
+
 function stampDshPhoneColumns(frame) {
   const columns = [...frame.children].filter(column => column instanceof HTMLElement);
   // The newer shell may insert a native mask before the actual sidebar.
@@ -19,6 +81,7 @@ function stampDshPhoneColumns(frame) {
 function installPhoneLayout(layout) {
   const html = document.documentElement;
   const media = window.matchMedia(MOBILE_QUERY$2);
+  const stopComposerFocus = installPhoneComposerFocus(media);
   const viewport = window.visualViewport;
   const observer = new MutationObserver(schedule);
   const nav = document.createElement("button");
@@ -92,7 +155,7 @@ function installPhoneLayout(layout) {
     nav.hidden = !needsNav;
     nav.setAttribute("aria-expanded", String(!frame.hasAttribute("data-sidebar-collapsed")));
     if (nav.parentElement !== frame) frame.appendChild(nav);
-    for (const editor of center.querySelectorAll('[data-composer-card] [contenteditable="true"]')) {
+    for (const editor of center.querySelectorAll(dshPhoneComposerEditor)) {
       if (editor.getAttribute("enterkeyhint") !== "send") editor.setAttribute("enterkeyhint", "send");
     }
   }
@@ -146,6 +209,7 @@ function installPhoneLayout(layout) {
   });
   sync();
   return () => {
+    stopComposerFocus();
     observer.disconnect();
     if (pending) window.cancelAnimationFrame(pending);
     media.removeEventListener("change", schedule);

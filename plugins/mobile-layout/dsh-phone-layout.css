@@ -39,21 +39,31 @@ html[data-dsh-phone] [data-mobile-role=center] {
   min-width: 0;
   min-height: 0;
   padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
-  transition: translate 180ms ease, border-radius 180ms ease;
+  transition: translate 180ms ease;
+}
+html[data-dsh-phone] [data-mobile-role=center] > * {
+  transition: opacity 180ms ease;
 }
 
-/* Keep the page at its original width and slide it beside the drawer. */
+/* Keep the page at its original width and slide it beside the drawer. The
+   page and drawer share the body color, which the host also gives the status
+   bar, so the top reads as one surface. The drawer's shadow and the faded page
+   mark the edge instead of a rule and rounded corners. */
 html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-mobile-role=center] {
   translate: var(--dsh-phone-sidebar-width) 0;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
   overflow: clip;
-  background: var(--dsw-alias-bg-layer-1, Canvas);
-  box-shadow: -1px 0 0 color-mix(in srgb, currentColor 12%, transparent);
+  background: var(--dsw-alias-bg-base, Canvas);
   cursor: pointer;
 }
 html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-mobile-role=center] > * {
   pointer-events: none;
+  opacity: .55;
+}
+/* The drawer has the host's own collapse button. A second, faded opener on
+   the page right beside it only doubles the control; a tap anywhere on the
+   page still closes the drawer. */
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) [data-dsh-phone-header-menu] {
+  visibility: hidden;
 }
 
 /* On newer hosts the native center defaults to grid column 2. The phone
@@ -159,24 +169,12 @@ html[data-dsh-phone] [data-mobile-role=sidebar] {
   max-width: 100% !important;
   padding-inline-start: env(safe-area-inset-left, 0px);
   z-index: 42;
-  background: var(--dsw-alias-bg-layer-1, Canvas);
-  box-shadow: none;
+  /* The host's sidebar panel and its sticky headers paint this fill. */
+  --dsw-specific-sidebar-fill: var(--dsw-alias-bg-base, Canvas);
+  background: var(--dsw-alias-bg-base, Canvas);
+  border-inline-end: 0;
+  box-shadow: 10px 0 28px -16px rgb(0 0 0 / 55%);
   overflow-x: clip;
-}
-html[data-dsh-phone] [data-dsh-phone-close] {
-  position: absolute;
-  inset-block-start: max(6px, env(safe-area-inset-top, 0px));
-  inset-inline-end: 8px;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  color: var(--dsw-alias-label-primary, CanvasText);
-  background: var(--dsw-alias-bg-layer-1, Canvas);
-  border: 0;
-  border-radius: 10px;
-  touch-action: manipulation;
 }
 
 html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-shell-leading],
@@ -319,7 +317,7 @@ html[data-dsh-phone] [data-mobile-role=details] {
 html[data-dsh-phone] [data-rightbar-fullscreen] > [data-mobile-role=details] {
   width: 100%;
 }
-html[data-dsh-phone] :is([data-mobile-role=sidebar], [data-mobile-role=details]) > :not([data-dsh-phone-close]) {
+html[data-dsh-phone] :is([data-mobile-role=sidebar], [data-mobile-role=details]) > * {
   max-width: 100%;
   width: 100% !important;
   min-width: 0;

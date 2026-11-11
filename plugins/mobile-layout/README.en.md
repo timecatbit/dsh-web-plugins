@@ -6,7 +6,7 @@ A narrow-screen layout for DeepSeek Harness (DSH). **Install it on its own.** It
 
 ## What changes
 
-- On phones, opening the left sidebar pushes the conversation to the right and leaves part of it visible.
+- On phones, opening the left sidebar pushes the conversation to the right, fades it, and leaves part of it visible. The sidebar, page and status bar share one color with no divider line. Opening a drawer while typing dismisses the keyboard.
 - Opening a conversation does not bring up the keyboard. Tap the composer to type.
 - The session readings below the composer (turns and steps, speed, tokens, cache hit, context usage) form a separate status bar: one cell each, value over a short description, nothing truncated. Tap a cell for details.
 - When the keyboard opens or closes, the page follows Safari's own animation and does not jump again afterwards. While the keyboard is open, the conversation header moves off screen, as on other pages in Safari.
@@ -38,11 +38,11 @@ The package remains `dsh-ui-mobile`. It replaces a previous build of this projec
 
 ## Install manually
 
-- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.14 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.14/dsh-ui-mobile-0.1.14.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
+- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.15 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.15/dsh-ui-mobile-0.1.15.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
 - **Standalone `dsh web`:** Download the `.tgz` from [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases). Use the same system account and `DSH_HOME` as the running instance. From the directory containing the download, run:
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.14.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.15.tgz"
   ```
 
   Replace `web` if you use a custom profile, then restart that `dsh web` process.

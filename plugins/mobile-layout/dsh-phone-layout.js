@@ -137,15 +137,10 @@ function installPhoneLayout(layout) {
   nav.setAttribute("aria-label", "菜单");
   nav.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
   nav.addEventListener("click", () => layout.toggleSidebar());
-  const close = document.createElement("button");
-  close.type = "button";
-  close.dataset.dshPhoneClose = "";
-  close.setAttribute("aria-label", "关闭侧栏");
-  close.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>';
-  close.addEventListener("click", () => layout.toggleSidebar());
   let pending = 0;
   let previous;
   let sidebarNavigationUntil = 0;
+  let drawerOpen = false;
 
   function schedule() {
     if (pending) return;
@@ -160,19 +155,20 @@ function installPhoneLayout(layout) {
     const center = frame?.querySelector(":scope > [data-mobile-role=center]");
     if (!phone || !center) {
       if (nav.isConnected) nav.remove();
-      if (close.isConnected) close.remove();
       previous?.frame.removeAttribute("data-dsh-phone-global-page");
       previous = undefined;
+      drawerOpen = false;
       return;
     }
     const sidebar = frame.querySelector(":scope > [data-mobile-role=sidebar]");
-    const sidebarOpen = sidebar && !frame.hasAttribute("data-sidebar-collapsed");
-    const hostClose = sidebar && [...sidebar.querySelectorAll('button[aria-label], button[title]')].find(button =>
-      button !== close && /(?:close|collapse)(?: left)? sidebar|(?:收起|关闭).*侧栏/i.test(
-        button.getAttribute("aria-label") || button.getAttribute("title") || ""));
-    if (sidebarOpen && !hostClose) {
-      if (close.parentElement !== sidebar) sidebar.appendChild(close);
-    } else if (close.isConnected) close.remove();
+    // A drawer covers the composer, so the composer's keyboard goes with it.
+    // An edge swipe or header button opens it without moving focus.
+    const drawer = !!(sidebar && !frame.hasAttribute("data-sidebar-collapsed")) || rightOpen(frame);
+    if (drawer && !drawerOpen) {
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && center.contains(active) && active.matches(dshPhoneEditable)) active.blur();
+    }
+    drawerOpen = drawer;
     const content = center.querySelector("[data-conversation-content]");
     const session = content?.getAttribute("data-conversation-session") ?? null;
     const panel = center.firstElementChild;
@@ -255,7 +251,6 @@ function installPhoneLayout(layout) {
     document.removeEventListener("keydown", onEscape);
     document.removeEventListener("click", onPhoneClick, true);
     nav.remove();
-    close.remove();
     previous?.frame.removeAttribute("data-dsh-phone-global-page");
     html.removeAttribute("data-dsh-phone");
   };

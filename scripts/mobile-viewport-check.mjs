@@ -162,8 +162,9 @@ try {
     `<div data-slot="conversation.composer.dock" style="display:contents">${entries}</div>${meter}</div>`
   const status = await browser.newPage({ ...devices[engine === 'webkit' ? 'iPhone 15' : 'Pixel 7'], viewport: { width: 390, height: 654 } })
   await status.setContent('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><div id="root">' +
-    '<div data-mobile-frame data-sidebar-collapsed data-rightbar-collapsed><div data-mobile-role="center">' +
-    '<div data-conversation-content><div data-composer-card class="host-card"><span style="width:110px;flex:none"></span>' +
+    '<div data-mobile-frame data-sidebar-collapsed data-rightbar-collapsed><div data-mobile-role="sidebar"></div><div data-mobile-role="center">' +
+    '<div data-conversation-content><div data-composer-card class="host-card"><div contenteditable="true" style="width:60px;flex:none"></div>' +
+    '<span style="width:42px;flex:none"></span>' +
     '<button type="button" class="host-model" aria-haspopup="menu"><span class="x_triggerLabel">DeepSeek V4.1 Flash</span></button>' +
     '<span style="width:36px;flex:none"></span></div>' +
     dock(pill('activity', '12 轮 34 步', '44 tok/s') + pill('usage', '8.3K tok', '缓存命中 98%'),
@@ -194,8 +195,28 @@ try {
   assert.equal(bar.clipped, false, 'readings wrap instead of truncating')
   assert.equal(bar.caption, '上下文已用')
   assert.equal(bar.emptyRule, '0px', 'a dock without readings stays as the host draws it')
+
+  // An edge swipe or header button opens a drawer without moving focus; the
+  // composer's keyboard has to go with the page it belongs to.
+  const typing = status.locator('[data-composer-card] [contenteditable]')
+  const focused = () => typing.evaluate(el => document.activeElement === el)
+  const drawer = (attribute, collapsed) => status.evaluate(({ attribute, collapsed }) => new Promise(resolve => {
+    document.querySelector('[data-mobile-frame]').toggleAttribute(attribute, collapsed)
+    requestAnimationFrame(() => requestAnimationFrame(resolve))
+  }), { attribute, collapsed })
+  for (const attribute of ['data-sidebar-collapsed', 'data-rightbar-collapsed']) {
+    await typing.tap()
+    assert.equal(await focused(), true)
+    await drawer(attribute, false)
+    assert.equal(await focused(), false, attribute + ': opening a drawer dismisses the keyboard')
+    await drawer(attribute, true)
+    await typing.tap()
+    await drawer('data-dsh-test', true)
+    assert.equal(await focused(), true, attribute + ': a closed drawer leaves typing alone')
+  }
+  assert.equal(await status.locator('[data-dsh-phone-close]').count(), 0, 'the drawer keeps the host close button only')
   await status.evaluate(() => window.stopLayout())
-  console.log(engine + ': keyboard reports leave the app in place, a leftover pan is cleared after dismissal, composer focus guards and the composer status bar passed')
+  console.log(engine + ': keyboard reports leave the app in place, a leftover pan is cleared after dismissal, composer focus guards, the composer status bar and drawer keyboard dismissal passed')
 } finally {
   await browser.close()
 }

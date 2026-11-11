@@ -83,59 +83,44 @@ function installPhoneViewport(media) {
   const viewport = window.visualViewport;
   let pending = 0;
   let settled = 0;
-  let appliedHeight = 0;
-  let candidate;
-  let width;
+  let keyboardOpen = false;
+  let appliedViewportHeight = 0;
+  let appliedOffsetTop = 0;
 
-  function apply(height) {
-    appliedHeight = height;
-    html.toggleAttribute("data-dsh-phone-keyboard", height !== 0);
-    if (height) html.style.setProperty("--dsh-phone-height", height + "px");
-    else html.style.removeProperty("--dsh-phone-height");
+  function setProperty(name, value) {
+    if (html.style.getPropertyValue(name) !== value) html.style.setProperty(name, value);
   }
 
-  function sync(now = performance.now()) {
+  function sync() {
     pending = 0;
     const normalScale = viewport && Math.abs(viewport.scale - 1) < 0.05;
     if (!media.matches || !normalScale || !(viewport.height > 0)) {
-      candidate = undefined;
-      if (appliedHeight) apply(0);
+      keyboardOpen = false;
+      appliedViewportHeight = appliedOffsetTop = 0;
+      html.removeAttribute("data-dsh-phone-keyboard");
+      html.style.removeProperty("--dsh-phone-height");
+      html.style.removeProperty("--dsh-phone-top");
       return;
     }
 
     const layoutHeight = Math.max(window.innerHeight, html.clientHeight);
-    const gap = layoutHeight - viewport.height;
-    const editable = document.activeElement?.matches?.('input, textarea, [contenteditable="true"]');
-    const next = gap > (appliedHeight ? 72 : 105) && (editable || appliedHeight)
-      ? Math.round(viewport.height) : 0;
-    const resized = width !== undefined && width !== window.innerWidth;
-    width = window.innerWidth;
-    if (next === appliedHeight) {
-      candidate = undefined;
-      return;
-    }
-
-    // WebKit can briefly report the opposite height during keyboard animation.
-    // Confirm opening, closing, and large jumps before resizing the app. Small
-    // changes to an already-open keyboard still track its usable height.
-    const boundary = !next || !appliedHeight || Math.abs(next - appliedHeight) > 72;
-    if (boundary && !resized) {
-      if (!candidate || (next === 0) !== (candidate.height === 0) ||
-        Math.abs(next - candidate.height) > 4) {
-        candidate = { height: next, since: now };
-      }
-      if (now - candidate.since < 40) {
-        pending = window.requestAnimationFrame(sync);
-        return;
-      }
-    }
-    candidate = undefined;
-    apply(next);
+    const gap = Math.max(0, layoutHeight - viewport.height);
+    const editing = document.activeElement?.matches?.('input, textarea, [contenteditable="true"]');
+    // A blur can precede a native resize. Keep the current geometry until
+    // the browser reports a change, even if the editor has lost focus.
+    keyboardOpen = gap > (keyboardOpen ? 72 : 105) && (editing || keyboardOpen);
+    const top = keyboardOpen ? Math.min(Math.max(0, viewport.offsetTop), gap) : 0;
+    appliedViewportHeight = viewport.height;
+    appliedOffsetTop = viewport.offsetTop;
+    html.toggleAttribute("data-dsh-phone-keyboard", !!keyboardOpen);
+    setProperty("--dsh-phone-height", Math.round(appliedViewportHeight) + "px");
+    setProperty("--dsh-phone-top", Math.round(top) + "px");
   }
 
   function schedule() {
     if (!pending) pending = window.requestAnimationFrame(sync);
-    // WebKit may emit the final event before publishing the final geometry.
+    // Some WebKit events fire before the final geometry is readable.
+    // Recheck the browser's reported values; don't predict an animation.
     window.clearTimeout(settled);
     settled = window.setTimeout(() => {
       settled = 0;
@@ -143,21 +128,41 @@ function installPhoneViewport(media) {
     }, 160);
   }
 
+  function onViewportChange() {
+    // Keep size and pan in the same browser event, including offset-only
+    // updates. A restored viewport should not render with the old offset.
+    if (media.matches && viewport &&
+      (Math.abs(viewport.height - appliedViewportHeight) > 0.5 ||
+        Math.abs(viewport.offsetTop - appliedOffsetTop) > 0.5)) {
+      if (pending) window.cancelAnimationFrame(pending);
+      sync();
+    }
+    schedule();
+  }
+
   media.addEventListener("change", schedule);
-  viewport?.addEventListener("resize", schedule);
-  for (const type of ["resize", "pageshow", "orientationchange"]) window.addEventListener(type, schedule);
+  viewport?.addEventListener("resize", onViewportChange);
+  viewport?.addEventListener("scroll", onViewportChange);
+  window.addEventListener("resize", onViewportChange);
+  window.addEventListener("scroll", onViewportChange, { passive: true });
+  for (const type of ["pageshow", "orientationchange"]) window.addEventListener(type, schedule);
   document.addEventListener("focusin", schedule);
   document.addEventListener("focusout", schedule);
   sync();
   return () => {
     media.removeEventListener("change", schedule);
-    viewport?.removeEventListener("resize", schedule);
-    for (const type of ["resize", "pageshow", "orientationchange"]) window.removeEventListener(type, schedule);
+    viewport?.removeEventListener("resize", onViewportChange);
+    viewport?.removeEventListener("scroll", onViewportChange);
+    window.removeEventListener("resize", onViewportChange);
+    window.removeEventListener("scroll", onViewportChange);
+    for (const type of ["pageshow", "orientationchange"]) window.removeEventListener(type, schedule);
     document.removeEventListener("focusin", schedule);
     document.removeEventListener("focusout", schedule);
     if (pending) window.cancelAnimationFrame(pending);
     window.clearTimeout(settled);
-    apply(0);
+    html.removeAttribute("data-dsh-phone-keyboard");
+    html.style.removeProperty("--dsh-phone-height");
+    html.style.removeProperty("--dsh-phone-top");
   };
 }
 

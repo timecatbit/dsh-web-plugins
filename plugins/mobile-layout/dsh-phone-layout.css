@@ -1,5 +1,6 @@
 html[data-dsh-phone] {
   --dsh-phone-height: 100dvh;
+  --dsh-phone-top: 0px;
   --dsh-phone-gutter: clamp(8px, 3vw, 16px);
   --dsh-phone-safe-bottom: max(8px, env(safe-area-inset-bottom, 0px));
   --dsh-phone-sidebar-width: min(calc(280px + env(safe-area-inset-left, 0px)),
@@ -14,12 +15,11 @@ html[data-dsh-phone] body {
   overscroll-behavior: none;
 }
 
-/* The keyboard may pan WebKit's visual viewport. Keep the page in the
-   layout viewport and resize only its bottom edge. */
 html[data-dsh-phone] #root {
-  position: relative;
+  position: fixed;
+  inset: var(--dsh-phone-top) 0 auto;
   height: var(--dsh-phone-height);
-  overflow: clip;
+  overflow: hidden;
 }
 
 html[data-dsh-phone] [data-mobile-frame] {
@@ -448,6 +448,9 @@ html[data-dsh-phone] .X_2TxG_toolbar { flex-wrap: wrap; gap: 8px; }
 
 html[data-dsh-phone][data-dsh-phone-keyboard] {
   --dsh-phone-safe-bottom: 4px;
+}
+html[data-dsh-phone][data-dsh-phone-keyboard] .wSkVaW_composerHero > :first-child {
+  display: none;
 }
 @media (max-height: 530px) {
   html[data-dsh-phone] .wSkVaW_composerHero > :first-child { display: none; }

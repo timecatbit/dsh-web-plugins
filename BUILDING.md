@@ -33,4 +33,4 @@ DSH_TEST_BROWSER=webkit node scripts/mobile-viewport-check.mjs
 DSH_TEST_BROWSER=chromium node scripts/mobile-viewport-check.mjs
 ```
 
-Chromium uses the installed Chrome channel by default; override it with `DSH_TEST_CHROME_CHANNEL`. A custom WebKit executable can be supplied through `DSH_TEST_WEBKIT_EXECUTABLE`. The check injects keyboard-like VisualViewport changes into a scrolling editor fixture and verifies stale-offset recovery, blur ordering, draft/scroll retention, toolbar changes, zoom, settling, and cleanup. It does not emulate a real iOS software keyboard; verify the animation on a physical iPhone as well.
+Chromium uses the installed Chrome channel by default; override it with `DSH_TEST_CHROME_CHANNEL`. A custom WebKit executable can be supplied through `DSH_TEST_WEBKIT_EXECUTABLE`. The check replays keyboard-like VisualViewport events and the associated native document pan in a scrolling editor fixture. It checks the app position in the same event, before the next animation frame, plus draft/scroll retention, zoom, delayed geometry, and cleanup. It does not emulate a real iOS software keyboard; verify the animation on a physical iPhone as well.

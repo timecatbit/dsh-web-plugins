@@ -37,11 +37,11 @@
 
 ## 手动安装
 
-- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.12 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.12/dsh-ui-mobile-0.1.12.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
+- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.13 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.13/dsh-ui-mobile-0.1.13.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
 - **独立 `dsh web`**：从 [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) 下载 `.tgz`。用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录执行：
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.12.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.13.tgz"
   ```
 
   使用自定义 profile 时替换 `web`，安装后重启该 `dsh web` 进程。

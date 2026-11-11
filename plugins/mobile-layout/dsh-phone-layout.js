@@ -1,4 +1,6 @@
 const dshPhoneComposerEditor = '[data-composer-card] [contenteditable="true"]';
+const dshPhoneComposerSearch = '[data-composer-card] [data-composer-overlay] input';
+const dshPhoneEditable = 'input, textarea, select, [contenteditable="true"]';
 
 function installPhoneComposerFocus(media) {
   // Older DSH runs its mount/session-switch focus effect before a mutation
@@ -12,9 +14,13 @@ function installPhoneComposerFocus(media) {
   let tappedUntil = 0;
   let tabUntil = 0;
 
-  function authorized(editor) {
+  function authorized(editor, from) {
     const now = performance.now();
-    return now < tabUntil || (editor === tappedEditor && now < tappedUntil);
+    // Focus moving between composer fields keeps the keyboard that is
+    // already up, e.g. returning from the command popup's search field.
+    return now < tabUntil || (editor === tappedEditor && now < tappedUntil) ||
+      (from instanceof Element && from !== editor && from.matches(dshPhoneEditable) &&
+        from.closest("[data-composer-card]") === editor.closest("[data-composer-card]"));
   }
 
   function onInputGesture(event) {
@@ -31,8 +37,13 @@ function installPhoneComposerFocus(media) {
   }
 
   function phoneComposerFocus(...args) {
-    if (requiresTap() && this instanceof HTMLElement && this.matches(dshPhoneComposerEditor) &&
-      document.activeElement !== this && !authorized(this)) return;
+    if (requiresTap() && this instanceof HTMLElement && document.activeElement !== this) {
+      if (this.matches(dshPhoneComposerEditor) && !authorized(this, document.activeElement)) return;
+      // The command popup focuses its search field when it opens. Coming
+      // from the open editor that keeps the keyboard; after a toolbar tap it
+      // would raise the keyboard over the list. The field still takes taps.
+      if (this.matches(dshPhoneComposerSearch) && !document.activeElement?.matches?.(dshPhoneEditable)) return;
+    }
     return focus.apply(this, args);
   }
 
@@ -45,7 +56,7 @@ function installPhoneComposerFocus(media) {
     // the DOM selection, without calling HTMLElement.focus().
     const editor = event.target;
     if (requiresTap() && editor instanceof HTMLElement && editor.matches(dshPhoneComposerEditor) &&
-      !authorized(editor)) editor.blur();
+      !authorized(editor, event.relatedTarget)) editor.blur();
   }
 
   prototype.focus = phoneComposerFocus;
@@ -79,90 +90,38 @@ function stampDshPhoneColumns(frame) {
 }
 
 function installPhoneViewport(media) {
+  // The keyboard pans WebKit's visual viewport across the fixed app, in step
+  // with its own animation, and the final geometry is reported only after
+  // that animation. Moving or resizing the app from those reports replays
+  // the motion as a jump. Leave the app at the full layout viewport so the
+  // native pan carries the composer, and only clear a pan that remains once
+  // the keyboard has gone.
   const html = document.documentElement;
   const viewport = window.visualViewport;
-  let pending = 0;
+  if (!viewport) return () => {};
   let settled = 0;
-  let keyboardOpen = false;
-  let appliedViewportHeight = 0;
-  let appliedOffsetTop = 0;
 
-  function setProperty(name, value) {
-    if (html.style.getPropertyValue(name) !== value) html.style.setProperty(name, value);
-  }
-
-  function sync() {
-    pending = 0;
-    const normalScale = viewport && Math.abs(viewport.scale - 1) < 0.05;
-    if (!media.matches || !normalScale || !(viewport.height > 0)) {
-      keyboardOpen = false;
-      appliedViewportHeight = appliedOffsetTop = 0;
-      html.removeAttribute("data-dsh-phone-keyboard");
-      html.style.removeProperty("--dsh-phone-height");
-      html.style.removeProperty("--dsh-phone-top");
-      return;
-    }
-
-    const layoutHeight = Math.max(window.innerHeight, html.clientHeight);
-    const gap = Math.max(0, layoutHeight - viewport.height);
-    const editing = document.activeElement?.matches?.('input, textarea, [contenteditable="true"]');
-    // A blur can precede a native resize. Keep the current geometry until
-    // the browser reports a change, even if the editor has lost focus.
-    keyboardOpen = gap > (keyboardOpen ? 72 : 105) && (editing || keyboardOpen);
-    const top = keyboardOpen ? Math.min(Math.max(0, viewport.offsetTop), gap) : 0;
-    appliedViewportHeight = viewport.height;
-    appliedOffsetTop = viewport.offsetTop;
-    html.toggleAttribute("data-dsh-phone-keyboard", !!keyboardOpen);
-    setProperty("--dsh-phone-height", Math.round(appliedViewportHeight) + "px");
-    setProperty("--dsh-phone-top", Math.round(top) + "px");
+  function settle() {
+    settled = 0;
+    if (!media.matches || Math.abs(viewport.scale - 1) >= 0.05) return;
+    if (document.activeElement?.matches?.(dshPhoneEditable)) return;
+    if (Math.max(window.innerHeight, html.clientHeight) - viewport.height > 1) return;
+    if (viewport.offsetTop > 0.5 || window.scrollY > 0.5) window.scrollTo(0, 0);
   }
 
   function schedule() {
-    if (!pending) pending = window.requestAnimationFrame(sync);
-    // Some WebKit events fire before the final geometry is readable.
-    // Recheck the browser's reported values; don't predict an animation.
     window.clearTimeout(settled);
-    settled = window.setTimeout(() => {
-      settled = 0;
-      if (!pending) pending = window.requestAnimationFrame(sync);
-    }, 160);
+    settled = window.setTimeout(settle, 240);
   }
 
-  function onViewportChange() {
-    // Keep size and pan in the same browser event, including offset-only
-    // updates. A restored viewport should not render with the old offset.
-    if (media.matches && viewport &&
-      (Math.abs(viewport.height - appliedViewportHeight) > 0.5 ||
-        Math.abs(viewport.offsetTop - appliedOffsetTop) > 0.5)) {
-      if (pending) window.cancelAnimationFrame(pending);
-      sync();
-    }
-    schedule();
-  }
-
-  media.addEventListener("change", schedule);
-  viewport?.addEventListener("resize", onViewportChange);
-  viewport?.addEventListener("scroll", onViewportChange);
-  window.addEventListener("resize", onViewportChange);
-  window.addEventListener("scroll", onViewportChange, { passive: true });
-  for (const type of ["pageshow", "orientationchange"]) window.addEventListener(type, schedule);
-  document.addEventListener("focusin", schedule);
+  viewport.addEventListener("resize", schedule);
+  viewport.addEventListener("scroll", schedule);
   document.addEventListener("focusout", schedule);
-  sync();
   return () => {
-    media.removeEventListener("change", schedule);
-    viewport?.removeEventListener("resize", onViewportChange);
-    viewport?.removeEventListener("scroll", onViewportChange);
-    window.removeEventListener("resize", onViewportChange);
-    window.removeEventListener("scroll", onViewportChange);
-    for (const type of ["pageshow", "orientationchange"]) window.removeEventListener(type, schedule);
-    document.removeEventListener("focusin", schedule);
+    viewport.removeEventListener("resize", schedule);
+    viewport.removeEventListener("scroll", schedule);
     document.removeEventListener("focusout", schedule);
-    if (pending) window.cancelAnimationFrame(pending);
     window.clearTimeout(settled);
-    html.removeAttribute("data-dsh-phone-keyboard");
-    html.style.removeProperty("--dsh-phone-height");
-    html.style.removeProperty("--dsh-phone-top");
   };
 }
 

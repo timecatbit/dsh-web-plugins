@@ -8,6 +8,7 @@ A narrow-screen layout for DeepSeek Harness (DSH). **Install it on its own.** It
 
 - On phones, opening the left sidebar pushes the conversation to the right and leaves part of it visible.
 - Opening a conversation does not bring up the keyboard. Tap the composer to type.
+- When the keyboard opens or closes, the page follows Safari's own animation and does not jump again afterwards. While the keyboard is open, the conversation header moves off screen, as on other pages in Safari.
 - The settings fit narrow screens. There is one left-sidebar button in chat, and the native right-sidebar button stays available.
 - Better Sidebar's bottom-workbench button is hidden in phone mode. The desktop toolbar is unchanged.
 

@@ -27,7 +27,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "d5d16d079b4d398949a9ffe3580b5ad175a8ded4"
+            "commit": "045653709f7a664dd2113e7ca01e344ee71bc773"
           },
           "engines": {
             "dsh": "0.2.1-rc.5 || 0.2.2-rc.1"

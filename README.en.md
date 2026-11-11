@@ -46,7 +46,7 @@ New release candidates must be verified before expanding the Mobile Layout compa
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.10/dsh-ui-mobile-0.1.10.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.11/dsh-ui-mobile-0.1.11.tgz
    https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz
    ```
 
@@ -58,7 +58,7 @@ New release candidates must be verified before expanding the Mobile Layout compa
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.10.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.11.tgz"
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
 ```
 

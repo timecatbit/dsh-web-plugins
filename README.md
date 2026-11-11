@@ -48,7 +48,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 2. 粘贴所需安装包的完整地址，一次装一个：
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.10/dsh-ui-mobile-0.1.10.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.11/dsh-ui-mobile-0.1.11.tgz
    https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz
    ```
 
@@ -63,7 +63,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.10.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.11.tgz"
 
 # Passkey 代理
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"

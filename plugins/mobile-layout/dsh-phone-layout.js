@@ -83,41 +83,59 @@ function installPhoneViewport(media) {
   const viewport = window.visualViewport;
   let pending = 0;
   let settled = 0;
-  let keyboardOpen = false;
+  let appliedHeight = 0;
+  let candidate;
+  let width;
 
-  function setProperty(name, value) {
-    if (html.style.getPropertyValue(name) !== value) html.style.setProperty(name, value);
+  function apply(height) {
+    appliedHeight = height;
+    html.toggleAttribute("data-dsh-phone-keyboard", height !== 0);
+    if (height) html.style.setProperty("--dsh-phone-height", height + "px");
+    else html.style.removeProperty("--dsh-phone-height");
   }
 
-  function sync() {
+  function sync(now = performance.now()) {
     pending = 0;
     const normalScale = viewport && Math.abs(viewport.scale - 1) < 0.05;
     if (!media.matches || !normalScale || !(viewport.height > 0)) {
-      keyboardOpen = false;
-      html.removeAttribute("data-dsh-phone-keyboard");
-      html.style.removeProperty("--dsh-phone-height");
-      html.style.removeProperty("--dsh-phone-top");
+      candidate = undefined;
+      if (appliedHeight) apply(0);
       return;
     }
 
-    // WebKit may restore the height before resetting offsetTop on dismissal.
-    // Never carry that stale offset into the restored, full-height app.
     const layoutHeight = Math.max(window.innerHeight, html.clientHeight);
-    const gap = Math.max(0, layoutHeight - viewport.height);
+    const gap = layoutHeight - viewport.height;
     const editable = document.activeElement?.matches?.('input, textarea, [contenteditable="true"]');
-    // Blur precedes the keyboard animation. Keep the small-viewport layout
-    // until the geometry recovers; a toolbar resize alone must not open it.
-    keyboardOpen = gap > (keyboardOpen ? 72 : 105) && (editable || keyboardOpen);
-    const top = keyboardOpen ? Math.min(Math.max(0, viewport.offsetTop), gap) : 0;
-    html.toggleAttribute("data-dsh-phone-keyboard", !!keyboardOpen);
-    setProperty("--dsh-phone-height", Math.round(viewport.height) + "px");
-    setProperty("--dsh-phone-top", Math.round(top) + "px");
+    const next = gap > (appliedHeight ? 72 : 105) && (editable || appliedHeight)
+      ? Math.round(viewport.height) : 0;
+    const resized = width !== undefined && width !== window.innerWidth;
+    width = window.innerWidth;
+    if (next === appliedHeight) {
+      candidate = undefined;
+      return;
+    }
+
+    // WebKit can briefly report the opposite height during keyboard animation.
+    // Confirm opening, closing, and large jumps before resizing the app. Small
+    // changes to an already-open keyboard still track its usable height.
+    const boundary = !next || !appliedHeight || Math.abs(next - appliedHeight) > 72;
+    if (boundary && !resized) {
+      if (!candidate || (next === 0) !== (candidate.height === 0) ||
+        Math.abs(next - candidate.height) > 4) {
+        candidate = { height: next, since: now };
+      }
+      if (now - candidate.since < 40) {
+        pending = window.requestAnimationFrame(sync);
+        return;
+      }
+    }
+    candidate = undefined;
+    apply(next);
   }
 
   function schedule() {
     if (!pending) pending = window.requestAnimationFrame(sync);
-    // Installed iOS web apps can report the last resize a frame early.
-    // Recheck once after the event burst, without polling while idle.
+    // WebKit may emit the final event before publishing the final geometry.
     window.clearTimeout(settled);
     settled = window.setTimeout(() => {
       settled = 0;
@@ -127,7 +145,6 @@ function installPhoneViewport(media) {
 
   media.addEventListener("change", schedule);
   viewport?.addEventListener("resize", schedule);
-  viewport?.addEventListener("scroll", schedule);
   for (const type of ["resize", "pageshow", "orientationchange"]) window.addEventListener(type, schedule);
   document.addEventListener("focusin", schedule);
   document.addEventListener("focusout", schedule);
@@ -135,15 +152,12 @@ function installPhoneViewport(media) {
   return () => {
     media.removeEventListener("change", schedule);
     viewport?.removeEventListener("resize", schedule);
-    viewport?.removeEventListener("scroll", schedule);
     for (const type of ["resize", "pageshow", "orientationchange"]) window.removeEventListener(type, schedule);
     document.removeEventListener("focusin", schedule);
     document.removeEventListener("focusout", schedule);
     if (pending) window.cancelAnimationFrame(pending);
     window.clearTimeout(settled);
-    html.removeAttribute("data-dsh-phone-keyboard");
-    html.style.removeProperty("--dsh-phone-height");
-    html.style.removeProperty("--dsh-phone-top");
+    apply(0);
   };
 }
 

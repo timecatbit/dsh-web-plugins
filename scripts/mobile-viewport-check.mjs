@@ -27,8 +27,7 @@ try {
     document.documentElement.toggleAttribute('data-dsh-phone', media.matches);
     window.stopViewport = installPhoneViewport(media);
   `)
-  const frame = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
-  const metrics = () => page.evaluate(() => {
+  const layout = () => page.evaluate(() => {
     const root = document.getElementById('root')
     const r = root.getBoundingClientRect()
     return {
@@ -38,69 +37,90 @@ try {
       property: document.documentElement.style.getPropertyValue('--dsh-phone-height'),
     }
   })
-  const change = async (values, type = 'resize') => {
-    await page.evaluate(({ values, type }) => {
-      Object.assign(window.testViewport, values)
-      window.testViewport.dispatchEvent(new Event(type))
-    }, { values, type })
-    await frame()
-    return metrics()
-  }
-  await page.locator('[contenteditable]').tap()
-  await page.locator('[contenteditable]').press('End')
+  const play = async (stages) => page.evaluate(async stages => {
+    const frames = []
+    for (const { height, top, scale = 1, count = 1 } of stages) {
+      Object.assign(window.testViewport, { height, offsetTop: top, scale })
+      window.testViewport.dispatchEvent(new Event('resize'))
+      for (let i = 0; i < count; i++) {
+        await new Promise(resolve => requestAnimationFrame(resolve))
+        const rect = document.getElementById('root').getBoundingClientRect()
+        frames.push({ top: rect.top, height: rect.height })
+      }
+    }
+    return frames
+  }, stages)
+  const heightIs = (height) => page.waitForFunction(height =>
+    Math.round(document.getElementById('root').getBoundingClientRect().height) === height, height)
+  const editor = page.locator('[contenteditable]')
+  await editor.tap()
+  await editor.press('End')
   await page.keyboard.insertText(' preserved')
   await page.evaluate(() => { document.querySelector('[data-conversation-scroll]').scrollTop = 360 })
-  await frame()
-  const before = await metrics()
+  const before = await layout()
+  assert.ok(before.scroll > 100)
+  assert.match(before.draft, /preserved/)
   for (let cycle = 0; cycle < 6; cycle++) {
-    await page.locator('[contenteditable]').evaluate(el => el.focus())
-    let m = await change({ height: 450, offsetTop: 170, scale: 1 })
+    await editor.evaluate(el => el.focus({ preventScroll: true }))
+    const opening = await play([
+      { height: 530, top: 170 }, // A short, premature keyboard sample.
+      { height: 844, top: 394 },
+      { height: 450, top: 170, count: 1 },
+    ])
+    assert.ok(opening.every(x => x.top === 0 && x.height === 844), JSON.stringify(opening))
+    await heightIs(450)
+    let m = await layout()
     assert.equal(m.keyboard, true)
-    assert.equal(m.top, 170)
-    assert.equal(m.height, 450)
-    await page.locator('[contenteditable]').evaluate(el => el.blur())
-    await frame()
-    assert.equal((await metrics()).keyboard, true, 'blur must not expand the page before the keyboard closes')
-    m = await change({ height: 844, offsetTop: 394 })
-    assert.equal(m.top, 0, 'a stale iOS pan must not offset the restored page')
+    assert.equal(m.top, 0)
+    // The keyboard can be dismissed by the OS with focus still on the editor.
+    if (cycle % 2 === 0) await editor.evaluate(el => el.blur())
+    const closing = await play([
+      { height: 844, top: 394 }, // A one-frame full-height report while the keyboard is still up.
+      { height: 450, top: 170 },
+      { height: 844, top: 394 },
+    ])
+    assert.ok(closing.every(x => x.top === 0 && x.height === 450), JSON.stringify(closing))
+    await heightIs(844)
+    m = await layout()
+    assert.equal(m.top, 0)
     assert.equal(m.keyboard, false)
-    assert.equal(m.height, 844)
     assert.equal(m.draft, before.draft)
     assert.equal(m.scroll, before.scroll)
   }
-  // A browser-toolbar change must not be mistaken for a keyboard.
-  let m = await change({ height: 790, offsetTop: 54 })
+  // A toolbar change with the editor focused is left to the browser's CSS viewport.
+  await play([{ height: 790, top: 54, count: 5 }])
+  let m = await layout()
   assert.equal(m.keyboard, false)
-  assert.equal(m.top, 0)
-  await page.locator('[contenteditable]').evaluate(el => el.focus())
-  m = await change({ height: 450, offsetTop: 700 })
-  assert.equal(m.top, 394, 'transient pan cannot exceed the occluded part of the layout viewport')
-  // Pinch zoom must not be forced back into an unscaled fixed viewport.
-  m = await change({ height: 350, offsetTop: 120, scale: 1.5 })
+  assert.equal(m.property, '')
+  await editor.evaluate(el => el.focus({ preventScroll: true }))
+  await play([{ height: 450, top: 700 }])
+  await heightIs(450)
+  assert.equal((await layout()).top, 0)
+  // Pinch zoom must not be forced back into an unscaled viewport.
+  await play([{ height: 350, top: 120, scale: 1.5 }])
+  m = await layout()
   assert.equal(m.property, '')
   assert.equal(m.keyboard, false)
-  await change({ height: 844, offsetTop: 0, scale: 1 })
-  // iOS may emit its final event before publishing the final geometry.
+  await play([{ height: 450, top: 170 }])
+  await heightIs(450)
+  // The final resize event can fire before the final geometry is readable.
   await page.evaluate(() => {
-    Object.assign(window.testViewport, { height: 450, offsetTop: 170 })
     window.testViewport.dispatchEvent(new Event('resize'))
     setTimeout(() => Object.assign(window.testViewport, { height: 844, offsetTop: 394 }), 60)
   })
-  await page.waitForTimeout(230)
-  await frame()
-  m = await metrics()
+  await heightIs(844)
+  m = await layout()
   assert.equal(m.top, 0)
-  assert.equal(m.height, 844, 'settling check must read the late final geometry')
   await page.evaluate(() => window.stopViewport())
-  assert.equal((await metrics()).property, '')
+  assert.equal((await layout()).property, '')
   await page.evaluate(() => {
     document.documentElement.removeAttribute('data-dsh-phone')
     window.stopViewport = installPhoneViewport(matchMedia('(min-width:1000px)'))
   })
-  await change({ height: 450, offsetTop: 200 })
-  assert.equal((await metrics()).property, '', 'desktop leaves viewport sizing to the host')
+  await play([{ height: 450, top: 200, count: 5 }])
+  assert.equal((await layout()).property, '', 'desktop leaves viewport sizing to the host')
   await page.evaluate(() => window.stopViewport())
-  console.log(engine + ': keyboard cycles, stale pan, blur ordering, draft/scroll retention, toolbar, zoom, late event and teardown passed')
+  console.log(engine + ': opening and closing frames stay anchored; transient heights, draft/scroll retention, toolbar, zoom, late event and teardown passed')
 } finally {
   await browser.close()
 }

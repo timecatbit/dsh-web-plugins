@@ -78,11 +78,80 @@ function stampDshPhoneColumns(frame) {
   }
 }
 
+function installPhoneViewport(media) {
+  const html = document.documentElement;
+  const viewport = window.visualViewport;
+  let pending = 0;
+  let settled = 0;
+  let keyboardOpen = false;
+
+  function setProperty(name, value) {
+    if (html.style.getPropertyValue(name) !== value) html.style.setProperty(name, value);
+  }
+
+  function sync() {
+    pending = 0;
+    const normalScale = viewport && Math.abs(viewport.scale - 1) < 0.05;
+    if (!media.matches || !normalScale || !(viewport.height > 0)) {
+      keyboardOpen = false;
+      html.removeAttribute("data-dsh-phone-keyboard");
+      html.style.removeProperty("--dsh-phone-height");
+      html.style.removeProperty("--dsh-phone-top");
+      return;
+    }
+
+    // WebKit may restore the height before resetting offsetTop on dismissal.
+    // Never carry that stale offset into the restored, full-height app.
+    const layoutHeight = Math.max(window.innerHeight, html.clientHeight);
+    const gap = Math.max(0, layoutHeight - viewport.height);
+    const editable = document.activeElement?.matches?.('input, textarea, [contenteditable="true"]');
+    // Blur precedes the keyboard animation. Keep the small-viewport layout
+    // until the geometry recovers; a toolbar resize alone must not open it.
+    keyboardOpen = gap > (keyboardOpen ? 72 : 105) && (editable || keyboardOpen);
+    const top = keyboardOpen ? Math.min(Math.max(0, viewport.offsetTop), gap) : 0;
+    html.toggleAttribute("data-dsh-phone-keyboard", !!keyboardOpen);
+    setProperty("--dsh-phone-height", Math.round(viewport.height) + "px");
+    setProperty("--dsh-phone-top", Math.round(top) + "px");
+  }
+
+  function schedule() {
+    if (!pending) pending = window.requestAnimationFrame(sync);
+    // Installed iOS web apps can report the last resize a frame early.
+    // Recheck once after the event burst, without polling while idle.
+    window.clearTimeout(settled);
+    settled = window.setTimeout(() => {
+      settled = 0;
+      if (!pending) pending = window.requestAnimationFrame(sync);
+    }, 160);
+  }
+
+  media.addEventListener("change", schedule);
+  viewport?.addEventListener("resize", schedule);
+  viewport?.addEventListener("scroll", schedule);
+  for (const type of ["resize", "pageshow", "orientationchange"]) window.addEventListener(type, schedule);
+  document.addEventListener("focusin", schedule);
+  document.addEventListener("focusout", schedule);
+  sync();
+  return () => {
+    media.removeEventListener("change", schedule);
+    viewport?.removeEventListener("resize", schedule);
+    viewport?.removeEventListener("scroll", schedule);
+    for (const type of ["resize", "pageshow", "orientationchange"]) window.removeEventListener(type, schedule);
+    document.removeEventListener("focusin", schedule);
+    document.removeEventListener("focusout", schedule);
+    if (pending) window.cancelAnimationFrame(pending);
+    window.clearTimeout(settled);
+    html.removeAttribute("data-dsh-phone-keyboard");
+    html.style.removeProperty("--dsh-phone-height");
+    html.style.removeProperty("--dsh-phone-top");
+  };
+}
+
 function installPhoneLayout(layout) {
   const html = document.documentElement;
   const media = window.matchMedia(MOBILE_QUERY$2);
   const stopComposerFocus = installPhoneComposerFocus(media);
-  const viewport = window.visualViewport;
+  const stopViewport = installPhoneViewport(media);
   const observer = new MutationObserver(schedule);
   const nav = document.createElement("button");
   nav.type = "button";
@@ -109,19 +178,6 @@ function installPhoneLayout(layout) {
     pending = 0;
     const phone = media.matches;
     html.toggleAttribute("data-dsh-phone", phone);
-    const normalScale = viewport && Math.abs(viewport.scale - 1) < 0.05;
-    const active = document.activeElement;
-    const editable = active?.matches?.('input, textarea, [contenteditable="true"]');
-    const keyboard = phone && normalScale && editable && window.innerHeight - viewport.height > 105;
-    html.toggleAttribute("data-dsh-phone-keyboard", !!keyboard);
-    if (phone && normalScale && viewport.height > 0) {
-      html.style.setProperty("--dsh-phone-height", Math.round(viewport.height) + "px");
-      html.style.setProperty("--dsh-phone-top", Math.max(0, Math.round(viewport.offsetTop)) + "px");
-    } else {
-      html.style.removeProperty("--dsh-phone-height");
-      html.style.removeProperty("--dsh-phone-top");
-    }
-
     const frame = document.querySelector("[data-mobile-frame]");
     const center = frame?.querySelector(":scope > [data-mobile-role=center]");
     if (!phone || !center) {
@@ -196,11 +252,6 @@ function installPhoneLayout(layout) {
   }
 
   media.addEventListener("change", schedule);
-  viewport?.addEventListener("resize", schedule);
-  viewport?.addEventListener("scroll", schedule);
-  for (const event of ["resize", "pageshow", "orientationchange"]) window.addEventListener(event, schedule);
-  document.addEventListener("focusin", schedule);
-  document.addEventListener("focusout", schedule);
   document.addEventListener("keydown", onEscape);
   document.addEventListener("click", onPhoneClick, true);
   observer.observe(document.getElementById("root") ?? document.body, {
@@ -210,22 +261,15 @@ function installPhoneLayout(layout) {
   sync();
   return () => {
     stopComposerFocus();
+    stopViewport();
     observer.disconnect();
     if (pending) window.cancelAnimationFrame(pending);
     media.removeEventListener("change", schedule);
-    viewport?.removeEventListener("resize", schedule);
-    viewport?.removeEventListener("scroll", schedule);
-    for (const event of ["resize", "pageshow", "orientationchange"]) window.removeEventListener(event, schedule);
-    document.removeEventListener("focusin", schedule);
-    document.removeEventListener("focusout", schedule);
     document.removeEventListener("keydown", onEscape);
     document.removeEventListener("click", onPhoneClick, true);
     nav.remove();
     close.remove();
     previous?.frame.removeAttribute("data-dsh-phone-global-page");
     html.removeAttribute("data-dsh-phone");
-    html.removeAttribute("data-dsh-phone-keyboard");
-    html.style.removeProperty("--dsh-phone-height");
-    html.style.removeProperty("--dsh-phone-top");
   };
 }

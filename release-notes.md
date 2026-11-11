@@ -1,13 +1,16 @@
-**DSH Pocket UI 0.1.9** fixes the duplicate left-sidebar opener in existing conversations and hides Better Sidebar's bottom-workbench button in the mobile header, including its blank-chat fallback. The desktop toolbar and native right-sidebar opener remain available.
+**DSH Pocket UI 0.1.10** fixes a viewport-handling bug that can leave a large blank area or cause an extra layout jump while the iPhone keyboard opens or closes.
 
-**DSH Passkey Proxy 0.1.8** adds release metadata for the new distribution channel. Proxy behavior and configuration paths are unchanged.
+- Bound the reported visual viewport offset to the part actually hidden by the keyboard; discard a stale offset once the full height returns.
+- Keep the keyboard layout during the dismissal animation instead of expanding as soon as the editor blurs.
+- Move viewport updates out of the full sidebar/conversation scan and recheck once after the resize event burst.
+- Preserve drafts and transcript scroll state. Keep tap-to-focus input and the previous mobile header fixes.
 
-两个插件现在可以从 DSH「发现」安装和更新。旧安装保留包名，添加一次索引后可在插件卡片的「版本」里安装新版。见[安装与更新说明](https://github.com/timecatbit/dsh-web-plugins#安装与更新)。
+**DSH Passkey Proxy remains at 0.1.8.** This release changes the mobile UI only.
 
-### 测试范围 / Tested environments
+### Validation
 
-| Environment | Status | Tested DSH versions |
-| --- | --- | --- |
-| Standalone Web (`dsh web`) | **已测试 / Tested** | `0.2.1-rc.5`, `0.2.2-rc.1` |
-| Official macOS Desktop (Apple Silicon) | **已测试 / Tested** | `0.2.2-rc.1` |
-| Official Windows Desktop | **未测试，兼容性未确认 / Not tested; compatibility unconfirmed** | — |
+WebKit and Chromium regression tests cover repeated keyboard cycles, stale offsets, blur-before-resize ordering, draft and scroll retention, browser toolbar changes, pinch zoom, delayed final geometry, desktop behavior, and cleanup. The keyboard viewport changes are simulated: these tests do not replace a physical iPhone keyboard test.
+
+Supported DSH versions remain `0.2.1-rc.5` and `0.2.2-rc.1`. The project has previously tested standalone Web and the official macOS desktop app (Apple Silicon); Windows desktop remains untested.
+
+Update Pocket UI through [DSH Discover](https://github.com/timecatbit/dsh-web-plugins#安装与更新) or install the new tarball into the same profile.

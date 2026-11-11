@@ -25,3 +25,12 @@ Each entry pins the release repository's full commit and takes the compatibility
 Before adding a DSH release candidate to `HOST_RANGE`, install the mobile archive into a disposable `dsh web` profile on that version. Check the merged config with `--dump-config`, then verify sidebar, settings and composer in a narrow browser and check that a wide window still uses the desktop layout. Update the supported versions in the READMEs with the package metadata. Avoid advertising an untested prerelease range: the plugin uses host slots, layout services and DOM attributes that can change between RCs.
 
 The proxy's browser smoke test uses Chrome with a virtual WebAuthn authenticator. Install Playwright separately or point `DSH_TEST_PLAYWRIGHT` at an existing Playwright package directory, then run `node scripts/passkey-smoke.mjs` from `plugins/passkey-proxy/dsh-proxy` after building. OpenSSL is used for a local test certificate. No production service, domain, or account is needed.
+
+The mobile viewport regression check is independent of a DSH account. Point `DSH_TEST_PLAYWRIGHT` at an installed Playwright package, install its browser engine, and run:
+
+```bash
+DSH_TEST_BROWSER=webkit node scripts/mobile-viewport-check.mjs
+DSH_TEST_BROWSER=chromium node scripts/mobile-viewport-check.mjs
+```
+
+Chromium uses the installed Chrome channel by default; override it with `DSH_TEST_CHROME_CHANNEL`. A custom WebKit executable can be supplied through `DSH_TEST_WEBKIT_EXECUTABLE`. The check injects keyboard-like VisualViewport changes into a scrolling editor fixture and verifies stale-offset recovery, blur ordering, draft/scroll retention, toolbar changes, zoom, settling, and cleanup. It does not emulate a real iOS software keyboard; verify the animation on a physical iPhone as well.

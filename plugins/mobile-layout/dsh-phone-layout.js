@@ -192,6 +192,15 @@ function installPhoneLayout(layout) {
     for (const editor of center.querySelectorAll(dshPhoneComposerEditor)) {
       if (editor.getAttribute("enterkeyhint") !== "send") editor.setAttribute("enterkeyhint", "send");
     }
+    // The context meter shows a bare percentage. Its localized label minus
+    // that reading ("上下文已用", "of context used") becomes the caption.
+    for (const meter of center.querySelectorAll("[data-composer-dock] > :not([data-slot]) button[aria-label]")) {
+      const reading = meter.querySelector(":scope > span")?.textContent?.trim();
+      const label = meter.getAttribute("aria-label") ?? "";
+      const caption = reading && label.includes(reading) ? label.replace(reading, "").trim() : "";
+      if (!caption) meter.removeAttribute("data-dsh-phone-caption");
+      else if (meter.getAttribute("data-dsh-phone-caption") !== caption) meter.setAttribute("data-dsh-phone-caption", caption);
+    }
   }
 
   function rightOpen(frame) {

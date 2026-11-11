@@ -1,12 +1,11 @@
-**DSH Pocket UI 0.1.13** stops the page from jumping after the iPhone keyboard opens or closes.
+**DSH Pocket UI 0.1.14** turns the session readings below the composer into a status bar on phones.
 
-Safari moves the page together with the keyboard animation and reports the new size only after the animation ends. Earlier versions moved the page again from that late report, which caused a second jump. The page now stays at its normal size and follows Safari's own motion. If Safari leaves the page slightly offset after the keyboard closes, the plugin resets it.
+The turn and step counts, speed, token total, cache hit, and context usage previously sat in one crowded row right under the composer buttons, and most of it was cut off. They now form a separate bar with a divider line, one equal cell per reading. Each cell shows its value with a short description below, for example `1%` over `上下文已用`. Nothing is truncated, and each cell still opens DSH's details when tapped.
 
-- While the keyboard is open, the conversation header scrolls out of view, as on other pages in Safari. The composer stays right above the keyboard.
-- The welcome area and bottom spacing no longer change when the keyboard opens.
-- A command list opened from a toolbar button no longer brings up the keyboard. The search field still opens it when tapped.
-- After a command is chosen while typing, the keyboard stays open and the cursor returns to the composer.
+The model picker in the composer toolbar now uses the free space in the row, so a full model name such as `DeepSeek V4.1 Flash` is no longer cut short. It still shrinks with an ellipsis when the row is full.
 
-WebKit and Chromium regression tests check that keyboard viewport events leave the page in place, that a leftover offset is reset only after dismissal, and that drafts, transcript position, and the composer focus rules are kept. Also tested on DSH Web `0.2.1-rc.5` with iPhone emulation. The keyboard animation itself still needs to be checked on a physical iPhone.
+Also included from 0.1.13: the page follows Safari's own keyboard animation without jumping afterwards, and a command list opened from a toolbar button does not bring up the keyboard.
+
+WebKit and Chromium checks cover the keyboard behavior, the composer focus rules, and the status bar layout (equal cells, no truncation, localized context caption, untouched when there are no readings yet). Tested on DSH Web `0.2.1-rc.5`.
 
 **DSH Passkey Proxy remains at 0.1.8.** Update Pocket UI through [DSH Discover](https://github.com/timecatbit/dsh-web-plugins#安装与更新).

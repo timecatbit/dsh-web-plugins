@@ -153,7 +153,49 @@ try {
   await page.locator('[aria-label="Command search"]').tap()
   assert.equal(await active(), 'Command search', 'a tap on the search field still focuses it')
   await page.evaluate(() => window.stopFocus())
-  console.log(engine + ': keyboard reports leave the app in place, a leftover pan is cleared after dismissal, composer focus guards passed')
+
+  // Composer readings form a status bar: equal cells, nothing truncated, and
+  // the context percentage captioned from its own localized label.
+  const pill = (stat, value, detail) => `<span data-composer-stat="${stat}"><button type="button" aria-haspopup="dialog"><svg width="14" height="14"></svg>` +
+    `<span style="overflow:hidden;text-overflow:ellipsis">${value}<span aria-hidden="true">·</span>${detail}</span></button></span>`
+  const dock = (entries, meter = '') => `<div class="host-dock" data-composer-dock>` +
+    `<div data-slot="conversation.composer.dock" style="display:contents">${entries}</div>${meter}</div>`
+  const status = await browser.newPage({ ...devices[engine === 'webkit' ? 'iPhone 15' : 'Pixel 7'], viewport: { width: 390, height: 654 } })
+  await status.setContent('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><div id="root">' +
+    '<div data-mobile-frame data-sidebar-collapsed data-rightbar-collapsed><div data-mobile-role="center">' +
+    '<div data-conversation-content><div data-composer-card class="host-card"><span style="width:110px;flex:none"></span>' +
+    '<button type="button" class="host-model" aria-haspopup="menu"><span class="x_triggerLabel">DeepSeek V4.1 Flash</span></button>' +
+    '<span style="width:36px;flex:none"></span></div>' +
+    dock(pill('activity', '12 轮 34 步', '44 tok/s') + pill('usage', '8.3K tok', '缓存命中 98%'),
+      '<span><button type="button" aria-haspopup="dialog" aria-label="上下文已用 1%"><svg width="14" height="14"></svg><span>1%</span></button></span>') +
+    dock('') + '</div></div></div></div>')
+  await status.addStyleTag({ content: '.host-dock{display:flex;justify-content:center;white-space:nowrap}' +
+    '.host-card{container-type:inline-size;display:flex;gap:8px;height:80px;font-size:15px}' +
+    '.host-model{display:flex;min-width:0;max-width:min(360px,45cqw);margin-left:auto;font:inherit}' +
+    '.x_triggerLabel{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\n' + css })
+  await status.evaluate(`const MOBILE_QUERY$2 = '(max-width: 767px)';\n${source}\nwindow.stopLayout = installPhoneLayout({ toggleSidebar() {}, closeRightbar() {} })`)
+  await status.waitForFunction(() => document.querySelector('[aria-label="上下文已用 1%"]')?.dataset.dshPhoneCaption)
+  const bar = await status.evaluate(() => {
+    const [full, empty] = document.querySelectorAll('[data-composer-dock]')
+    const cells = [...full.querySelectorAll('button')].map(cell => cell.getBoundingClientRect())
+    const model = document.querySelector('.x_triggerLabel')
+    return {
+      modelCut: model.scrollWidth > model.clientWidth + 1,
+      widths: cells.map(r => Math.round(r.width)), heights: cells.map(r => r.height),
+      clipped: [...full.querySelectorAll('button span')].some(span => span.scrollWidth > span.clientWidth + 1),
+      caption: full.querySelector('[aria-label="上下文已用 1%"]').dataset.dshPhoneCaption,
+      grid: getComputedStyle(full).display, emptyRule: getComputedStyle(empty).borderTopWidth,
+    }
+  })
+  assert.equal(bar.grid, 'grid')
+  assert.equal(new Set(bar.widths).size, 1, 'each reading gets an equal cell')
+  assert.ok(bar.heights.every(h => h >= 36 && h <= 44), 'cells stay compact but tappable')
+  assert.equal(bar.modelCut, false, 'the model picker uses the free toolbar space')
+  assert.equal(bar.clipped, false, 'readings wrap instead of truncating')
+  assert.equal(bar.caption, '上下文已用')
+  assert.equal(bar.emptyRule, '0px', 'a dock without readings stays as the host draws it')
+  await status.evaluate(() => window.stopLayout())
+  console.log(engine + ': keyboard reports leave the app in place, a leftover pan is cleared after dismissal, composer focus guards and the composer status bar passed')
 } finally {
   await browser.close()
 }

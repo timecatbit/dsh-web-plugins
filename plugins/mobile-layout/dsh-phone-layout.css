@@ -413,6 +413,119 @@ html[data-dsh-phone] [data-composer-toolbar] {
   flex-wrap: wrap;
   gap: 4px;
 }
+/* The host caps the model picker at 45% of the composer, which cuts a full
+   model name short on a phone while the toolbar has room. It still shrinks
+   with an ellipsis when the row is full. */
+html[data-dsh-phone] [data-composer-card] button:has(> [class$="_triggerLabel"]) {
+  max-width: none;
+}
+
+/* Session readings below the composer: a status bar of their own, one equal
+   cell per reading with its value over a muted description, so nothing is
+   cut off or read as another composer control. Each cell still opens the
+   host's details. The slot outlets inside the dock use display: contents. */
+html[data-dsh-phone] [data-composer-dock]:has([data-composer-stat], > :not([data-slot])) {
+  --dsh-phone-status-rule: var(--dsw-alias-separator-primary, color-mix(in srgb, currentColor 14%, transparent));
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0 1px;
+  box-sizing: border-box;
+  width: calc(100% + 2 * var(--dsh-composer-side-clearance, 0px));
+  max-width: none;
+  margin: 4px calc(-1 * var(--dsh-composer-side-clearance, 0px)) 0;
+  padding: 0;
+  border-top: 0.5px solid var(--dsh-phone-status-rule);
+  overflow: hidden;
+}
+/* The bar already separates the readings from the screen edge. */
+html[data-dsh-phone] [data-composer-seat]:has([data-composer-dock] [data-composer-stat]) {
+  --dsh-phone-safe-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+}
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat],
+html[data-dsh-phone] [data-composer-dock] > :not([data-slot]) {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 13px;
+  line-height: 17px;
+}
+/* An inset divider in the gap before each cell; the first one falls outside
+   the bar and is clipped. */
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat]::before,
+html[data-dsh-phone] [data-composer-dock] > :not([data-slot])::before {
+  content: "";
+  position: absolute;
+  inset: 9px auto 9px -1px;
+  width: 0.5px;
+  background: var(--dsh-phone-status-rule);
+}
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat] > :first-child,
+html[data-dsh-phone] [data-composer-dock] > :not([data-slot]) button {
+  display: grid;
+  grid-template-columns: 16px minmax(0, max-content);
+  /* Otherwise the icon spanning both rows leaves an empty second row. */
+  grid-auto-rows: min-content;
+  gap: 0 6px;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: none;
+  min-height: 38px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  color: var(--dsw-alias-label-secondary);
+  font: inherit;
+  font-weight: 500;
+  text-align: start;
+  white-space: normal;
+}
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat] > :first-child > svg,
+html[data-dsh-phone] [data-composer-dock] > :not([data-slot]) button > svg {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  width: 16px;
+  height: 16px;
+  color: var(--dsw-alias-label-tertiary);
+}
+/* A two-part reading wraps at its separator: value first, detail below. */
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat] > :first-child > span {
+  display: block;
+  grid-column: 2;
+  overflow: visible;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 14px;
+  overflow-wrap: break-word;
+}
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat] > :first-child > span::first-line {
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 17px;
+}
+html[data-dsh-phone] [data-composer-dock] [data-composer-stat] [aria-hidden="true"]:not(svg) {
+  display: block;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+html[data-dsh-phone] [data-composer-dock] > :not([data-slot]) button > span {
+  grid-column: 2;
+}
+html[data-dsh-phone] [data-composer-dock] button[data-dsh-phone-caption]::after {
+  content: attr(data-dsh-phone-caption);
+  grid-column: 2;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 14px;
+}
 
 html[data-dsh-phone] [data-chat-flow] {
   min-width: 0;

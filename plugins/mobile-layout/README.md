@@ -8,6 +8,7 @@
 
 - 窄屏侧栏打开时，主页面向右移，仍能看到部分内容。
 - 进入已有对话时不自动弹键盘；点输入框后才开始输入。
+- 输入框下方的会话数据（轮次和步数、速度、token 用量、缓存命中、上下文占用）显示为单独的底部状态栏，每项一格，上行是数值，下行是说明，不再截断；点开可看详情。
 - 键盘弹出和收起时，页面跟随 Safari 自带的动画移动，结束后不会再跳一次。键盘打开期间，对话顶部栏会移出屏幕，与 Safari 中其他网页一致。
 - 设置页适配窄屏。手机聊天顶部只保留一个左侧栏入口；保留原生右侧栏按钮。
 - 手机模式隐藏 Better Sidebar 的底部工作台按钮。桌面宽窗口保留原有工具栏。
@@ -37,11 +38,11 @@
 
 ## 手动安装
 
-- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.13 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.13/dsh-ui-mobile-0.1.13.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
+- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.14 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.14/dsh-ui-mobile-0.1.14.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
 - **独立 `dsh web`**：从 [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) 下载 `.tgz`。用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录执行：
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.13.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.14.tgz"
   ```
 
   使用自定义 profile 时替换 `web`，安装后重启该 `dsh web` 进程。

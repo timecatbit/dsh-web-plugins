@@ -39,10 +39,19 @@ html[data-dsh-phone] [data-mobile-role=center] {
   min-width: 0;
   min-height: 0;
   padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
-  transition: translate 180ms ease;
+  /* The host animates the drawer with these tokens (300ms, ease-in-out), and
+     its rule outranks ours. Follow the same tokens so the page edge stays on
+     the drawer edge for the whole motion, opening and closing. */
+  transition: translate var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1));
 }
 html[data-dsh-phone] [data-mobile-role=center] > * {
-  transition: opacity 180ms ease;
+  transition: opacity var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1));
+}
+/* The host sets data-sidebar-instant when the drawer must jump, for example
+   on the first render; the page jumps with it. */
+html[data-dsh-phone] [data-sidebar-instant] > [data-mobile-role=center],
+html[data-dsh-phone] [data-sidebar-instant] > [data-mobile-role=center] > * {
+  transition: none;
 }
 
 /* Keep the page at its original width and slide it beside the drawer. The
@@ -158,7 +167,9 @@ html[data-dsh-phone] [data-mobile-role=details] {
   max-height: 100%;
   background: var(--dsw-alias-bg-layer-1);
   box-shadow: 0 0 24px #0004;
-  transition: transform 180ms ease;
+  /* Same tokens as the page above. Newer hosts drive the left drawer with
+     their own rule using these tokens; 0.2.1-rc.5 has none and uses this. */
+  transition: transform var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1));
 }
 
 html[data-dsh-phone] [data-mobile-role=sidebar] {

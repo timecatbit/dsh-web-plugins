@@ -1,9 +1,8 @@
-**DSH Pocket UI 0.1.16 and DSH Passkey Proxy 0.1.9** run on DSH `0.2.1-rc.5` and every later version, and list the DSH versions they were tested on.
+**DSH Pocket UI 0.1.17** keeps the page edge on the sidebar edge while the phone sidebar opens and closes.
 
-- Both plugins now declare `>=0.2.1-rc.5` instead of a fixed list of versions. New DSH releases can install and enable them without waiting for a plugin update. The previous builds accepted only `0.2.1-rc.5` and `0.2.2-rc.1`, so DSH `0.2.2-rc.2` refused to load them.
-- The READMEs now separate the supported range from the tested versions. The Discover cards carry "Tested on DSH …" tags with the same list. A DSH version without a tag can still be used; it just has not been checked yet.
-- The plugin code is unchanged from Pocket UI 0.1.15 and Passkey Proxy 0.1.8.
+- The page used a 180 ms ease while DSH animates its sidebar drawer over 300 ms with an ease-in-out curve. When the sidebar opened, the page ran ahead and left a gap of up to about 130 px; when it closed, the sidebar trailed over the page. The page slide and fade now use DSH's own animation tokens, so they move together frame by frame. When DSH switches the drawer instantly, the page switches with it.
+- On DSH `0.2.1-rc.5`, which has no drawer animation of its own, the plugin's sidebar uses the same tokens.
 
-Newly tested on standalone DSH Web `0.2.2-rc.2`. In WebKit and Chromium with iPhone emulation, the phone layout, drawers, keyboard dismissal and composer focus rules behave as before, and a wide window keeps the desktop layout. Through the proxy, password sign-in works, the app loads, and its WebSocket connects. **Settings → LAN Proxy** shows the proxy running. Earlier tests on Web `0.2.1-rc.5` and `0.2.2-rc.1` and on the macOS desktop app `0.2.2-rc.1` still apply; Windows desktop remains untested.
+Measured frame by frame in WebKit and Chromium with iPhone emulation, on standalone DSH Web `0.2.1-rc.5`, `0.2.2-rc.1` and `0.2.2-rc.2`. The page and sidebar edges now stay within 0.5 px of each other; before, they were up to about 130 px apart. On `0.2.2-rc.2` the composer focus rules, keyboard dismissal when a drawer opens, the colors and the wide desktop layout were checked again.
 
-If you already upgraded DSH to `0.2.2-rc.2`, DSH will not load the previous plugin versions. Update both plugins through [DSH Discover](https://github.com/timecatbit/dsh-web-plugins#安装与更新), or install the new archives over the old ones.
+**DSH Passkey Proxy remains at 0.1.9.** Update Pocket UI through [DSH Discover](https://github.com/timecatbit/dsh-web-plugins#安装与更新).

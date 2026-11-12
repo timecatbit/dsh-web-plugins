@@ -1,8 +1,8 @@
-**DSH Pocket UI 0.1.17** keeps the page edge on the sidebar edge while the phone sidebar opens and closes.
+**DSH Pocket UI 0.1.18** fades the page's sidebar button in and out with the sidebar.
 
-- The page used a 180 ms ease while DSH animates its sidebar drawer over 300 ms with an ease-in-out curve. When the sidebar opened, the page ran ahead and left a gap of up to about 130 px; when it closed, the sidebar trailed over the page. The page slide and fade now use DSH's own animation tokens, so they move together frame by frame. When DSH switches the drawer instantly, the page switches with it.
-- On DSH `0.2.1-rc.5`, which has no drawer animation of its own, the plugin's sidebar uses the same tokens.
+- When the phone sidebar closed, the sidebar button at the top left of the page appeared in a single frame, already at the page's dimmed opacity. On global pages such as Settings or Plugins it appeared at full strength. It now fades in over the same 300 ms ease-in-out as the drawer, starting from fully transparent. When the sidebar opens, the button fades out and stops taking taps once the fade ends. When DSH switches the drawer instantly, the button switches with it.
+- Also included from 0.1.17: the page slides and fades with the sidebar drawer frame by frame.
 
-Measured frame by frame in WebKit and Chromium with iPhone emulation, on standalone DSH Web `0.2.1-rc.5`, `0.2.2-rc.1` and `0.2.2-rc.2`. The page and sidebar edges now stay within 0.5 px of each other; before, they were up to about 130 px apart. On `0.2.2-rc.2` the composer focus rules, keyboard dismissal when a drawer opens, the colors and the wide desktop layout were checked again.
+Measured frame by frame in WebKit and Chromium with iPhone emulation, on standalone DSH Web `0.2.1-rc.5`, `0.2.2-rc.1` and `0.2.2-rc.2`, on conversation and global pages. The button starts closing at opacity 0 and rises without a jump, and the page and sidebar edges stay within 1 px. On `0.2.2-rc.2` the composer focus rules, keyboard dismissal when a drawer opens, the colors and the wide desktop layout were checked again.
 
 **DSH Passkey Proxy remains at 0.1.9.** Update Pocket UI through [DSH Discover](https://github.com/timecatbit/dsh-web-plugins#安装与更新).

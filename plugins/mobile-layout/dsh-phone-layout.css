@@ -70,9 +70,21 @@ html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-m
 }
 /* The drawer has the host's own collapse button. A second, faded opener on
    the page right beside it only doubles the control; a tap anywhere on the
-   page still closes the drawer. */
-html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) [data-dsh-phone-header-menu] {
+   page still closes the drawer. The page's openers fade with the drawer
+   motion instead of popping in when it closes; visibility follows once the
+   fade-out ends, so a hidden opener takes no taps. */
+html[data-dsh-phone] :is([data-dsh-phone-header-menu], [data-dsh-phone-nav]) {
+  transition: opacity var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1)), visibility 0s;
+}
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) [data-dsh-phone-header-menu],
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-dsh-phone-nav] {
+  opacity: 0;
   visibility: hidden;
+  transition: opacity var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1)), visibility 0s linear var(--ds-transition-duration-slow, .3s);
+}
+html[data-dsh-phone] [data-sidebar-instant] [data-dsh-phone-header-menu],
+html[data-dsh-phone] [data-sidebar-instant] > [data-dsh-phone-nav] {
+  transition: none;
 }
 
 /* On newer hosts the native center defaults to grid column 2. The phone
@@ -188,8 +200,7 @@ html[data-dsh-phone] [data-mobile-role=sidebar] {
   overflow-x: clip;
 }
 
-html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-shell-leading],
-html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-dsh-phone-nav] {
+html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) > [data-shell-leading] {
   visibility: hidden;
 }
 html[data-dsh-phone] [data-mobile-frame]:not([data-sidebar-collapsed]) .gLgNoW_scrim {

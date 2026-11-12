@@ -17,21 +17,27 @@ This repository provides installation instructions for standalone `dsh web` and 
 - **The two plugin repositories** publish prebuilt bundles, detailed guides, and issue trackers for each plugin. You do not need to clone this repository to install either one.
 - **Which should I install?** Use Pocket UI if the DSH website is already reachable and you want a better phone layout. Use Passkey Proxy if you need a LAN entry, password sign-in, or Passkeys. Install both if you need both.
 
-## Tested environments
+<a id="tested-environments"></a>
 
-| Environment | Status | Tested DSH versions |
-| --- | --- | --- |
-| Standalone Web (`dsh web`) | **Tested** | `0.2.1-rc.5`, `0.2.2-rc.1` |
-| Official macOS Desktop (Apple Silicon) | **Tested** | `0.2.2-rc.1` |
-| Official Windows Desktop | **Not tested; compatibility unconfirmed** | — |
+## Supported and tested versions
 
-New release candidates must be verified before expanding the Mobile Layout compatibility range. The official desktop app ships its own runtime; for CLI installs, follow the Node.js requirement of your DSH version.
+**Supported: DSH `0.2.1-rc.5` and every later version.** Starting with Pocket UI 0.1.16 and Passkey Proxy 0.1.9, both plugins declare `>=0.2.1-rc.5`, so a new DSH release can install and enable them without waiting for an update here. The plugins rely on DSH's interface hooks, so an untested release may show layout or connection problems. Please report them in the plugin's repository; fixes ship as new plugin versions.
+
+**Tested versions** are the ones the plugins were actually installed and checked on. A DSH version missing from the table has not been tested yet. The "Tested on DSH …" tags on the Discover cards show the same list.
+
+| Environment | Tested DSH versions |
+| --- | --- |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2` |
+| Official macOS Desktop (Apple Silicon) | `0.2.2-rc.1` |
+| Official Windows Desktop | Not tested |
+
+The official desktop app ships its own runtime; for CLI installs, follow the Node.js requirement of your DSH version.
 
 ## Installation
 
 ### Install and update in DSH
 
-1. Open **Plugins** from the sidebar and find the **Experimental plugins** section. If the custom plugin index bundle is not listed, click **More** in that section. Look for **Custom plugin markets** (「自定义插件市场」) on DSH `0.2.1-rc.5`, or **Custom plugin indexes** (「自定义插件索引」) on `0.2.2-rc.1`. Turn the bundle on.
+1. Open **Plugins** from the sidebar and find the **Experimental plugins** section. If the custom plugin index bundle is not listed, click **More** in that section. Look for **Custom plugin markets** (「自定义插件市场」) on DSH `0.2.1-rc.5`, or **Custom plugin indexes** (「自定义插件索引」) on `0.2.2-rc.1` and later. Turn the bundle on.
 2. In **Discover**, add this index source once:
 
    ```text
@@ -46,8 +52,8 @@ New release candidates must be verified before expanding the Mobile Layout compa
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.15/dsh-ui-mobile-0.1.15.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.16/dsh-ui-mobile-0.1.16.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.9/smanx-dsh-proxy-0.1.9.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
@@ -58,8 +64,8 @@ New release candidates must be verified before expanding the Mobile Layout compa
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.15.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.16.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.9.tgz"
 ```
 
 Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. The packages replace the corresponding upstream plugin in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.

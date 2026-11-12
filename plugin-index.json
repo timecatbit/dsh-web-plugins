@@ -4,6 +4,28 @@
     "en": "DSH Web Plugins",
     "zh": "DSH 网页插件"
   },
+  "metadata": {
+    "labels": {
+      "tested-dsh-0.2.1-rc.5": {
+        "title": {
+          "en": "Tested on DSH 0.2.1-rc.5",
+          "zh": "已测 DSH 0.2.1-rc.5"
+        }
+      },
+      "tested-dsh-0.2.2-rc.1": {
+        "title": {
+          "en": "Tested on DSH 0.2.2-rc.1",
+          "zh": "已测 DSH 0.2.2-rc.1"
+        }
+      },
+      "tested-dsh-0.2.2-rc.2": {
+        "title": {
+          "en": "Tested on DSH 0.2.2-rc.2",
+          "zh": "已测 DSH 0.2.2-rc.2"
+        }
+      }
+    }
+  },
   "plugins": [
     {
       "name": "dsh-ui-mobile",
@@ -20,7 +42,26 @@
       "repository": {
         "url": "https://github.com/timecatbit/dsh-pocket-ui"
       },
+      "metadata": {
+        "labels": [
+          "tested-dsh-0.2.1-rc.5",
+          "tested-dsh-0.2.2-rc.1",
+          "tested-dsh-0.2.2-rc.2"
+        ]
+      },
       "versions": [
+        {
+          "publishTimestamp": 1794485316,
+          "version": "0.1.16",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-pocket-ui",
+            "commit": "9224a2f157a80cec0af38462ea896d783add5d05"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794377208,
           "version": "0.1.15",
@@ -62,7 +103,26 @@
       "repository": {
         "url": "https://github.com/timecatbit/dsh-passkey-proxy"
       },
+      "metadata": {
+        "labels": [
+          "tested-dsh-0.2.1-rc.5",
+          "tested-dsh-0.2.2-rc.1",
+          "tested-dsh-0.2.2-rc.2"
+        ]
+      },
       "versions": [
+        {
+          "publishTimestamp": 1794485316,
+          "version": "0.1.9",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
+            "commit": "5d25e9b6120ac7cffad201954323f9aaaf0d0de3"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794308546,
           "version": "0.1.8",

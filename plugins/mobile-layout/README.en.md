@@ -17,17 +17,21 @@ The layout applies mainly below 768 CSS pixels and also covers some touch device
 
 ## Compatibility
 
-| Environment | Tested |
+**Supported: DSH `0.2.1-rc.5` and every later version** (from 0.1.16). A new DSH release can install and enable the plugin right away. An untested release may show layout problems; please [open an issue](https://github.com/timecatbit/dsh-pocket-ui/issues) and a fix will ship as a new version.
+
+**Tested versions** are the ones the plugin was actually installed and checked on. A DSH version missing from the table has not been tested yet. The "Tested on DSH …" tags on the Discover card show the same list.
+
+| Environment | Tested DSH versions |
 | --- | --- |
-| Standalone Web (`dsh web`) | DSH `0.2.1-rc.5` and `0.2.2-rc.1` |
-| Official macOS desktop app (Apple Silicon) | DSH `0.2.2-rc.1`; a wide window keeps the desktop layout |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2` |
+| Official macOS desktop app (Apple Silicon) | `0.2.2-rc.1`; a wide window keeps the desktop layout |
 | Official Windows desktop app | Not tested |
 
 The package remains `dsh-ui-mobile`. It replaces a previous build of this project or the upstream package with the same ID in the selected profile.
 
 ## Install or update in DSH
 
-1. In the DSH sidebar, open **Plugins**. Under **Experimental plugins**, click **More** if the switch is not visible. Enable **Custom plugin markets** on DSH `0.2.1-rc.5` or **Custom plugin indexes** on `0.2.2-rc.1`.
+1. In the DSH sidebar, open **Plugins**. Under **Experimental plugins**, click **More** if the switch is not visible. Enable **Custom plugin markets** on DSH `0.2.1-rc.5` or **Custom plugin indexes** on `0.2.2-rc.1` and later.
 2. Go to **Discover → Add index source** and paste the address below. Add it once per profile. If you already added it for Passkey Proxy, skip to the next step.
 
    ```text
@@ -38,11 +42,11 @@ The package remains `dsh-ui-mobile`. It replaces a previous build of this projec
 
 ## Install manually
 
-- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.15 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.15/dsh-ui-mobile-0.1.15.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
+- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.16 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.16/dsh-ui-mobile-0.1.16.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
 - **Standalone `dsh web`:** Download the `.tgz` from [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases). Use the same system account and `DSH_HOME` as the running instance. From the directory containing the download, run:
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.15.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.16.tgz"
   ```
 
   Replace `web` if you use a custom profile, then restart that `dsh web` process.

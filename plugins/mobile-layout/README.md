@@ -17,17 +17,21 @@
 
 ## 兼容性
 
-| DSH 环境 | 测试范围 |
+**支持范围：DSH `0.2.1-rc.5` 及之后的所有版本**（从 0.1.16 起）。DSH 发布新版后可以直接安装和启用。没测过的新版本可能出现布局问题，遇到请[提 issue](https://github.com/timecatbit/dsh-pocket-ui/issues)，修复后发布新版。
+
+**已测试版本**是实际装上测过的版本；你的 DSH 版本不在表里，只表示还没测过。DSH「发现」里卡片上的「已测 DSH …」标签也是这份列表。
+
+| DSH 环境 | 已测试的 DSH 版本 |
 | --- | --- |
-| 独立 Web 版（`dsh web`） | 已测试 `0.2.1-rc.5`、`0.2.2-rc.1` |
-| 官方 macOS 桌面版（Apple Silicon） | 已测试 `0.2.2-rc.1`；宽窗口没有手机布局变化属正常 |
+| 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2` |
+| 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1`；宽窗口没有手机布局变化属正常 |
 | 官方 Windows 桌面版 | 未测试 |
 
 安装包名是 `dsh-ui-mobile`。已经装过本项目的旧版，可覆盖更新。同名上游插件也会被替换，请先确认要使用这个分支。
 
 ## 在 DSH 里安装或更新
 
-1. 从 **DSH 左侧栏**打开「插件」，找到「实验性插件」。找不到开关就点这一栏右侧的「更多」。在 DSH `0.2.1-rc.5` 里打开 **「自定义插件市场」**；在 `0.2.2-rc.1` 里打开 **「自定义插件索引」**。
+1. 从 **DSH 左侧栏**打开「插件」，找到「实验性插件」。找不到开关就点这一栏右侧的「更多」。在 DSH `0.2.1-rc.5` 里打开 **「自定义插件市场」**；在 `0.2.2-rc.1` 及之后打开 **「自定义插件索引」**。
 2. 在「发现 → 添加索引源」粘贴以下地址。同一个 profile 只需添加一次；如果已为 Passkey Proxy 添加过，直接跳到下一步。
 
    ```text
@@ -38,11 +42,11 @@
 
 ## 手动安装
 
-- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.15 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.15/dsh-ui-mobile-0.1.15.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
+- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.16 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.16/dsh-ui-mobile-0.1.16.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
 - **独立 `dsh web`**：从 [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) 下载 `.tgz`。用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录执行：
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.15.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.16.tgz"
   ```
 
   使用自定义 profile 时替换 `web`，安装后重启该 `dsh web` 进程。

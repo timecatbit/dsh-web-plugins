@@ -17,15 +17,21 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 - **两个独立仓库**各自发布可直接安装的构建包、单插件使用说明和问题反馈入口。只想下载或使用其中一个插件，去对应仓库即可；不需要克隆本仓库。
 - **怎么选**：网页已经能访问，只想优化手机界面，装 Pocket UI；需要局域网访问、密码或 Passkey，装 Passkey Proxy；两个都需要就分别安装。
 
-## 测试范围
+<a id="测试范围"></a>
 
-| 环境 | 状态 | 实测 DSH 版本 |
-| --- | --- | --- |
-| 独立 Web 版（`dsh web`） | **已测试** | `0.2.1-rc.5`、`0.2.2-rc.1` |
-| 官方 macOS 桌面版（Apple Silicon） | **已测试** | `0.2.2-rc.1` |
-| 官方 Windows 桌面版 | **未测试，兼容性未确认** | — |
+## 支持范围与已测试版本
 
-手机布局依赖 DSH 的客户端接口，新 RC 要验证后才加入支持范围。命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
+**支持范围：DSH `0.2.1-rc.5` 及之后的所有版本。** 两个插件从 Pocket UI 0.1.16、Passkey Proxy 0.1.9 起声明 `>=0.2.1-rc.5`，DSH 发布新版后可以直接安装和启用，不用等这里更新。插件依赖 DSH 的界面接口，没测过的新版本可能出现显示或连接问题；遇到问题请到对应插件仓库提 issue，修复后发布新版。
+
+**已测试版本**是实际装上测过的版本。你的 DSH 版本不在表里，只表示还没测过。DSH「发现」里插件卡片上的「已测 DSH …」标签也是这份列表。
+
+| 环境 | 已测试的 DSH 版本 |
+| --- | --- |
+| 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2` |
+| 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1` |
+| 官方 Windows 桌面版 | 未测试 |
+
+命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
 
 <a id="安装"></a>
 
@@ -33,7 +39,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 
 ### 在 DSH 里安装和更新
 
-1. 从 **DSH 左侧栏**打开「插件」。找到「实验性插件」一栏，列表里没有目标开关就点该栏右侧「更多」。DSH `0.2.1-rc.5` 的开关叫 **「自定义插件市场」**，`0.2.2-rc.1` 叫 **「自定义插件索引」**。打开开关。
+1. 从 **DSH 左侧栏**打开「插件」。找到「实验性插件」一栏，列表里没有目标开关就点该栏右侧「更多」。DSH `0.2.1-rc.5` 的开关叫 **「自定义插件市场」**，`0.2.2-rc.1` 及之后叫 **「自定义插件索引」**。打开开关。
 2. 进入「发现 → 添加索引源」，粘贴下面的地址。一个 profile 只需添加一次，两个插件共用：
 
    ```text
@@ -48,8 +54,8 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 2. 粘贴所需安装包的完整地址，一次装一个：
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.15/dsh-ui-mobile-0.1.15.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.16/dsh-ui-mobile-0.1.16.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.9/smanx-dsh-proxy-0.1.9.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
@@ -63,10 +69,10 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.15.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.16.tgz"
 
 # Passkey 代理
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.9.tgz"
 ```
 
 安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、局域网代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。

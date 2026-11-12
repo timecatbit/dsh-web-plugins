@@ -6,9 +6,19 @@ A separate web entry for DeepSeek Harness (DSH) with LAN password sign-in, HTTPS
 
 ## Compatibility and installation
 
-Tested on standalone DSH Web `0.2.1-rc.5` and `0.2.2-rc.1` and the official macOS desktop app `0.2.2-rc.1` on Apple Silicon. The official Windows desktop app has not been tested. The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to keep your settings.
+**Supported: DSH `0.2.1-rc.5` and every later version** (from 0.1.9). A new DSH release can install and enable the plugin right away. An untested release may show sign-in or connection problems; please [open an issue](https://github.com/timecatbit/dsh-passkey-proxy/issues) and a fix will ship as a new version.
 
-1. Open **Plugins** from the sidebar. Under **Experimental plugins**, click **More** if the switch is hidden. Enable **Custom plugin markets** on `0.2.1-rc.5` or **Custom plugin indexes** on `0.2.2-rc.1`.
+**Tested versions** are the ones the plugin was actually installed and checked on. A DSH version missing from the table has not been tested yet. The "Tested on DSH …" tags on the Discover card show the same list.
+
+| Environment | Tested DSH versions |
+| --- | --- |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2` |
+| Official macOS desktop app (Apple Silicon) | `0.2.2-rc.1` |
+| Official Windows desktop app | Not tested |
+
+The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to keep your settings.
+
+1. Open **Plugins** from the sidebar. Under **Experimental plugins**, click **More** if the switch is hidden. Enable **Custom plugin markets** on `0.2.1-rc.5` or **Custom plugin indexes** on `0.2.2-rc.1` and later.
 2. Open **Discover → Add index source** and add this URL once per profile. Pocket UI uses the same source.
 
    ```text
@@ -17,10 +27,10 @@ Tested on standalone DSH Web `0.2.1-rc.5` and `0.2.2-rc.1` and the official macO
 
 3. Click the **DSH Passkey Proxy card title → Versions → Install**. Use the same path for updates without uninstalling first. Enable the plugin and restart the current instance if DSH prompts you.
 
-**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.8 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
+**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.9 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.9/smanx-dsh-proxy-0.1.9.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.9.tgz"
 ```
 
 Replace `web` if you use a custom profile, then restart that web process. The standalone CLI does not manage the official app's `desktop` profile.

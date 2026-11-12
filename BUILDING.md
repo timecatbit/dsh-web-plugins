@@ -22,7 +22,25 @@ Each entry pins the release repository's full commit and takes the compatibility
 - **Passkey proxy:** derived from `smanx/dsh-proxy` commit `36954a30af329f4f4d54b6961c75f018e93eb873`. TypeScript sources and the pnpm lockfile are in `plugins/passkey-proxy/dsh-proxy`. The dependency license notices are at `plugins/passkey-proxy/THIRD-PARTY-NOTICES.md`.
 - **Mobile layout:** based on the published `dsh-ui-mobile@0.1.8` distribution. The scripts pin the upstream SHA-512 integrity and verify both intermediate file manifests. The added layout CSS and JavaScript are in `plugins/mobile-layout`.
 
-Before adding a DSH release candidate to `HOST_RANGE`, install the mobile archive into a disposable `dsh web` profile on that version. Check the merged config with `--dump-config`, then verify sidebar, settings and composer in a narrow browser and check that a wide window still uses the desktop layout. Update the supported versions in the READMEs with the package metadata. Avoid advertising an untested prerelease range: the plugin uses host slots, layout services and DOM attributes that can change between RCs.
+## Supported range and tested versions
+
+Both packages declare `engines.dsh` as `>=0.2.1-rc.5` (`HOST_RANGE` in `build_dsh_phone_layout.py` and `plugins/passkey-proxy/package.json`). DSH matches the range with prereleases included, so every later release, RC or stable, can install the plugins without a new build. Keep the range open. Close it only when a known DSH release breaks a plugin; then ship a plugin version whose range excludes that release.
+
+The tested versions are a separate, shorter list. Add a DSH version to it only after you have checked it:
+
+1. Install DSH at that version into a temporary directory and start `dsh web` with a disposable `DSH_HOME` and its own ports. Put `{"listenPort": <free port>}` in that home's `dsh-proxy.json` first so the proxy does not collide with a running instance on 3081.
+2. Install both archives into the `web` profile. Check in a narrow browser that the sidebar, settings and composer work and a wide window keeps the desktop layout. Sign in through the proxy port and check that the app loads and its WebSocket connects, and that **Settings → LAN Proxy** shows the proxy running.
+3. Add the version to the tested-version tables in `README.md`, `README.en.md`, and both plugins' READMEs. The plugin READMEs ship inside the archives, so a table change reaches the release repositories with the next build.
+4. Record the full list for each plugin in the Discover index. Discover shows these as "Tested on DSH …" tags on the plugin cards:
+
+   ```bash
+   python3 scripts/set-tested-dsh.py plugin-index.json dsh-ui-mobile 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2
+   python3 scripts/set-tested-dsh.py plugin-index.json @smanx/dsh-proxy 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2
+   ```
+
+   The script replaces the plugin's tested tags and drops declarations no plugin uses. The tags describe the newest version of each plugin. A DSH release that only needs a new tag does not need a new plugin build.
+
+## Regression checks
 
 The proxy's browser smoke test uses Chrome with a virtual WebAuthn authenticator. Install Playwright separately or point `DSH_TEST_PLAYWRIGHT` at an existing Playwright package directory, then run `node scripts/passkey-smoke.mjs` from `plugins/passkey-proxy/dsh-proxy` after building. OpenSSL is used for a local test certificate. No production service, domain, or account is needed.
 

@@ -1,7 +1,7 @@
 {
   "name": "@smanx/dsh-proxy",
   "description": "DSH LAN reverse proxy with password and HTTPS Passkey login, persistent browser sessions, and WebSocket forwarding.",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "license": "MIT",
   "author": "smanx",
   "repository": {
@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/timecatbit/dsh-passkey-proxy/issues"
   },
-  "engines": { "dsh": "0.2.1-rc.5 || 0.2.2-rc.1" },
+  "engines": { "dsh": ">=0.2.1-rc.5" },
   "keywords": [
     "dsh",
     "deepseek-harness",

@@ -6,9 +6,19 @@
 
 ## 兼容性和安装
 
-独立 `dsh web` 已测试 DSH `0.2.1-rc.5`、`0.2.2-rc.1`；官方 macOS 桌面版（Apple Silicon）已测试 `0.2.2-rc.1`；Windows 桌面版未测试。包名保留为 `@smanx/dsh-proxy`，同一个 profile 可直接更新旧版。
+**支持范围：DSH `0.2.1-rc.5` 及之后的所有版本**（从 0.1.9 起）。DSH 发布新版后可以直接安装和启用。没测过的新版本可能出现登录或连接问题，遇到请[提 issue](https://github.com/timecatbit/dsh-passkey-proxy/issues)，修复后发布新版。
 
-1. 从 DSH 左侧栏点「插件」，找到「实验性插件」。没有看到开关就点该栏右侧「更多」。在 `0.2.1-rc.5` 打开 **「自定义插件市场」**，在 `0.2.2-rc.1` 打开 **「自定义插件索引」**。
+**已测试版本**是实际装上测过的版本；你的 DSH 版本不在表里，只表示还没测过。DSH「发现」里卡片上的「已测 DSH …」标签也是这份列表。
+
+| DSH 环境 | 已测试的 DSH 版本 |
+| --- | --- |
+| 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2` |
+| 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1` |
+| 官方 Windows 桌面版 | 未测试 |
+
+包名保留为 `@smanx/dsh-proxy`，同一个 profile 可直接更新旧版。
+
+1. 从 DSH 左侧栏点「插件」，找到「实验性插件」。没有看到开关就点该栏右侧「更多」。在 `0.2.1-rc.5` 打开 **「自定义插件市场」**，在 `0.2.2-rc.1` 及之后打开 **「自定义插件索引」**。
 2. 进「发现 → 添加索引源」，添加下面的地址。和 Pocket UI 共用，只需每个 profile 添加一次。
 
    ```text
@@ -17,10 +27,10 @@
 
 3. 点 **DSH Passkey Proxy 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。
 
-**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.8 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.8/smanx-dsh-proxy-0.1.8.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
+**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.9 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.9/smanx-dsh-proxy-0.1.9.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.8.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.9.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。不要用独立 CLI 安装到官方桌面 App 的 `desktop` profile。

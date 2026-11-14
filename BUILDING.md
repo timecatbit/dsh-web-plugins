@@ -17,7 +17,7 @@ python3 scripts/update-plugin-index.py plugin-index.json dist/dsh-ui-mobile-<ver
 python3 scripts/update-plugin-index.py plugin-index.json dist/smanx-dsh-proxy-<version>.tgz <proxy-commit-sha>
 ```
 
-Each entry pins the release repository's full commit and takes the compatibility range from the built package. Keep previous versions in the index so users can select an earlier release.
+Each entry pins the release repository's full commit and takes the compatibility range from the built package. The index keeps each plugin's newest version plus a few milestone versions to roll back to, not every release. When a version is dropped from the index, also delete its release and tag in the release repository. Combined releases in this repository follow the same milestones: keep the one that bundles each kept pair and delete the rest.
 
 - **Passkey proxy:** derived from `smanx/dsh-proxy` commit `36954a30af329f4f4d54b6961c75f018e93eb873`. TypeScript sources and the pnpm lockfile are in `plugins/passkey-proxy/dsh-proxy`. The dependency license notices are at `plugins/passkey-proxy/THIRD-PARTY-NOTICES.md`.
 - **Mobile layout:** based on the published `dsh-ui-mobile@0.1.8` distribution. The scripts pin the upstream SHA-512 integrity and verify both intermediate file manifests. The added layout CSS and JavaScript are in `plugins/mobile-layout`.

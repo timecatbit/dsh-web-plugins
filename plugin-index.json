@@ -70,72 +70,12 @@
           }
         },
         {
-          "publishTimestamp": 1794656037,
-          "version": "0.1.22",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "0444adac6724713601a4256a86602f981071f994"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794654818,
-          "version": "0.1.21",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "83d177587a4a266e7047a4d7bc8c66465edf4eda"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
           "publishTimestamp": 1794635066,
           "version": "0.1.20",
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-pocket-ui",
             "commit": "191998a6f0aa3cc287781b704d0cc89bc862aa0d"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794626694,
-          "version": "0.1.19",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "13a9a92831384b72de052d84e788fe2b2374546e"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794488247,
-          "version": "0.1.18",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "a55e7d17c3656bf4c4648037fd6994dd42dcafc8"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794487110,
-          "version": "0.1.17",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "cb2bdd2d03e5245e4731a1ffed0128a6db55e485"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"
@@ -151,30 +91,6 @@
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794377208,
-          "version": "0.1.15",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "6d45a82a116052177646130a7c3fa0585e62f414"
-          },
-          "engines": {
-            "dsh": "0.2.1-rc.5 || 0.2.2-rc.1"
-          }
-        },
-        {
-          "publishTimestamp": 1794375696,
-          "version": "0.1.14",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "13c836d1c33b221327266e09a43022b761a74714"
-          },
-          "engines": {
-            "dsh": "0.2.1-rc.5 || 0.2.2-rc.1"
           }
         }
       ]
@@ -216,72 +132,12 @@
           }
         },
         {
-          "publishTimestamp": 1794654818,
-          "version": "0.1.15",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "865adce0cc6e3c894d059aa48c15aa8cbb12f950"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794650948,
-          "version": "0.1.14",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "0c155636d73000958f514e73eae9e9abfb4fea59"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794650205,
-          "version": "0.1.13",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "09d218b149476be96ad1d8b04fd71b45890e8667"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
           "publishTimestamp": 1794643674,
           "version": "0.1.12",
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-passkey-proxy",
             "commit": "1d3c74b5d0607560675674a24ae29dd62d758c6e"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794635066,
-          "version": "0.1.11",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "06c7b9382e44ef188481de17e16807b0824f811b"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794626694,
-          "version": "0.1.10",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "825e0170de68be7afdf769b0a2f1d35a0ecee501"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"
@@ -297,18 +153,6 @@
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794308546,
-          "version": "0.1.8",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "c6befa067d7c568168b5825fd37cd7a1b075e894"
-          },
-          "engines": {
-            "dsh": "0.2.1-rc.5 || 0.2.2-rc.1"
           }
         }
       ]

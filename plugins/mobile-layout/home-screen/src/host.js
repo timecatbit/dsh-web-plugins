@@ -3,7 +3,7 @@
  * its home screen.
  *
  * The choice is a live (`volatile`) Config field, so DSH's settings service
- * lets the Settings → General row edit it without a restart. With a whale
+ * lets the Settings → Pocket UI page edit it without a restart. With a whale
  * chosen, the page's touch-icon and manifest links point at
  * `/home-screen/<choice>/…`, which this plugin serves; with `dsh` the page and
  * DSH's own icons are left alone. A path of its own per choice also means a
@@ -137,7 +137,7 @@ export function apply(ctx, config) {
     const value = typeof config.homeScreenIcon?.get === 'function' ? config.homeScreenIcon.get() : config.homeScreenIcon
     return HOME_SCREEN_ICONS.includes(value) ? value : 'dsh'
   }
-  // Pocket UI draws its own row in Settings → General; no generated page.
+  // Pocket UI draws its own Settings → Pocket UI page; no generated one.
   ctx.inject(['settings'], (child) => {
     child.effect(() => child.settings.configure({ auto: false }, ctx.fiber), 'pocket-ui: settings page policy')
   })

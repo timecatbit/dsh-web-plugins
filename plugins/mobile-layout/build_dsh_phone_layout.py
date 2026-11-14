@@ -10,14 +10,14 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.21"
+VERSION = "0.1.22"
 HOST_RANGE = ">=0.2.1-rc.5"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent
 HOME = ROOT / "home-screen"
 LOCALE = {
-    "en": {"title": "DSH Pocket UI", "description": "Phone layout for DSH: touch drawers, tap-to-focus chat input, and a home-screen icon choice in Settings → General."},
-    "zh": {"title": "DSH Pocket UI", "description": "适配手机的对话页面、侧栏和输入框，并可在「设置 → 通用」选择主屏幕图标。"},
+    "en": {"title": "DSH Pocket UI", "description": "Phone layout for DSH: touch drawers and tap-to-focus chat input, with its own settings page for the home-screen icon."},
+    "zh": {"title": "DSH Pocket UI", "description": "适配手机的对话页面、侧栏和输入框，自带设置页可选主屏幕图标。"},
 }
 
 
@@ -49,7 +49,7 @@ def main(source, target):
     s, changed = re.subn(r'(?m)^\t\tconst css = ".*?";$', lambda _: "\t\tconst css = " + json.dumps(css) + ";", s)
     assert changed == 1, changed
     before = "\t\tfunction apply(ctx) {"
-    s = replace(s, before, (ROOT / "dsh-phone-layout.js").read_text() + "\n" + (ROOT / "dsh-home-screen-row.js").read_text() + "\n" + before)
+    s = replace(s, before, (ROOT / "dsh-phone-layout.js").read_text() + "\n" + (ROOT / "dsh-pocket-settings.js").read_text() + "\n" + before)
     # Upstream only blurs untrusted focus, but focus() fires trusted events.
     # installPhoneComposerFocus guards the command popup's search instead.
     s = replace(s, '\t\t\tctx.effect(() => suppressCommandPanelScriptFocus(), "ui-mobile: command panel keyboard guard");\n', "")
@@ -57,7 +57,7 @@ def main(source, target):
         '\t\t\tctx.effect(() => enableMobileEnterSend(), "ui-mobile: keyboard send action");\n'
         '\t\t\tctx.effect(() => lockMobilePageZoom(), "ui-mobile: page zoom lock");',
         '\t\t\tctx.effect(() => installPhoneLayout(ctx.layout), "ui-mobile: adaptive phone layout");\n'
-        '\t\t\tinstallHomeScreenRow(ctx);')
+        '\t\t\tinstallPocketSettings(ctx);')
     s = replace(s, "if (!state.mobile || !state.sidebarOpen) return null;",
         "if (!state.mobile || (!state.sidebarOpen && !state.detailsOpen)) return null;")
     # The host's ChatView already owns a scroll-to-bottom button and follow state.
@@ -98,6 +98,11 @@ def main(source, target):
     pkg.pop("devDependencies", None)
     pkg["engines"]["dsh"] = HOST_RANGE
     pkg["exports"]["./locale/*"] = "./locale/*"
+    # A git install only copies `files`; without these DSH lists the plugin
+    # by its package name and the notices go missing.
+    for entry in ("locale", "THIRD-PARTY-NOTICES.md"):
+        if entry not in pkg["files"]:
+            pkg["files"].append(entry)
     for dep in ("@deepseek-ai/dsh-client-ui-settings", "@deepseek-ai/dsh-client-locale"):
         if dep not in pkg["dsh"]["client"]["inject"]:
             pkg["dsh"]["client"]["inject"].append(dep)

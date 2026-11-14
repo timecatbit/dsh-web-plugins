@@ -27,10 +27,10 @@ The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to kee
 
 3. Click the **DSH Passkey Proxy card title → Versions → Install**. Use the same path for updates without uninstalling first. Enable the plugin and restart the current instance if DSH prompts you.
 
-**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.15 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.15/smanx-dsh-proxy-0.1.15.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
+**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.16 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.16/smanx-dsh-proxy-0.1.16.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.15.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.16.tgz"
 ```
 
 Replace `web` if you use a custom profile, then restart that web process. The standalone CLI does not manage the official app's `desktop` profile.
@@ -54,7 +54,7 @@ You can keep HTTPS and use passwords alone. If `DSH_PROXY_PASSKEY_ORIGIN` or `DS
 
 ## Add to a phone's home screen
 
-Home-screen icons and the web app manifest bypass the proxy login, so a phone that adds DSH to its home screen through the proxy gets an icon. Sign in and open DSH first, then use the browser's **Add to Home Screen**. The icon is DSH's own by default; for a black-and-white whale, install [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) and choose one under **Settings → General → Home-screen icon**.
+Home-screen icons and the web app manifest bypass the proxy login, so a phone that adds DSH to its home screen through the proxy gets an icon. Sign in and open DSH first, then use the browser's **Add to Home Screen**. The icon is DSH's own by default; for a black-and-white whale, install [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) and choose one under **Settings → Pocket UI → Home-screen icon**.
 
 ## Troubleshoot and roll back
 

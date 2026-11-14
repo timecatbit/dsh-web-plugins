@@ -10,7 +10,7 @@ For external HTTPS, preserve Host and X-Forwarded-Proto, and forward WebSocket u
 
 Password and Passkey sign-in can be enabled separately. At least one must stay enabled. Enroll and test a Passkey before disabling passwords. A password is still required for credential management, but cannot sign you in when disabled. In Passkey-only mode the final usable credential cannot be removed.
 
-Home-screen icons and the web app manifest pass through without a sign-in, so a phone that adds DSH to its home screen gets an icon. DSH Pocket UI can switch it to a black-and-white whale under **Settings → General**.
+Home-screen icons and the web app manifest pass through without a sign-in, so a phone that adds DSH to its home screen gets an icon. DSH Pocket UI can switch it to a black-and-white whale under **Settings → Pocket UI**.
 
 Standalone Web defaults to completing DSH's launch-token exchange after authenticating the visitor; Desktop requires opting in. `DSH_PROXY_PASSKEY_ORIGIN` and `DSH_PROXY_TLS_PROXIES` override the address fields, not the sign-in switches. Roll back by reinstalling a previous trusted archive and restarting DSH.
 

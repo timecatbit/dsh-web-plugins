@@ -12,7 +12,7 @@
 - 键盘弹出和收起时，页面跟随 Safari 自带的动画移动，结束后不会再跳一次。键盘打开期间，对话顶部栏会移出屏幕，与 Safari 中其他网页一致。
 - 设置页适配窄屏。手机聊天顶部只保留一个左侧栏入口；保留原生右侧栏按钮。
 - 手机模式隐藏 Better Sidebar 的底部工作台按钮。桌面宽窗口保留原有工具栏。
-- 「设置 → 通用」多了一行「主屏幕图标」：DSH 自带、黑底白鲸、白底黑鲸。选好后，手机把 DSH 添加到主屏幕时就用这个图标；改了马上生效，不用重启。
+- 设置里多了「Pocket UI」一栏，可选「主屏幕图标」：DSH 自带、黑底白鲸、白底黑鲸。选好后，手机把 DSH 添加到主屏幕时就用这个图标；改了马上生效，不用重启。
 
 布局主要在宽度小于 768 CSS 像素时生效，也覆盖部分触屏横屏窗口。插件不开端口，也不注册 Service Worker、安装提示或 Web Push。选了鲸鱼图标时，它在 DSH 自己的端口上提供 `/home-screen/` 下的图标和网页清单，并把页面里的图标链接指向那里；选「DSH 自带」时不改页面。
 
@@ -43,11 +43,11 @@
 
 ## 手动安装
 
-- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.21 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.21/dsh-ui-mobile-0.1.21.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
+- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.22 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.22/dsh-ui-mobile-0.1.22.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
 - **独立 `dsh web`**：从 [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) 下载 `.tgz`。用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录执行：
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.21.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.22.tgz"
   ```
 
   使用自定义 profile 时替换 `web`，安装后重启该 `dsh web` 进程。
@@ -58,7 +58,7 @@
 - 手机打不开电脑上的桌面 DSH：先给桌面实例提供一个手机能访问的网页入口。需要代理和登录时，可选装 [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy)。
 - **iPhone / iPad**：在 Safari 打开日常访问地址，点「分享 → 添加到主屏幕」，如有「作为网页 App 打开」就打开它。**Mac**：在 Safari 选「文件 → 添加到程序坞」。保存日常访问地址，别保存带 `?token=` 的启动链接。Safari 只是保存网页入口，插件装在 DSH 实例里。
 - **Android**：用手机浏览器打开同一个 DSH 地址即可。
-- **换主屏幕图标**：在「设置 → 通用 → 主屏幕图标」选好，再登录进入 DSH 页面，用「添加到主屏幕」。手机会记住添加那一刻的图标，所以之后再换，要先删掉桌面上原来的 DSH 再重新添加。通过 Passkey Proxy 访问时需要 Proxy 0.1.15 及以上，旧版会挡住这些图标。
+- **换主屏幕图标**：在「设置 → Pocket UI → 主屏幕图标」选好，再登录进入 DSH 页面，用「添加到主屏幕」。手机会记住添加那一刻的图标，所以之后再换，要先删掉桌面上原来的 DSH 再重新添加。通过 Passkey Proxy 访问时需要 Proxy 0.1.15 及以上，旧版会挡住这些图标。
 
 ## 排查、回退与许可证
 

@@ -46,7 +46,7 @@ import { isJavaScriptContentType, patchClientScript } from './clientpatch.ts'
 import { attachBodyTransform } from './compression.ts'
 import { LaunchTokenAutoLogin } from './tokenretry.ts'
 import { BrowserAuth, LOGIN, type LoginPolicy } from './browser-auth.ts'
-import { homeScreenIconPng } from './home-icons.ts'
+import { homeScreenIconPng, pinHomeScreenIcon } from './home-icons.ts'
 import type { HomeScreenIcon } from './contract.ts'
 
 export interface LanProxyOptions {
@@ -228,9 +228,10 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
 
     attachBodyTransform(res, proxyRes, (plain) => {
       const text = plain.toString('utf8')
-      // HTML: inject the randomUUID polyfill.
+      // HTML: inject the randomUUID polyfill, and point the touch-icon link
+      // at the chosen whale's own URL.
       if (isHtml) {
-        return Buffer.from(injectPolyfill(text, RANDOM_UUID_POLYFILL))
+        return Buffer.from(pinHomeScreenIcon(injectPolyfill(text, RANDOM_UUID_POLYFILL), options.homeScreenIcon))
       }
       // JS: rewrite the loopback-trust needles (applied unconditionally
       // the Host/Origin rewrite already lets the server-side fence treat

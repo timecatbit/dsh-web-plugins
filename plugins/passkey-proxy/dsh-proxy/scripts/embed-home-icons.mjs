@@ -39,4 +39,21 @@ export function homeScreenIconPng(choice: HomeScreenIcon | undefined, pathname: 
   }
   return png
 }
+
+const TOUCH_ICON_LINK = /<link\\b[^>]*\\brel=["']?apple-touch-icon["']?[^>]*>/i
+
+/**
+ * Point the page's apple-touch-icon link at a URL unique to the chosen whale
+ * (\`/apple-touch-icon.png?v=black\`). A phone, or a CDN that sets its own
+ * browser cache lifetime, may still hold DSH's icon under the bare URL; a new
+ * URL makes "Add to Home Screen" fetch the chosen one. Adds the link when the
+ * page has none (DSH 0.2.1-rc.5). Leaves the page alone for \`dsh\`.
+ */
+export function pinHomeScreenIcon(html: string, choice: HomeScreenIcon | undefined): string {
+  if (choice !== 'black' && choice !== 'white') return html
+  const tag = \`<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=\${choice}" />\`
+  if (TOUCH_ICON_LINK.test(html)) return html.replace(TOUCH_ICON_LINK, tag)
+  const head = html.toLowerCase().indexOf('</head>')
+  return head === -1 ? html : html.slice(0, head) + tag + html.slice(head)
+}
 `)

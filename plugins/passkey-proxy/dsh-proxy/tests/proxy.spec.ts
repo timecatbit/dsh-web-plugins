@@ -6,6 +6,7 @@ import type { AddressInfo } from 'node:net'
 import WebSocket, { WebSocketServer } from 'ws'
 import { startLanProxy, type LanProxyHandle } from '../src/proxy.ts'
 import { RANDOM_UUID_POLYFILL } from '../src/polyfill.ts'
+import { pinHomeScreenIcon } from '../src/home-icons.ts'
 
 const USER = 'admin'
 const PASS = 's3cret'
@@ -208,8 +209,17 @@ describe('content handling', () => {
     // Only those exact files: other images still need a login.
     const other = await fetch(`${base()}/apple-touch-icon.png.bak`, { redirect: 'manual' })
     expect(other.status).toBe(401)
-    // Without a home-screen icon choice they come from DSH itself.
+    // Without a home-screen icon choice they come from DSH itself, and the page is not touched.
     expect((await fetch(`${base()}/apple-touch-icon.png`)).headers.get('content-type')).toContain('text/html')
+    expect(await (await fetch(`${base()}/`, { headers: { authorization: basic() } })).text()).not.toContain('apple-touch-icon')
+  })
+
+  it('rewrites or adds the touch-icon link only when a whale is chosen', () => {
+    const host = '<head><link rel="manifest" href="./manifest.webmanifest" />\n<link rel="apple-touch-icon" href="./apple-touch-icon.png" />\n</head>'
+    expect(pinHomeScreenIcon(host, 'white')).toBe('<head><link rel="manifest" href="./manifest.webmanifest" />\n<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=white" />\n</head>')
+    expect(pinHomeScreenIcon(host, 'dsh')).toBe(host)
+    expect(pinHomeScreenIcon(host, undefined)).toBe(host)
+    expect(pinHomeScreenIcon('<html><head><title>x</title></HEAD>', 'black')).toBe('<html><head><title>x</title><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=black" /></HEAD>')
   })
 
   it('serves the bundled black or white whale as the home-screen icons when chosen', async () => {
@@ -238,6 +248,11 @@ describe('content handling', () => {
       const head = await fetch(origin + '/apple-touch-icon.png', { method: 'HEAD' })
       expect(head.status).toBe(200)
       expect(head.headers.get('content-length')).toBe(String(readFileSync(new URL(`../assets/home-icons/${homeScreenIcon}-apple-touch-icon.png`, import.meta.url)).length))
+      // The page links the touch icon under a URL unique to the choice, and that URL serves it too.
+      const page = await (await fetch(origin + '/', { headers: { authorization: basic() } })).text()
+      expect(page).toContain(`<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${homeScreenIcon}" /></head>`)
+      const pinned = Buffer.from(await (await fetch(`${origin}/apple-touch-icon.png?v=${homeScreenIcon}`)).arrayBuffer())
+      expect(pinned.equals(readFileSync(new URL(`../assets/home-icons/${homeScreenIcon}-apple-touch-icon.png`, import.meta.url)))).toBe(true)
       // The favicons and everything else still come from DSH.
       expect((await fetch(origin + '/favicon.svg')).headers.get('content-type')).toBe('image/svg+xml')
       expect((await fetch(origin + '/icon-1024.png', { redirect: 'manual' })).status).toBe(401)

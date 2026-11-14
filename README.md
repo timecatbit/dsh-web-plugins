@@ -55,7 +55,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 
    ```text
    https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.20/dsh-ui-mobile-0.1.20.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.13/smanx-dsh-proxy-0.1.13.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.14/smanx-dsh-proxy-0.1.14.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
@@ -72,7 +72,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.20.tgz"
 
 # Passkey 代理
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.13.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.14.tgz"
 ```
 
 安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、局域网代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。

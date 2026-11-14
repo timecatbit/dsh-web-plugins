@@ -53,7 +53,7 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 
    ```text
    https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.20/dsh-ui-mobile-0.1.20.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.11/smanx-dsh-proxy-0.1.11.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.12/smanx-dsh-proxy-0.1.12.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
@@ -65,7 +65,7 @@ Install on the machine running `dsh web`, with the same OS account and `DSH_HOME
 
 ```bash
 dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.20.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.11.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.12.tgz"
 ```
 
 Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. The packages replace the corresponding upstream plugin in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.

@@ -27,10 +27,10 @@
 
 3. 点 **DSH Passkey Proxy 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。
 
-**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.11 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.11/smanx-dsh-proxy-0.1.11.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
+**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.12 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.12/smanx-dsh-proxy-0.1.12.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.11.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.12.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。不要用独立 CLI 安装到官方桌面 App 的 `desktop` profile。

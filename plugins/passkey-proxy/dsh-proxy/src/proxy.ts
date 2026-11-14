@@ -89,12 +89,21 @@ export interface LanProxyHandle {
 const AUTH_REALM = 'dsh-proxy'
 
 /**
- * Static files browsers fetch OUTSIDE the authenticated document context
- * (the PWA manifest and the favicon are requested without credentials), so
- * gating them on Basic auth 401s them. They carry no secrets and the
- * upstream serves them unauthenticated anyway.
+ * Static files browsers fetch OUTSIDE the authenticated document context, so
+ * gating them on the login 401s them: the PWA manifest and the icons it
+ * lists, the favicons, and the touch icon iOS fetches without cookies when a
+ * page is added to the home screen (which then shows a blank tile). They
+ * carry no secrets and the upstream serves them unauthenticated anyway.
  */
-const PUBLIC_PATHS = new Set(['/manifest.webmanifest', '/favicon.svg'])
+const PUBLIC_PATHS = new Set([
+  '/manifest.webmanifest',
+  '/favicon.svg',
+  '/favicon-dark.svg',
+  '/apple-touch-icon.png',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon-maskable-512.png',
+])
 
 /** LAN IPv4 addresses the host currently has, as http URLs on `port`. */
 export function lanAddresses(port: number): string[] {

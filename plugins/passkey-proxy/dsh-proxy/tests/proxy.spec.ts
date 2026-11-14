@@ -199,6 +199,16 @@ describe('content handling', () => {
     expect(favicon.status).toBe(200)
   })
 
+  it('serves the home-screen and manifest icons without authentication', async () => {
+    for (const path of ['/apple-touch-icon.png', '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/favicon-dark.svg']) {
+      const res = await fetch(`${base()}${path}`, { redirect: 'manual' })
+      expect(res.status, path).toBe(200)
+    }
+    // Only those exact files: other images still need a login.
+    const other = await fetch(`${base()}/apple-touch-icon.png.bak`, { redirect: 'manual' })
+    expect(other.status).toBe(401)
+  })
+
   it('does not inject the polyfill into non-HTML responses', async () => {
     const res = await fetch(`${base()}/favicon.svg`, { headers: { authorization: basic() } })
     expect(res.status).toBe(200)

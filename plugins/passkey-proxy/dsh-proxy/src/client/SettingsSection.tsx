@@ -51,8 +51,10 @@ function StatusRow(props: { label: ReactNode; value: ReactNode }): ReactNode {
 function PortStatus(props: { port: string; ok: boolean; okText: string; failText: string }): ReactNode {
   return (
     <span className="dsh_lanproxy_portStatus">
-      <span className={props.ok ? 'dsh_lanproxy_dot dsh_lanproxy_dotOn' : 'dsh_lanproxy_dot dsh_lanproxy_dotOff'} />
-      <span className="dsh_lanproxy_portValue">{props.port}</span>
+      <span className="dsh_lanproxy_portAddr">
+        <span className={props.ok ? 'dsh_lanproxy_dot dsh_lanproxy_dotOn' : 'dsh_lanproxy_dot dsh_lanproxy_dotOff'} />
+        <span className="dsh_lanproxy_portValue">{props.port}</span>
+      </span>
       <span className={props.ok ? 'dsh_lanproxy_statusText dsh_lanproxy_statusTextOn' : 'dsh_lanproxy_statusText dsh_lanproxy_statusTextOff'}>
         {props.ok ? props.okText : props.failText}
       </span>

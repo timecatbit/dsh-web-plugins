@@ -42,11 +42,11 @@ The package remains `dsh-ui-mobile`. It replaces a previous build of this projec
 
 ## Install manually
 
-- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.19 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.19/dsh-ui-mobile-0.1.19.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
+- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.20 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.20/dsh-ui-mobile-0.1.20.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
 - **Standalone `dsh web`:** Download the `.tgz` from [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases). Use the same system account and `DSH_HOME` as the running instance. From the directory containing the download, run:
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.19.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.20.tgz"
   ```
 
   Replace `web` if you use a custom profile, then restart that `dsh web` process.

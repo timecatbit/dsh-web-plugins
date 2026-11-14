@@ -79,7 +79,11 @@ export const cssText = `
   gap: 12px;
   min-width: 0;
 }
+/* Narrow windows and phones: long values wrap inside their column instead of
+   running past the card, and the label keeps room for a word or two. A value
+   never gets narrower than an address with its status light. */
 .dsh_lanproxy_rowLabel {
+  min-width: min(6em, 35%);
   color: var(--dsw-alias-label-secondary, #c9d1d9);
   font-size: 13px;
   line-height: 20px;
@@ -89,13 +93,22 @@ export const cssText = `
   font-size: 13px;
   line-height: 20px;
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 .dsh_lanproxy_portStatus {
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2px 6px;
+  min-width: 0;
+}
+.dsh_lanproxy_portAddr {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-width: 0;
+  white-space: nowrap;
 }
 .dsh_lanproxy_dot {
   width: 8px;
@@ -118,6 +131,7 @@ export const cssText = `
 .dsh_lanproxy_statusText {
   font-size: 12px;
   line-height: 18px;
+  white-space: nowrap;
 }
 .dsh_lanproxy_statusTextOn {
   color: var(--dsw-alias-state-success-primary, #3fb950);
@@ -126,9 +140,10 @@ export const cssText = `
   color: var(--dsw-alias-state-error-primary, #f85149);
 }
 /* Badges: text color only, no tinted background (the user asked for the
-   status text color without the red/green fill). */
+   status text color without the red/green fill), and no side padding, so
+   their text lines up with the other values. */
 .dsh_lanproxy_badge {
-  padding: 2px 8px;
+  padding: 2px 0;
   border-radius: 999px;
   font-size: 12px;
   line-height: 18px;

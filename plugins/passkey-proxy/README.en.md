@@ -27,10 +27,10 @@ The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to kee
 
 3. Click the **DSH Passkey Proxy card title → Versions → Install**. Use the same path for updates without uninstalling first. Enable the plugin and restart the current instance if DSH prompts you.
 
-**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.10 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.10/smanx-dsh-proxy-0.1.10.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
+**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.11 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.11/smanx-dsh-proxy-0.1.11.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.10.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.11.tgz"
 ```
 
 Replace `web` if you use a custom profile, then restart that web process. The standalone CLI does not manage the official app's `desktop` profile.

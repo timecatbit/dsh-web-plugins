@@ -58,6 +58,18 @@
       },
       "versions": [
         {
+          "publishTimestamp": 1794635066,
+          "version": "0.1.20",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-pocket-ui",
+            "commit": "191998a6f0aa3cc287781b704d0cc89bc862aa0d"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
+        {
           "publishTimestamp": 1794626694,
           "version": "0.1.19",
           "source": {
@@ -155,6 +167,18 @@
         ]
       },
       "versions": [
+        {
+          "publishTimestamp": 1794635066,
+          "version": "0.1.11",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
+            "commit": "06c7b9382e44ef188481de17e16807b0824f811b"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794626694,
           "version": "0.1.10",

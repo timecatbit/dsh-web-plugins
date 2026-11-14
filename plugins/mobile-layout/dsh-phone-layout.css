@@ -324,10 +324,15 @@ html[data-dsh-phone] [data-shortcut-modal="settings"] [data-slot="settings.actio
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* One inset for every settings page. The host pads this scroller by 24px, or
+   16px in narrow windows on newer hosts; sections are width: 100% with
+   content-box sizing, so padding them as well pushed their right edge past
+   the scroller and clipped the controls there. */
 html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_options"]:has(> [data-slot="settings.section"]) {
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
+  padding-inline: 20px;
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -344,12 +349,27 @@ html[data-dsh-phone] [data-shortcut-modal="settings"] ._8HJdBW_cubeRow > button 
   min-height: 64px;
   padding: 8px 2px;
 }
-html[data-dsh-phone] [data-shortcut-modal="settings"] [data-slot="settings.section"] > [class$="_section"] {
-  padding-inline: clamp(12px, 4vw, 20px);
-}
 html[data-dsh-phone] [data-shortcut-modal="settings"] [data-slot="settings.general.item"] > [class$="_row"] {
   flex-wrap: wrap;
   gap: 8px;
+}
+/* Built-in plugins: the agent-preset switcher beside a group title moves to
+   its own line when both do not fit, and shortens its label if even that
+   line is too narrow. */
+html[data-dsh-phone] [data-shortcut-modal="settings"] :has(> [class$="_headerEnd"]) {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_headerEnd"],
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_headerEnd"] > *,
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_headerEnd"] button[class$="_switcher"] {
+  min-width: 0;
+  max-width: 100%;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] [class$="_switcher"] > [class$="_switcherLabel"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 html[data-dsh-phone] [data-mobile-role=details] {
   right: 0;

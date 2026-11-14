@@ -52,20 +52,20 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.20/dsh-ui-mobile-0.1.20.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.14/smanx-dsh-proxy-0.1.14.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.21/dsh-ui-mobile-0.1.21.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.15/smanx-dsh-proxy-0.1.15.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
-4. To reach this desktop instance from your phone using our proxy, open **Settings → LAN Proxy**, set a proxy username and password, and enable **Allow access from devices on the local network**. Under **Advanced**, enable **Open DSH automatically after sign-in**, then save. Open `http://COMPUTER-LAN-IP:PROXY-PORT` on your phone, or configure HTTPS for Passkeys. The plugins are independent; installing Mobile Layout alone does not enable remote access.
+4. To reach this desktop instance from your phone using our proxy, open **Settings → Passkey Proxy**, set a proxy username and password, and enable **Allow access from devices on the local network**. Under **Advanced**, enable **Open DSH automatically after sign-in**, then save. Open `http://COMPUTER-LAN-IP:PROXY-PORT` on your phone, or configure HTTPS for Passkeys. The plugins are independent; installing Mobile Layout alone does not enable remote access.
 
 ### Manual install: Standalone `dsh web`
 
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.20.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.14.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.21.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.15.tgz"
 ```
 
 Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. The packages replace the corresponding upstream plugin in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.
@@ -84,7 +84,7 @@ Desktop stores its proxy settings and Passkey records in `~/.dsh/profiles/deskto
 
 Standalone `dsh web` keeps its existing settings, defaults, and credentials in the DSH data root. Standalone profiles sharing that root still share those files. Both versions default to proxy port `3081`; choose distinct ports if they run on the same computer. Proxy authentication remains required. Do not expose plain HTTP to the public internet.
 
-Set the proxy username and password from the original DSH page under **Settings → LAN Proxy**. The proxy blocks unauthenticated access before setup. On a trusted LAN, you can use password sign-in at `http://SERVER-IP:3081`; the proxy verifies its own password and issues a session cookie before forwarding to DSH. Plain HTTP does not encrypt credentials. The advanced launch-token option allows the proxy to complete DSH's separate check after authenticating the visitor.
+Set the proxy username and password from the original DSH page under **Settings → Passkey Proxy**. The proxy blocks unauthenticated access before setup. On a trusted LAN, you can use password sign-in at `http://SERVER-IP:3081`; the proxy verifies its own password and issues a session cookie before forwarding to DSH. Plain HTTP does not encrypt credentials. The advanced launch-token option allows the proxy to complete DSH's separate check after authenticating the visitor.
 
 For HTTPS, preserve `Host`, set `X-Forwarded-Proto: https`, and forward WebSocket upgrades. Set the public HTTPS origin in **Access addresses**. If your reverse proxy connects via local loopback, leave the IP field blank; only `127.0.0.1` and `::1` are trusted in that case. For remote or container peers, enter the actual source IPs. To find a candidate, save the origin, visit it in another tab, and use **Check recent proxy sources**. Review the suggestion before trusting it.
 

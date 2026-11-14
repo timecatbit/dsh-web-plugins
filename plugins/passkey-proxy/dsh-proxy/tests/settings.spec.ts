@@ -63,15 +63,6 @@ describe('validateUpdate', () => {
     expect(out).toEqual({ ok: true, patch: { listenPort: 3091, username: 'bob', password: 'x' } })
   })
 
-  it('accepts only the known home-screen icons', () => {
-    expect(validateUpdate({ homeScreenIcon: 'black' }, 3081, 3080)).toEqual({ ok: true, patch: { homeScreenIcon: 'black' } })
-    expect(validateUpdate({ homeScreenIcon: 'dsh' }, 3081, 3080)).toEqual({ ok: true, patch: { homeScreenIcon: 'dsh' } })
-    expect(validateUpdate({ homeScreenIcon: 'blue' }, 3081, 3080).ok).toBe(false)
-    expect(validateUpdate({ homeScreenIcon: 1 }, 3081, 3080).ok).toBe(false)
-    expect(normalizeRuntimeSettings({ homeScreenIcon: 'white' })).toEqual({ homeScreenIcon: 'white' })
-    expect(normalizeRuntimeSettings({ homeScreenIcon: '../x' })).toEqual({})
-  })
-
   it('accepts partial patches', () => {
     expect(validateUpdate({ username: 'bob' }, 3081, 3080)).toEqual({ ok: true, patch: { username: 'bob' } })
     expect(validateUpdate({ password: '' }, 3081, 3080)).toEqual({ ok: true, patch: { password: '' } })

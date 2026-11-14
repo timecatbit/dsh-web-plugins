@@ -12,8 +12,9 @@ A narrow-screen layout for DeepSeek Harness (DSH). **Install it on its own.** It
 - When the keyboard opens or closes, the page follows Safari's own animation and does not jump again afterwards. While the keyboard is open, the conversation header moves off screen, as on other pages in Safari.
 - The settings fit narrow screens. There is one left-sidebar button in chat, and the native right-sidebar button stays available.
 - Better Sidebar's bottom-workbench button is hidden in phone mode. The desktop toolbar is unchanged.
+- **Settings → General** gets a **Home-screen icon** row: DSH's own, a white whale on black, or a black whale on white. A phone that adds DSH to its home screen uses the chosen icon. Changes apply at once, without a restart.
 
-The layout applies mainly below 768 CSS pixels and also covers some touch devices in landscape. It opens no network port and adds no Service Worker, installation prompt, or Web Push.
+The layout applies mainly below 768 CSS pixels and also covers some touch devices in landscape. It opens no network port and adds no Service Worker, installation prompt, or Web Push. With a whale chosen, it serves the icons and a web app manifest under `/home-screen/` on DSH's own port and points the page's icon links there; with DSH's own icon it leaves the page alone.
 
 ## Compatibility
 
@@ -42,11 +43,11 @@ The package remains `dsh-ui-mobile`. It replaces a previous build of this projec
 
 ## Install manually
 
-- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.20 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.20/dsh-ui-mobile-0.1.20.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
+- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.21 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.21/dsh-ui-mobile-0.1.21.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
 - **Standalone `dsh web`:** Download the `.tgz` from [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases). Use the same system account and `DSH_HOME` as the running instance. From the directory containing the download, run:
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.20.tgz"
+  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.21.tgz"
   ```
 
   Replace `web` if you use a custom profile, then restart that `dsh web` process.
@@ -54,6 +55,8 @@ The package remains `dsh-ui-mobile`. It replaces a previous build of this projec
 ## Use it on a phone
 
 Open your existing DSH website in Safari or an Android browser. If the DSH instance on your desktop is not reachable from the phone, give it a reachable web address first; [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) is one option. On iPhone or iPad, Safari can save the regular site via **Share → Add to Home Screen → Open as Web App** (if shown). On Mac, use **File → Add to Dock**. Save the everyday address rather than a launch URL containing `?token=`. These shortcuts open the site; plugins are installed in DSH itself.
+
+To use a whale as the home-screen icon, choose it under **Settings → General → Home-screen icon**, sign in and open DSH, then use **Add to Home Screen**. A phone keeps the icon it got when DSH was added, so after switching later, remove the old DSH tile and add it again. Through DSH Passkey Proxy this needs Proxy 0.1.15 or later; older versions block these icons.
 
 ## Troubleshoot, roll back, and contribute
 

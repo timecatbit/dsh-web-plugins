@@ -14,9 +14,11 @@
  * (the app's module system provides it).
  */
 import { build } from 'esbuild'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, rmSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 
+// Start from an empty lib/ so files from removed sources never ship.
+rmSync('lib', { recursive: true, force: true })
 mkdirSync('lib', { recursive: true })
 const authClient = await build({
   entryPoints: ['src/auth-client.ts'],

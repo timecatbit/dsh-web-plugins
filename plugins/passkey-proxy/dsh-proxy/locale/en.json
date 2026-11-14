@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "LAN Proxy",
-    "description": "Expose the DSH web app to your LAN on a second port: native Basic Auth, full HTTP + WebSocket forwarding, and a settings page."
+    "title": "DSH Passkey Proxy",
+    "description": "Reach DSH from your LAN or an HTTPS domain through a separate port, with password and Passkey sign-in and full HTTP + WebSocket forwarding."
   }
 }

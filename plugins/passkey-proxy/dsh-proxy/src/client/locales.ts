@@ -10,7 +10,7 @@ export const NS = 'dsh-proxy'
 
 /** Simplified Chinese dictionary (the key-set source of truth). */
 export const zh = {
-  'nav': '局域网代理',
+  'nav': 'Passkey Proxy',
   'status.title': '运行状态',
   'status.proxyPort': '代理服务端口',
   'status.proxyRunning': '运行中',
@@ -42,7 +42,7 @@ export const zh = {
   'form.listenPort': '代理服务端口（监听端口）',
   'form.listenPortHint': '1–65535',
   'form.username': '用户名',
-  'form.usernameHint': '局域网代理账号',
+  'form.usernameHint': '代理账号',
   'form.password': '代理密码',
   'form.passwordHint': '已设置；留空保持不变',
   'form.passwordNew': '设置新密码',
@@ -59,11 +59,6 @@ export const zh = {
   'form.registeredKeys': '当前域名已注册',
   'form.openHTTPS': '到 HTTPS 入口管理 Passkey',
   'form.advanced': '高级：DSH 启动令牌',
-  'form.homeIcon': '主屏幕图标',
-  'form.homeIcon.dsh': 'DSH 自带图标',
-  'form.homeIcon.black': '黑底白鲸',
-  'form.homeIcon.white': '白底黑鲸',
-  'form.homeIconHint': '手机把 DSH 添加到主屏幕时用的图标。更换后，先删掉桌面上原来的图标，再从浏览器重新添加。',
   'form.passkeyTitle': 'Passkey 登录',
   'form.passkeyOrigin': '对外 HTTPS 域名',
   'form.tlsProxyIPs': '反代来源 IP（同机回环可留空）',
@@ -100,7 +95,7 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 
 /** English dictionary, checked complete against the zh key set. */
 export const en: Record<LanProxyKey, string> = {
-  'nav': 'LAN Proxy',
+  'nav': 'Passkey Proxy',
   'status.title': 'Status',
   'status.proxyPort': 'Proxy port',
   'status.proxyRunning': 'Running',
@@ -132,7 +127,7 @@ export const en: Record<LanProxyKey, string> = {
   'form.listenPort': 'Proxy port (listen)',
   'form.listenPortHint': '1–65535',
   'form.username': 'Username',
-  'form.usernameHint': 'LAN proxy username',
+  'form.usernameHint': 'Proxy username',
   'form.password': 'Proxy password',
   'form.passwordHint': 'Already set; leave blank to keep it',
   'form.passwordNew': 'Set a new password',
@@ -149,11 +144,6 @@ export const en: Record<LanProxyKey, string> = {
   'form.registeredKeys': 'Registered for this domain',
   'form.openHTTPS': 'Manage Passkeys on the HTTPS site',
   'form.advanced': 'Advanced: DSH launch token',
-  'form.homeIcon': 'Home-screen icon',
-  'form.homeIcon.dsh': "DSH's own icon",
-  'form.homeIcon.black': 'White whale on black',
-  'form.homeIcon.white': 'Black whale on white',
-  'form.homeIconHint': 'The icon a phone uses when DSH is added to its home screen. After changing it, remove the old icon from the home screen and add DSH again from the browser.',
   'form.passkeyTitle': 'Passkey sign-in',
   'form.passkeyOrigin': 'Public HTTPS origin',
   'form.tlsProxyIPs': 'Reverse proxy source IPs (optional for loopback)',

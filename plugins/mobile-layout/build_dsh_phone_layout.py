@@ -10,10 +10,15 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.20"
+VERSION = "0.1.21"
 HOST_RANGE = ">=0.2.1-rc.5"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent
+HOME = ROOT / "home-screen"
+LOCALE = {
+    "en": {"title": "DSH Pocket UI", "description": "Phone layout for DSH: touch drawers, tap-to-focus chat input, and a home-screen icon choice in Settings → General."},
+    "zh": {"title": "DSH Pocket UI", "description": "适配手机的对话页面、侧栏和输入框，并可在「设置 → 通用」选择主屏幕图标。"},
+}
 
 
 def replace(s, old, new):
@@ -44,14 +49,15 @@ def main(source, target):
     s, changed = re.subn(r'(?m)^\t\tconst css = ".*?";$', lambda _: "\t\tconst css = " + json.dumps(css) + ";", s)
     assert changed == 1, changed
     before = "\t\tfunction apply(ctx) {"
-    s = replace(s, before, (ROOT / "dsh-phone-layout.js").read_text() + "\n" + before)
+    s = replace(s, before, (ROOT / "dsh-phone-layout.js").read_text() + "\n" + (ROOT / "dsh-home-screen-row.js").read_text() + "\n" + before)
     # Upstream only blurs untrusted focus, but focus() fires trusted events.
     # installPhoneComposerFocus guards the command popup's search instead.
     s = replace(s, '\t\t\tctx.effect(() => suppressCommandPanelScriptFocus(), "ui-mobile: command panel keyboard guard");\n', "")
     s = replace(s,
         '\t\t\tctx.effect(() => enableMobileEnterSend(), "ui-mobile: keyboard send action");\n'
         '\t\t\tctx.effect(() => lockMobilePageZoom(), "ui-mobile: page zoom lock");',
-        '\t\t\tctx.effect(() => installPhoneLayout(ctx.layout), "ui-mobile: adaptive phone layout");')
+        '\t\t\tctx.effect(() => installPhoneLayout(ctx.layout), "ui-mobile: adaptive phone layout");\n'
+        '\t\t\tinstallHomeScreenRow(ctx);')
     s = replace(s, "if (!state.mobile || !state.sidebarOpen) return null;",
         "if (!state.mobile || (!state.sidebarOpen && !state.detailsOpen)) return null;")
     # The host's ChatView already owns a scroll-to-bottom button and follow state.
@@ -70,11 +76,20 @@ def main(source, target):
         "\t\t\t\t\t\ttoggleSidebar: () => controller.snapshot().detailsOpen ? ctx.layout.closeRightbar() : ctx.layout.toggleSidebar()\n"
         "\t\t\t\t\t})\n\t\t\t\t}, DrawerScrim);")
     files[name] = s.encode()
+    # Host part: the home-screen icon choice (built by home-screen/build.mjs).
+    files["package/lib/index.js"] = (HOME / "lib" / "index.js").read_bytes()
+    files["package/THIRD-PARTY-NOTICES.md"] = (HOME / "lib" / "THIRD-PARTY-NOTICES.md").read_bytes()
+    for icon in [n for n in files if n.startswith("package/assets/icons/")]:
+        del files[icon]  # upstream's PWA icons, unused since the layout-only build
+    for png in sorted((HOME / "assets" / "home-screen").glob("*.png")):
+        files["package/assets/home-screen/" + png.name] = png.read_bytes()
+    for lang, meta in LOCALE.items():
+        files[f"package/locale/{lang}.json"] = (json.dumps({"meta": meta}, ensure_ascii=False, indent=2) + "\n").encode()
     pkg = json.loads(files["package/package.json"])
     assert pkg["version"] == "0.1.8-subuntu.4"
     pkg["version"] = VERSION
     pkg["license"] = "MIT"
-    pkg["description"] = "DSH Pocket UI: mobile layout, touch drawers, and tap-to-focus chat input"
+    pkg["description"] = "DSH Pocket UI: mobile layout, touch drawers, tap-to-focus chat input, and a home-screen icon choice"
     pkg["repository"] = {"type": "git", "url": "git+https://github.com/timecatbit/dsh-pocket-ui.git"}
     pkg["homepage"] = "https://github.com/timecatbit/dsh-pocket-ui#readme"
     pkg["bugs"] = {"url": "https://github.com/timecatbit/dsh-pocket-ui/issues"}
@@ -82,6 +97,10 @@ def main(source, target):
     pkg.pop("scripts", None)
     pkg.pop("devDependencies", None)
     pkg["engines"]["dsh"] = HOST_RANGE
+    pkg["exports"]["./locale/*"] = "./locale/*"
+    for dep in ("@deepseek-ai/dsh-client-ui-settings", "@deepseek-ai/dsh-client-locale"):
+        if dep not in pkg["dsh"]["client"]["inject"]:
+            pkg["dsh"]["client"]["inject"].append(dep)
     for name, version in pkg["peerDependencies"].items():
         if name.startswith("@deepseek-ai/dsh-") and version == "0.2.1-rc.5":
             pkg["peerDependencies"][name] = HOST_RANGE

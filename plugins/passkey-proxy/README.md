@@ -27,17 +27,17 @@
 
 3. 点 **DSH Passkey Proxy 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。
 
-**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.14 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.14/smanx-dsh-proxy-0.1.14.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
+**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.15 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.15/smanx-dsh-proxy-0.1.15.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.14.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.15.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。不要用独立 CLI 安装到官方桌面 App 的 `desktop` profile。
 
 ## 只在局域网用账号密码
 
-1. 从原来的 DSH 网页或桌面 App 打开「设置 → 局域网代理」，设置代理用户名和密码，保留「允许密码登录」。
+1. 从原来的 DSH 网页或桌面 App 打开「设置 → Passkey Proxy」，设置代理用户名和密码，保留「允许密码登录」。
 2. 默认代理端口是 `3081`，它和 DSH 自己的端口是两个端口。桌面版默认只监听本机；要让同网手机访问，打开「允许局域网设备访问」。保存并确认代理显示「运行中」。
 3. 手机连接同一个局域网，打开 `http://服务器局域网IP:3081`（端口改过就用实际值）。登录用的是刚设的**代理账号**。代理验证密码后签发浏览器会话 Cookie，再把请求转发给 DSH。没有 HTTPS 的 HTTP 不加密，请只在可信局域网用。
 
@@ -54,7 +54,7 @@ dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.14.tgz"
 
 ## 添加到手机主屏幕
 
-在手机浏览器里打开代理地址，用「添加到主屏幕」即可，不用先登录：主屏幕图标和网页清单不经过代理登录。图标默认用 DSH 自带的；想换成黑白鲸鱼，在「设置 → 局域网代理 → 主屏幕图标」选「黑底白鲸」或「白底黑鲸」并保存。手机会记住添加时的图标，所以换图标后要先删掉桌面上原来的 DSH，再重新添加。
+主屏幕图标和网页清单不经过代理登录，所以手机通过代理把 DSH 添加到主屏幕时能拿到图标。建议先登录进入 DSH 页面，再用浏览器的「添加到主屏幕」。图标默认是 DSH 自带的；想换成黑白鲸鱼，安装 [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui)，在「设置 → 通用 → 主屏幕图标」里选。
 
 ## 维护和排查
 

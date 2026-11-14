@@ -1,6 +1,6 @@
 {
   "name": "@smanx/dsh-proxy",
-  "description": "LAN reverse proxy with web-based auth and a settings page for the DSH web app",
+  "description": "DSH Passkey Proxy: LAN and HTTPS access to the DSH web app with password and Passkey sign-in",
   "version": "0.1.0",
   "entry": {
     "name": "@smanx/dsh-proxy",

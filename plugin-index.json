@@ -40,8 +40,8 @@
         "zh": "DSH Pocket UI · 手机界面"
       },
       "description": {
-        "en": "Mobile conversation layout, touch drawers, and tap-to-focus chat input.",
-        "zh": "适配手机的对话页面、侧栏和输入框。"
+        "en": "Mobile conversation layout, touch drawers, tap-to-focus chat input, and a home-screen icon choice.",
+        "zh": "适配手机的对话页面、侧栏和输入框，可选主屏幕图标。"
       },
       "author": "timecatbit",
       "homepage": "https://github.com/timecatbit/dsh-pocket-ui",
@@ -57,6 +57,18 @@
         ]
       },
       "versions": [
+        {
+          "publishTimestamp": 1794654818,
+          "version": "0.1.21",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-pocket-ui",
+            "commit": "83d177587a4a266e7047a4d7bc8c66465edf4eda"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794635066,
           "version": "0.1.20",
@@ -147,11 +159,11 @@
       "name": "@smanx/dsh-proxy",
       "title": {
         "en": "DSH Passkey Proxy",
-        "zh": "DSH Passkey Proxy · 局域网代理"
+        "zh": "DSH Passkey Proxy · 远程访问"
       },
       "description": {
-        "en": "LAN reverse proxy with password and HTTPS Passkey sign-in.",
-        "zh": "提供局域网代理、密码和 HTTPS Passkey 登录。"
+        "en": "Reach DSH from your LAN or an HTTPS domain, with password and Passkey sign-in.",
+        "zh": "通过局域网或 HTTPS 域名访问 DSH，支持密码和 Passkey 登录。"
       },
       "author": "timecatbit",
       "homepage": "https://github.com/timecatbit/dsh-passkey-proxy",
@@ -167,6 +179,18 @@
         ]
       },
       "versions": [
+        {
+          "publishTimestamp": 1794654818,
+          "version": "0.1.15",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
+            "commit": "865adce0cc6e3c894d059aa48c15aa8cbb12f950"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794650948,
           "version": "0.1.14",

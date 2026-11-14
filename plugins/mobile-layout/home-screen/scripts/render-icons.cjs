@@ -1,5 +1,5 @@
 // Render the black/white DeepSeek whale home-screen PNGs from DSH's favicon path.
-// usage: node render-home-icons.cjs <dsh favicon.svg> <out dir>, then node embed-home-icons.mjs
+// usage: node render-icons.cjs <DSH favicon.svg> <out dir>  (needs Playwright + Chrome); copy the PNGs into ../assets
 const { chromium } = require('playwright');
 const fs = require('fs'); const path = require('path');
 (async () => {

@@ -243,32 +243,6 @@ describe('ProxyController update', () => {
     expect(res.text).toBe('A')
   })
 
-  it('switches the home-screen icon and keeps the choice across controller instances', async () => {
-    const upstreamPort = await startUpstream('A')
-    const settingsFile = tempSettingsFile()
-    controller = new ProxyController({ base: baseOptions(upstreamPort), settingsFile, log: () => {} })
-    await controller.start()
-    expect(controller.status().homeScreenIcon).toBe('dsh')
-    expect((await fetchThrough(`http://127.0.0.1:${controller.status().listenPort}/apple-touch-icon.png`)).text).toBe('A')
-
-    const out = await controller.update({ homeScreenIcon: 'black' })
-    expect(out.ok).toBe(true)
-    if (out.ok) expect(out.result.status.homeScreenIcon).toBe('black')
-    const icon = await fetchThrough(`http://127.0.0.1:${controller.status().listenPort}/apple-touch-icon.png`)
-    expect(icon.status).toBe(200)
-    expect(icon.text.slice(1, 4)).toBe('PNG')
-    expect(JSON.parse(readFileSync(settingsFile, 'utf8')).homeScreenIcon).toBe('black')
-    await controller.stop()
-    controller = null
-
-    const restarted = new ProxyController({ base: baseOptions(upstreamPort), settingsFile, log: () => {} })
-    controller = restarted
-    await restarted.start()
-    expect(restarted.status().homeScreenIcon).toBe('black')
-    expect(restarted.status().persisted).toBe(true)
-    expect((await fetchThrough(`http://127.0.0.1:${restarted.status().listenPort}/icon-512.png`)).text.slice(1, 4)).toBe('PNG')
-  })
-
   it('rejects invalid patches without touching the running proxy', async () => {
     const upstreamPort = await startUpstream('A')
     controller = new ProxyController({ base: baseOptions(upstreamPort), settingsFile: tempSettingsFile(), log: () => {} })

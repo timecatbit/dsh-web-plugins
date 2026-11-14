@@ -93,7 +93,7 @@ export function authPage(management: boolean, passkey: boolean, resumeKeys = fal
     ${management ? back : ''}
     <header>${keyIcon}<h1>${title}</h1><p>${management ? '使用设备验证登录。每个账号最多添加 5 个。' : passkey
       ? allowPassword ? '已有 Passkey 可直接登录。首次设置请先用账号密码。' : '使用已添加的 Passkey 登录。'
-      : allowPassword ? '请输入局域网代理的账号密码。' : '这里暂时没有可用的登录方式。'}</p></header>
+      : allowPassword ? '请输入代理的账号密码。' : '这里暂时没有可用的登录方式。'}</p></header>
     ${management ? keys : '<section class="card">' + login + '</section>'}
     <p id="message" role="status" aria-live="polite"></p>
     ${management ? '<footer><button class="link danger" type="button" id="logout">退出登录</button></footer>' : ''}

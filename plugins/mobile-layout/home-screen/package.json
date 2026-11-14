@@ -1,0 +1,16 @@
+{
+  "name": "dsh-ui-mobile-home-screen",
+  "private": true,
+  "type": "module",
+  "description": "Pocket UI host part: the home-screen icon choice. Bundled into dsh-ui-mobile's lib/index.js by build.mjs.",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "vitest run",
+    "check": "pnpm run test && pnpm run build"
+  },
+  "devDependencies": {
+    "@deepseek-ai/schemastery": "3.19.0",
+    "esbuild": "^0.28.0",
+    "vitest": "^4.1.8"
+  }
+}

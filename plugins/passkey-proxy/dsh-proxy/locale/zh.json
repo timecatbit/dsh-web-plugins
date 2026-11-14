@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "局域网代理",
-    "description": "用第二个端口把 DSH Web 界面开放到局域网：原生 Basic Auth 弹窗、HTTP + WebSocket 全协议转发，带设置页面。"
+    "title": "DSH Passkey Proxy",
+    "description": "通过独立端口从局域网或 HTTPS 域名访问 DSH，支持账号密码和 Passkey 登录，完整转发网页与实时连接。"
   }
 }

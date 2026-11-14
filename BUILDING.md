@@ -29,7 +29,7 @@ Both packages declare `engines.dsh` as `>=0.2.1-rc.5` (`HOST_RANGE` in `build_ds
 The tested versions are a separate, shorter list. Add a DSH version to it only after you have checked it:
 
 1. Install DSH at that version into a temporary directory and start `dsh web` with a disposable `DSH_HOME` and its own ports. Put `{"listenPort": <free port>}` in that home's `dsh-proxy.json` first so the proxy does not collide with a running instance on 3081.
-2. Install both archives into the `web` profile. Check in a narrow browser that the sidebar, settings and composer work and a wide window keeps the desktop layout. Sign in through the proxy port and check that the app loads and its WebSocket connects, and that **Settings → LAN Proxy** shows the proxy running.
+2. Install both archives into the `web` profile. Check in a narrow browser that the sidebar, settings and composer work and a wide window keeps the desktop layout. Sign in through the proxy port and check that the app loads and its WebSocket connects, and that **Settings → Passkey Proxy** shows the proxy running, and that Pocket UI's **Settings → General → Home-screen icon** row switches the served icon.
 3. Add the version to the tested-version tables in `README.md`, `README.en.md`, and both plugins' READMEs. The plugin READMEs ship inside the archives, so a table change reaches the release repositories with the next build.
 4. Record the full list for each plugin in the Discover index. Discover shows these as "Tested on DSH …" tags on the plugin cards:
 

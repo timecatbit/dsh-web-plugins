@@ -46,8 +46,6 @@ import { isJavaScriptContentType, patchClientScript } from './clientpatch.ts'
 import { attachBodyTransform } from './compression.ts'
 import { LaunchTokenAutoLogin } from './tokenretry.ts'
 import { BrowserAuth, LOGIN, type LoginPolicy } from './browser-auth.ts'
-import { homeScreenIconPng, pinHomeScreenIcon } from './home-icons.ts'
-import type { HomeScreenIcon } from './contract.ts'
 
 export interface LanProxyOptions {
   /** Interface the proxy binds (0.0.0.0 for LAN access). */
@@ -73,12 +71,6 @@ export interface LanProxyOptions {
   passkeyOrigin?: string
   trustedTLSProxyIPs?: string[]
   loginPolicy?: LoginPolicy
-  /**
-   * `black`/`white` answers apple-touch-icon.png and the manifest PNG icons
-   * with the bundled black-and-white whale instead of DSH's own; `dsh` or
-   * unset forwards them to DSH as before.
-   */
-  homeScreenIcon?: HomeScreenIcon
   /** Optional sink for human-readable lifecycle messages. */
   log?: (level: 'info' | 'warn' | 'error', message: string) => void
 }
@@ -112,6 +104,19 @@ const PUBLIC_PATHS = new Set([
   '/icon-512.png',
   '/icon-maskable-512.png',
 ])
+
+/**
+ * Home-screen icons and manifests DSH Pocket UI serves for its icon choice
+ * (`/home-screen/<black|white>/…`): fetched without cookies for the same
+ * reason, and, like every non-index file, public in DSH itself. Read-only
+ * methods only.
+ */
+const PUBLIC_PREFIX = '/home-screen/'
+
+function isPublicPath(pathname: string, method: string | undefined): boolean {
+  return PUBLIC_PATHS.has(pathname) ||
+    (pathname.startsWith(PUBLIC_PREFIX) && (method === 'GET' || method === 'HEAD'))
+}
 
 /** LAN IPv4 addresses the host currently has, as http URLs on `port`. */
 export function lanAddresses(port: number): string[] {
@@ -228,10 +233,9 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
 
     attachBodyTransform(res, proxyRes, (plain) => {
       const text = plain.toString('utf8')
-      // HTML: inject the randomUUID polyfill, and point the touch-icon link
-      // at the chosen whale's own URL.
+      // HTML: inject the randomUUID polyfill.
       if (isHtml) {
-        return Buffer.from(pinHomeScreenIcon(injectPolyfill(text, RANDOM_UUID_POLYFILL), options.homeScreenIcon))
+        return Buffer.from(injectPolyfill(text, RANDOM_UUID_POLYFILL))
       }
       // JS: rewrite the loopback-trust needles (applied unconditionally
       // the Host/Origin rewrite already lets the server-side fence treat
@@ -268,17 +272,9 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
       void browser.route(req, res, pathname)
       return
     }
-    // Public static files (PWA manifest, favicon): fetched without
+    // Public static files (PWA manifest, icons): fetched without
     // credentials by the browser, so they bypass the auth gate.
-    if (PUBLIC_PATHS.has(pathname)) {
-      const icon = req.method === 'GET' || req.method === 'HEAD' ? homeScreenIconPng(options.homeScreenIcon, pathname) : undefined
-      if (icon) {
-        // no-cache: switching the icon in settings must show up the next time
-        // the page is added to the home screen.
-        res.writeHead(200, { 'content-type': 'image/png', 'content-length': String(icon.length), 'cache-control': 'no-cache' })
-        res.end(req.method === 'HEAD' ? undefined : icon)
-        return
-      }
+    if (isPublicPath(pathname, req.method)) {
       alignOrigin(req)
       proxy.web(req, res)
       return

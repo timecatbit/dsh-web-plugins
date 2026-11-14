@@ -1,6 +1,6 @@
 /**
  * dsh-proxy client plugin: the browser half of the LAN-proxy settings
- * page. Registers the `settings.section` entry ("局域网代理") that shows the
+ * page. Registers the `settings.section` entry ("Passkey Proxy") that shows the
  * running proxy status and edits the forward target port / username /
  * password through the host `/dsh-proxy` Connection RPC channel.
  */

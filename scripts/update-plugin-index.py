@@ -14,16 +14,16 @@ PLUGINS = {
         "repo": "dsh-pocket-ui",
         "title": {"en": "DSH Pocket UI", "zh": "DSH Pocket UI · 手机界面"},
         "description": {
-            "en": "Mobile conversation layout, touch drawers, and tap-to-focus chat input.",
-            "zh": "适配手机的对话页面、侧栏和输入框。",
+            "en": "Mobile conversation layout, touch drawers, tap-to-focus chat input, and a home-screen icon choice.",
+            "zh": "适配手机的对话页面、侧栏和输入框，可选主屏幕图标。",
         },
     },
     "@smanx/dsh-proxy": {
         "repo": "dsh-passkey-proxy",
-        "title": {"en": "DSH Passkey Proxy", "zh": "DSH Passkey Proxy · 局域网代理"},
+        "title": {"en": "DSH Passkey Proxy", "zh": "DSH Passkey Proxy · 远程访问"},
         "description": {
-            "en": "LAN reverse proxy with password and HTTPS Passkey sign-in.",
-            "zh": "提供局域网代理、密码和 HTTPS Passkey 登录。",
+            "en": "Reach DSH from your LAN or an HTTPS domain, with password and Passkey sign-in.",
+            "zh": "通过局域网或 HTTPS 域名访问 DSH，支持密码和 Passkey 登录。",
         },
     },
 }

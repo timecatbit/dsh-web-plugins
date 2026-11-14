@@ -2,14 +2,14 @@
 
 [English](README.en.md) · [MIT 许可证](LICENSE) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
 
-DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单独安装、更新和回退：手机布局只改网页界面，局域网代理负责提供访问入口和登录。无需把本仓库作为第三个插件安装。
+DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单独安装、更新和回退：Pocket UI 负责手机上的界面，Passkey Proxy 负责访问入口和登录。无需把本仓库作为第三个插件安装。
 
 本仓库提供独立 `dsh web` 和 [DeepSeek Harness 官方桌面 App](https://www.deepseek.com/en/harness/) 的安装说明。桌面版用它自己的插件管理器安装；Safari 则用于把可访问的 DSH 网页加到主屏幕或程序坞。
 
 | 插件 | 包名 | 作用 |
 | --- | --- | --- |
-| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` | 手机布局、侧栏和聊天输入 |
-| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` | 局域网代理、密码和 HTTPS Passkey 登录 |
+| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` | 手机布局、侧栏、聊天输入和主屏幕图标 |
+| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` | 局域网和 HTTPS 访问入口，密码和 Passkey 登录 |
 
 ## 三个仓库怎么用
 
@@ -54,12 +54,12 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 2. 粘贴所需安装包的完整地址，一次装一个：
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.20/dsh-ui-mobile-0.1.20.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.14/smanx-dsh-proxy-0.1.14.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.21/dsh-ui-mobile-0.1.21.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.15/smanx-dsh-proxy-0.1.15.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
-4. 若要让手机访问**这个桌面实例**，还要给它提供一个手机能访问的网页入口。用本仓库代理时，在桌面 App 的「设置 → 局域网代理」里设置账号密码，开启「允许局域网设备访问」，并在「高级」里开启「认证后自动进入 DSH」。保存后用手机打开 `http://电脑的局域网IP:代理端口`。也可给代理配置 HTTPS 后使用 Passkey。两个插件不相互依赖；Mobile UI 单独安装不会开启远程入口。
+4. 若要让手机访问**这个桌面实例**，还要给它提供一个手机能访问的网页入口。用本仓库代理时，在桌面 App 的「设置 → Passkey Proxy」里设置账号密码，开启「允许局域网设备访问」，并在「高级」里开启「认证后自动进入 DSH」。保存后用手机打开 `http://电脑的局域网IP:代理端口`。也可给代理配置 HTTPS 后使用 Passkey。两个插件不相互依赖；Mobile UI 单独安装不会开启远程入口。
 
 ### 手动安装：独立 `dsh web`
 
@@ -69,13 +69,13 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.20.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.21.tgz"
 
 # Passkey 代理
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.14.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.15.tgz"
 ```
 
-安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、局域网代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。
+安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。
 
 ## 用 Safari 保存为网页 App
 
@@ -91,7 +91,7 @@ dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.14.tgz"
 
 独立 `dsh web` 保留原来的 `~/.dsh/dsh-proxy.json`、Passkey 记录和默认设置。共用同一 `DSH_HOME` 的独立网页 profile 仍共用这份配置。两种入口的默认代理端口都是 `3081`；同机同时运行时，请给它们设置不同端口。代理自己的认证始终有效。不要把未加 TLS 的入口直接暴露到公网。
 
-1. 第一次在**服务器原来的 DSH 网页**打开「设置 → 局域网代理」，设置代理账号和密码。未配置时代理拒绝未登录请求。密码登录默认开启，Passkey 可选。
+1. 第一次在**服务器原来的 DSH 网页**打开「设置 → Passkey Proxy」，设置代理账号和密码。未配置时代理拒绝未登录请求。密码登录默认开启，Passkey 可选。
 2. **只用局域网**：打开 `http://服务器IP:3081`（或自己的代理端口）。浏览器把账号密码交给代理，代理验证后签发登录 Cookie，再把请求转发给 DSH。HTTP 不加密，只在可信局域网使用。启用「认证后自动进入 DSH」时，代理会在认证成功后代办 DSH 自己的启动令牌校验。
 3. **要用 HTTPS 或 Passkey**：把自己的 HTTPS 域名反代到代理端口。反代须保留原始 `Host`、设置 `X-Forwarded-Proto: https` 并支持 WebSocket。填写完整 HTTPS 地址，例如 `https://dsh.example.com`。反代在同机、通过 `127.0.0.1` 或 `::1` 连接时，可以不填反代 IP；留空只信任这两个地址。
 4. **反代在另一台机器或用容器地址连接**：填写 DSH 实际收到的来源 IP。找不到时，先保存域名，从另一标签页打开它一次，再回到设置点「检查最近的反代来源」。核对后手动填写；检测结果不会自动加入信任列表。

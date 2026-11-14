@@ -9,7 +9,7 @@
 import { lanAddresses, startLanProxy, type LanProxyHandle } from './proxy.ts'
 import { RuntimeSettingsFile, trustedProxyIPs, validateUpdate } from './settings.ts'
 import { registeredPasskeyCount } from './browser-auth.ts'
-import type { LanProxyStatus, LanProxyUpdatePayload, LanProxyUpdateResult } from './contract.ts'
+import type { HomeScreenIcon, LanProxyStatus, LanProxyUpdatePayload, LanProxyUpdateResult } from './contract.ts'
 import { dirname, join } from 'node:path'
 
 /** The fully-resolved runtime options of one proxy instance. */
@@ -27,6 +27,7 @@ export interface EffectiveProxyOptions {
   tlsProxyIPs?: string
   passwordLoginEnabled?: boolean
   passkeyLoginEnabled?: boolean
+  homeScreenIcon?: HomeScreenIcon
 }
 
 export interface ProxyControllerOptions {
@@ -90,6 +91,7 @@ export class ProxyController {
     this.options.tlsProxyIPs = process.env.DSH_PROXY_TLS_PROXIES ?? persisted.tlsProxyIPs
     this.options.passwordLoginEnabled = persisted.passwordLoginEnabled ?? true
     this.options.passkeyLoginEnabled = persisted.passkeyLoginEnabled ?? Boolean(this.options.passkeyOrigin)
+    this.options.homeScreenIcon = persisted.homeScreenIcon ?? this.options.homeScreenIcon ?? 'dsh'
   }
 
   private get authFile(): string { return join(dirname(this.opts.settingsFile), 'dsh-proxy-auth.json') }
@@ -107,6 +109,7 @@ export class ProxyController {
       || current.passwordLoginEnabled !== undefined
       || current.passkeyLoginEnabled !== undefined
       || current.lanAccessEnabled !== undefined
+      || current.homeScreenIcon !== undefined
   }
 
   /**
@@ -155,6 +158,7 @@ export class ProxyController {
         password: this.options.passwordLoginEnabled === true,
         passkey: this.options.passkeyLoginEnabled === true,
       },
+      homeScreenIcon: this.options.homeScreenIcon,
       log,
     })
     this.handle = handle
@@ -239,6 +243,7 @@ export class ProxyController {
       passkeySettingsManaged: this.passkeySettingsManaged,
       registeredPasskeys: registeredPasskeyCount(this.authFile, this.options.username, this.options.passkeyOrigin),
       observedProxyIPs: this.handle?.observedProxyIPs() ?? [],
+      homeScreenIcon: this.options.homeScreenIcon ?? 'dsh',
     }
   }
 
@@ -341,6 +346,7 @@ export class ProxyController {
     if (patch.tlsProxyIPs !== undefined) this.options.tlsProxyIPs = patch.tlsProxyIPs
     if (patch.passwordLoginEnabled !== undefined) this.options.passwordLoginEnabled = patch.passwordLoginEnabled
     if (patch.passkeyLoginEnabled !== undefined) this.options.passkeyLoginEnabled = patch.passkeyLoginEnabled
+    if (patch.homeScreenIcon !== undefined) this.options.homeScreenIcon = patch.homeScreenIcon
     // Auto-login needs the actual token, which is read from the host (lazily,
     // because BrowserAuth only exists once the harness is serving). Re-read it
     // whenever the flag is being turned on so the settings page takes effect

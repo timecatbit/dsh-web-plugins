@@ -7,7 +7,7 @@
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { isIP } from 'node:net'
-import type { LanProxyUpdatePayload } from './contract.ts'
+import { HOME_SCREEN_ICONS, type HomeScreenIcon, type LanProxyUpdatePayload } from './contract.ts'
 
 /** The on-disk shape (a subset of the update payload; no derived fields). */
 export interface PersistedRuntimeSettings {
@@ -24,6 +24,7 @@ export interface PersistedRuntimeSettings {
   tlsProxyIPs?: string
   passwordLoginEnabled?: boolean
   passkeyLoginEnabled?: boolean
+  homeScreenIcon?: HomeScreenIcon
 }
 
 /** Match equivalent IPv6 spellings and dual-stack IPv4 sockets consistently. */
@@ -70,6 +71,7 @@ export function normalizeRuntimeSettings(raw: unknown): PersistedRuntimeSettings
   if (typeof source.passwordLoginEnabled === 'boolean') out.passwordLoginEnabled = source.passwordLoginEnabled
   if (typeof source.passkeyLoginEnabled === 'boolean') out.passkeyLoginEnabled = source.passkeyLoginEnabled
   if (typeof source.lanAccessEnabled === 'boolean') out.lanAccessEnabled = source.lanAccessEnabled
+  if (HOME_SCREEN_ICONS.includes(source.homeScreenIcon as HomeScreenIcon)) out.homeScreenIcon = source.homeScreenIcon as HomeScreenIcon
   return out
 }
 
@@ -194,6 +196,10 @@ export function validateUpdate(
     if (typeof input[key] !== 'boolean') return { ok: false, message: '登录开关必须是布尔值。' }
     patch[key] = input[key]
   }
+  if (input.homeScreenIcon !== undefined) {
+    if (!HOME_SCREEN_ICONS.includes(input.homeScreenIcon as HomeScreenIcon)) return { ok: false, message: '主屏幕图标只能是 dsh、black 或 white。' }
+    patch.homeScreenIcon = input.homeScreenIcon as HomeScreenIcon
+  }
 
   if (
     patch.listenPort === undefined
@@ -206,6 +212,7 @@ export function validateUpdate(
     && patch.passwordLoginEnabled === undefined
     && patch.passkeyLoginEnabled === undefined
     && patch.lanAccessEnabled === undefined
+    && patch.homeScreenIcon === undefined
   ) {
     return { ok: false, message: '没有可保存的修改' }
   }

@@ -27,10 +27,10 @@ The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to kee
 
 3. Click the **DSH Passkey Proxy card title → Versions → Install**. Use the same path for updates without uninstalling first. Enable the plugin and restart the current instance if DSH prompts you.
 
-**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.12 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.12/smanx-dsh-proxy-0.1.12.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
+**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.13 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.13/smanx-dsh-proxy-0.1.13.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.12.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.13.tgz"
 ```
 
 Replace `web` if you use a custom profile, then restart that web process. The standalone CLI does not manage the official app's `desktop` profile.
@@ -51,6 +51,10 @@ If DSH still asks for its launch token after proxy sign-in, the advanced option 
 4. After confirming that a Passkey works, you can turn password sign-in off. That also disables password sign-in over LAN HTTP. The password can still authorize enrolling or removing Passkeys. At least one sign-in method must stay enabled, and in Passkey-only mode the last usable credential cannot be removed.
 
 You can keep HTTPS and use passwords alone. If `DSH_PROXY_PASSKEY_ORIGIN` or `DSH_PROXY_TLS_PROXIES` manages the entry, the address fields are read-only in the UI; you can still change the sign-in switches.
+
+## Add to a phone's home screen
+
+Open the proxy address in the phone's browser and use **Add to Home Screen**; no sign-in is needed first, because the home-screen icons and the web app manifest bypass the proxy login. The icon is DSH's own by default. For a black-and-white whale, choose **White whale on black** or **Black whale on white** under **Settings → LAN Proxy → Home-screen icon** and save. A phone keeps the icon it got when DSH was added, so after switching, remove the old DSH tile and add it again.
 
 ## Troubleshoot and roll back
 

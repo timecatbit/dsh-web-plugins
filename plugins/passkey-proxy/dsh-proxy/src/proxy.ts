@@ -46,6 +46,8 @@ import { isJavaScriptContentType, patchClientScript } from './clientpatch.ts'
 import { attachBodyTransform } from './compression.ts'
 import { LaunchTokenAutoLogin } from './tokenretry.ts'
 import { BrowserAuth, LOGIN, type LoginPolicy } from './browser-auth.ts'
+import { homeScreenIconPng } from './home-icons.ts'
+import type { HomeScreenIcon } from './contract.ts'
 
 export interface LanProxyOptions {
   /** Interface the proxy binds (0.0.0.0 for LAN access). */
@@ -71,6 +73,12 @@ export interface LanProxyOptions {
   passkeyOrigin?: string
   trustedTLSProxyIPs?: string[]
   loginPolicy?: LoginPolicy
+  /**
+   * `black`/`white` answers apple-touch-icon.png and the manifest PNG icons
+   * with the bundled black-and-white whale instead of DSH's own; `dsh` or
+   * unset forwards them to DSH as before.
+   */
+  homeScreenIcon?: HomeScreenIcon
   /** Optional sink for human-readable lifecycle messages. */
   log?: (level: 'info' | 'warn' | 'error', message: string) => void
 }
@@ -262,6 +270,14 @@ export function startLanProxy(options: LanProxyOptions): LanProxyHandle {
     // Public static files (PWA manifest, favicon): fetched without
     // credentials by the browser, so they bypass the auth gate.
     if (PUBLIC_PATHS.has(pathname)) {
+      const icon = req.method === 'GET' || req.method === 'HEAD' ? homeScreenIconPng(options.homeScreenIcon, pathname) : undefined
+      if (icon) {
+        // no-cache: switching the icon in settings must show up the next time
+        // the page is added to the home screen.
+        res.writeHead(200, { 'content-type': 'image/png', 'content-length': String(icon.length), 'cache-control': 'no-cache' })
+        res.end(req.method === 'HEAD' ? undefined : icon)
+        return
+      }
       alignOrigin(req)
       proxy.web(req, res)
       return

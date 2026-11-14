@@ -168,6 +168,18 @@
       },
       "versions": [
         {
+          "publishTimestamp": 1794650205,
+          "version": "0.1.13",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
+            "commit": "09d218b149476be96ad1d8b04fd71b45890e8667"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
+        {
           "publishTimestamp": 1794643674,
           "version": "0.1.12",
           "source": {

@@ -272,6 +272,30 @@ describe('update form', () => {
     expect(user.value).toBe('alice')
   })
 
+  it('submits a changed home-screen icon and leaves it out otherwise', async () => {
+    const { rpc, calls } = makeRpc({
+      update: (_channel, _endpoint, payload) => Promise.resolve({ ok: true, value: { status: { ...STATUS, ...(payload as object) }, notice: 'saved-restarted', message: '' } }),
+    })
+    mounted = mount(<SettingsSection {...props(rpc)} />)
+    await flush()
+
+    const radios = [...mounted.container.querySelectorAll<HTMLInputElement>('input[name="dsh-home-icon"]')]
+    expect(radios.map(radio => radio.value)).toEqual(['dsh', 'black', 'white'])
+    expect(radios[0].checked).toBe(true)
+    expect(mounted.container.textContent ?? '').toContain('黑底白鲸')
+    submitForm(mounted.container)
+    await flush()
+    expect((calls.find(call => call.endpoint === RPC_UPDATE_ENDPOINT)?.payload as Record<string, unknown>).homeScreenIcon).toBeUndefined()
+
+    calls.length = 0
+    radios[1].click()
+    flushSync(() => {})
+    submitForm(mounted.container)
+    await flush()
+    expect((calls.find(call => call.endpoint === RPC_UPDATE_ENDPOINT)?.payload as Record<string, unknown>).homeScreenIcon).toBe('black')
+    expect(radios[1].checked).toBe(true)
+  })
+
   it('does not submit a policy with both methods disabled', async () => {
     const { rpc, calls } = makeRpc()
     mounted = mount(<SettingsSection {...props(rpc)} />)

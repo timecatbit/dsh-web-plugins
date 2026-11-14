@@ -16,6 +16,13 @@ export const RPC_START_ENDPOINT = 'start'
 /** Endpoint: stop the forwarding service (the response is answered before the listener closes). */
 export const RPC_STOP_ENDPOINT = 'stop'
 
+/**
+ * Which icon a phone gets when DSH is added to its home screen through the
+ * proxy: DSH's own (`dsh`, the default) or a bundled black-and-white whale.
+ */
+export type HomeScreenIcon = 'dsh' | 'black' | 'white'
+export const HOME_SCREEN_ICONS: readonly HomeScreenIcon[] = ['dsh', 'black', 'white']
+
 /** Read-only status the settings section shows. */
 export interface LanProxyStatus {
   /** Whether the Desktop-specific LAN binding control is available. */
@@ -50,6 +57,7 @@ export interface LanProxyStatus {
   passwordConfigured?: boolean
   registeredPasskeys?: number
   observedProxyIPs?: string[]
+  homeScreenIcon?: HomeScreenIcon
 }
 
 /** Settings-section patch: only fields present are changed; omitted fields keep their values. */
@@ -80,6 +88,8 @@ export interface LanProxyUpdatePayload {
   tlsProxyIPs?: string
   passwordLoginEnabled?: boolean
   passkeyLoginEnabled?: boolean
+  /** Home-screen icon served for apple-touch-icon.png and the manifest icons. */
+  homeScreenIcon?: HomeScreenIcon
 }
 
 /** Successful update response. */

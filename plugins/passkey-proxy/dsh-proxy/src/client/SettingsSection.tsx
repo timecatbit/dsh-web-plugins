@@ -20,6 +20,8 @@ import {
   RPC_STATUS_ENDPOINT,
   RPC_STOP_ENDPOINT,
   RPC_UPDATE_ENDPOINT,
+  HOME_SCREEN_ICONS,
+  type HomeScreenIcon,
   type LanProxyStatus,
   type LanProxyUpdatePayload,
   type LanProxyUpdateResult,
@@ -109,6 +111,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
   const [tlsProxyIPs, setTlsProxyIPs] = useState('')
   const [passwordLoginEnabled, setPasswordLoginEnabled] = useState(true)
   const [passkeyLoginEnabled, setPasskeyLoginEnabled] = useState(false)
+  const [homeScreenIcon, setHomeScreenIcon] = useState<HomeScreenIcon>('dsh')
   // Ref (not state): the form is seeded from the first successful status
   // load only; a state dependency here would re-run the load effect.
   const formSeededRef = useRef(false)
@@ -129,6 +132,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
     setTlsProxyIPs(next.tlsProxyIPs ?? '')
     setPasswordLoginEnabled(next.passwordLoginEnabled ?? true)
     setPasskeyLoginEnabled(next.passkeyLoginEnabled ?? Boolean(next.passkeyOrigin))
+    setHomeScreenIcon(next.homeScreenIcon ?? 'dsh')
   }, [])
 
   /** Fetch the current proxy status; every outcome is rendered, never thrown. */
@@ -231,6 +235,7 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
       if (status?.desktopProfile && lanAccessEnabled !== (status.listenHost === '0.0.0.0')) payload.lanAccessEnabled = lanAccessEnabled
       if (passwordLoginEnabled !== (status?.passwordLoginEnabled ?? true)) payload.passwordLoginEnabled = passwordLoginEnabled
       if (passkeyLoginEnabled !== (status?.passkeyLoginEnabled ?? Boolean(status?.passkeyOrigin))) payload.passkeyLoginEnabled = passkeyLoginEnabled
+      if (homeScreenIcon !== (status?.homeScreenIcon ?? 'dsh')) payload.homeScreenIcon = homeScreenIcon
       if (!passwordLoginEnabled && !passkeyLoginEnabled) {
         setError(t('form.atLeastOne'))
         return
@@ -461,6 +466,18 @@ export function SettingsSection({ rpc, t }: SettingsSectionProps) {
           {status?.registeredPasskeys !== undefined && <p className="dsh_lanproxy_fieldHint">
             {t('form.registeredKeys')}: {status.registeredPasskeys} / 5
           </p>}
+        </fieldset>
+
+        <fieldset className="dsh_lanproxy_group">
+          <legend>{t('form.homeIcon')}</legend>
+          {HOME_SCREEN_ICONS.map(choice => (
+            <label key={choice} className="dsh_lanproxy_checkRow">
+              <input className="dsh_lanproxy_checkbox" type="radio" name="dsh-home-icon" value={choice}
+                checked={homeScreenIcon === choice} onChange={() => setHomeScreenIcon(choice)} />
+              {t(`form.homeIcon.${choice}`)}
+            </label>
+          ))}
+          <p className="dsh_lanproxy_fieldHint">{t('form.homeIconHint')}</p>
         </fieldset>
 
         <details className="dsh_lanproxy_trust">

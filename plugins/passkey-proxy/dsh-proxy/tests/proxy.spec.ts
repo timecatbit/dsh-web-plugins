@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import http from 'node:http'
+import { readFileSync } from 'node:fs'
 import zlib from 'node:zlib'
 import type { AddressInfo } from 'node:net'
 import WebSocket, { WebSocketServer } from 'ws'
@@ -207,6 +208,40 @@ describe('content handling', () => {
     // Only those exact files: other images still need a login.
     const other = await fetch(`${base()}/apple-touch-icon.png.bak`, { redirect: 'manual' })
     expect(other.status).toBe(401)
+    // Without a home-screen icon choice they come from DSH itself.
+    expect((await fetch(`${base()}/apple-touch-icon.png`)).headers.get('content-type')).toContain('text/html')
+  })
+
+  it('serves the bundled black or white whale as the home-screen icons when chosen', async () => {
+    for (const homeScreenIcon of ['black', 'white'] as const) {
+      const iconProxy = startLanProxy({
+        listenHost: '127.0.0.1',
+        listenPort: 0,
+        upstreamHost: '127.0.0.1',
+        upstreamPort: world.upstreamPort,
+        username: USER,
+        password: PASS,
+        homeScreenIcon,
+      })
+      cleanup.splice(0, 0, () => iconProxy.close())
+      const origin = `http://127.0.0.1:${await iconProxy.ready}`
+      for (const [path, size] of [['/apple-touch-icon.png', 180], ['/icon-192.png', 192], ['/icon-512.png', 512], ['/icon-maskable-512.png', 512]] as const) {
+        const res = await fetch(origin + path, { redirect: 'manual' })
+        expect(res.status, path).toBe(200)
+        expect(res.headers.get('content-type')).toBe('image/png')
+        expect(res.headers.get('cache-control')).toBe('no-cache')
+        const body = Buffer.from(await res.arrayBuffer())
+        const asset = readFileSync(new URL(`../assets/home-icons/${homeScreenIcon}-${path.slice(1)}`, import.meta.url))
+        expect(body.equals(asset), path).toBe(true)
+        expect(body.readUInt32BE(16), path).toBe(size) // PNG IHDR width
+      }
+      const head = await fetch(origin + '/apple-touch-icon.png', { method: 'HEAD' })
+      expect(head.status).toBe(200)
+      expect(head.headers.get('content-length')).toBe(String(readFileSync(new URL(`../assets/home-icons/${homeScreenIcon}-apple-touch-icon.png`, import.meta.url)).length))
+      // The favicons and everything else still come from DSH.
+      expect((await fetch(origin + '/favicon.svg')).headers.get('content-type')).toBe('image/svg+xml')
+      expect((await fetch(origin + '/icon-1024.png', { redirect: 'manual' })).status).toBe(401)
+    }
   })
 
   it('does not inject the polyfill into non-HTML responses', async () => {

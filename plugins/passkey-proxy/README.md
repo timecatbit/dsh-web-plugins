@@ -27,10 +27,10 @@
 
 3. 点 **DSH Passkey Proxy 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。
 
-**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.12 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.12/smanx-dsh-proxy-0.1.12.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
+**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.1.13 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.13/smanx-dsh-proxy-0.1.13.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.12.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.13.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。不要用独立 CLI 安装到官方桌面 App 的 `desktop` profile。
@@ -51,6 +51,10 @@ dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.12.tgz"
 4. 确认 Passkey 可用后，可按需关闭「允许密码登录」。关闭后，HTTP 局域网入口也不能用密码登录；旧密码仍用于验证添加或移除 Passkey。两种登录方式不能同时关闭，仅允许 Passkey 时不能移除最后一个可用凭据。
 
 只想用 HTTPS 密码登录，可以关闭 Passkey。部署通过 `DSH_PROXY_PASSKEY_ORIGIN` 或 `DSH_PROXY_TLS_PROXIES` 管理入口时，地址字段在网页上只读，登录开关仍可改。
+
+## 添加到手机主屏幕
+
+在手机浏览器里打开代理地址，用「添加到主屏幕」即可，不用先登录：主屏幕图标和网页清单不经过代理登录。图标默认用 DSH 自带的；想换成黑白鲸鱼，在「设置 → 局域网代理 → 主屏幕图标」选「黑底白鲸」或「白底黑鲸」并保存。手机会记住添加时的图标，所以换图标后要先删掉桌面上原来的 DSH，再重新添加。
 
 ## 维护和排查
 

@@ -125,8 +125,10 @@ html[data-dsh-phone] [data-conversation-header-corner] [data-sidebar-right-expan
   padding: 0;
 }
 
-/* The empty conversation header uses unequal native desktop gutters. */
-html[data-dsh-phone] [class*="_headerBlank"]:has(> [data-conversation-header-leading]):has([data-sidebar-right-expand]) {
+/* The empty conversation header uses unequal native desktop gutters. Size it
+   from the first frame: DSH adds the right-panel button about 100 ms after
+   the header, and waiting for that button made the page drop 14px on launch. */
+html[data-dsh-phone] [class*="_headerBlank"]:has(> [data-conversation-header-leading]) {
   --dsh-phone-toggle-edge: 14px;
   position: relative;
   min-height: 54px;

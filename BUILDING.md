@@ -34,8 +34,8 @@ The tested versions are a separate, shorter list. Add a DSH version to it only a
 4. Record the full list for each plugin in the Discover index. Discover shows these as "Tested on DSH …" tags on the plugin cards:
 
    ```bash
-   python3 scripts/set-tested-dsh.py plugin-index.json dsh-ui-mobile 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2
-   python3 scripts/set-tested-dsh.py plugin-index.json @smanx/dsh-proxy 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2
+   python3 scripts/set-tested-dsh.py plugin-index.json dsh-ui-mobile 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3
+   python3 scripts/set-tested-dsh.py plugin-index.json @smanx/dsh-proxy 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3
    ```
 
    The script replaces the plugin's tested tags and drops declarations no plugin uses. The tags describe the newest version of each plugin. A DSH release that only needs a new tag does not need a new plugin build.

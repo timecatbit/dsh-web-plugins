@@ -27,7 +27,7 @@ This repository provides installation instructions for standalone `dsh web` and 
 
 | Environment | Tested DSH versions |
 | --- | --- |
-| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2` |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3` |
 | Official macOS Desktop (Apple Silicon) | `0.2.2-rc.1` |
 | Official Windows Desktop | Not tested |
 
@@ -52,8 +52,8 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.18/dsh-ui-mobile-0.1.18.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.9/smanx-dsh-proxy-0.1.9.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.19/dsh-ui-mobile-0.1.19.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.10/smanx-dsh-proxy-0.1.10.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
@@ -64,8 +64,8 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run either or both commands:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.18.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.9.tgz"
+dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.19.tgz"
+dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.10.tgz"
 ```
 
 Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. The packages replace the corresponding upstream plugin in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.

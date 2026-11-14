@@ -257,6 +257,26 @@ html[data-dsh-phone] [data-shortcut-modal="settings"] > nav > [class*="_navTitle
   padding: 10px 0 0;
   margin: 0;
 }
+/* Newer hosts render the title beside the nav instead of inside it. Their
+   own narrow-window rules (one class and two :not() guards, so they outrank
+   the rules above) zero the nav padding and let the title shrink in the
+   flex column until its text is clipped behind the tabs. Keep the title a
+   full row level with the close button and the tabs inset from the edge. */
+html[data-dsh-phone] [data-shortcut-modal="settings"] > nav[class] {
+  padding: 12px 12px 0;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > [class*="_navTitle"] + nav[class] {
+  padding-top: 0;
+}
+html[data-dsh-phone] [data-shortcut-modal="settings"] > [class*="_navTitle"][class] {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 12px 12px 0;
+  overflow: hidden;
+}
 html[data-dsh-phone] [data-shortcut-modal="settings"] > nav > [class*="_navList"] {
   flex-direction: row;
   align-items: center;

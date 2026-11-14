@@ -18,12 +18,12 @@ mkdir -p "$dist"
 )
 python3 "$mobile/build_dsh_ui_mobile_compat.py" "$temp/compat.tgz"
 python3 "$mobile/build_dsh_ui_mobile_layout_only.py" "$temp/compat.tgz" "$temp/layout.tgz"
-python3 "$mobile/build_dsh_phone_layout.py" "$temp/layout.tgz" "$dist/dsh-ui-mobile-0.1.18.tgz"
+python3 "$mobile/build_dsh_phone_layout.py" "$temp/layout.tgz" "$dist/dsh-ui-mobile-0.1.19.tgz"
 (
   cd "$dist"
   if command -v sha256sum >/dev/null; then
-    sha256sum dsh-ui-mobile-0.1.18.tgz smanx-dsh-proxy-0.1.9.tgz > SHA256SUMS
+    sha256sum dsh-ui-mobile-0.1.19.tgz smanx-dsh-proxy-0.1.10.tgz > SHA256SUMS
   else
-    shasum -a 256 dsh-ui-mobile-0.1.18.tgz smanx-dsh-proxy-0.1.9.tgz > SHA256SUMS
+    shasum -a 256 dsh-ui-mobile-0.1.19.tgz smanx-dsh-proxy-0.1.10.tgz > SHA256SUMS
   fi
 )

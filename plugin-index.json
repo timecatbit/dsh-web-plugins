@@ -23,6 +23,12 @@
           "en": "Tested on DSH 0.2.2-rc.2",
           "zh": "已测 DSH 0.2.2-rc.2"
         }
+      },
+      "tested-dsh-0.2.2-rc.3": {
+        "title": {
+          "en": "Tested on DSH 0.2.2-rc.3",
+          "zh": "已测 DSH 0.2.2-rc.3"
+        }
       }
     }
   },
@@ -46,10 +52,23 @@
         "labels": [
           "tested-dsh-0.2.1-rc.5",
           "tested-dsh-0.2.2-rc.1",
-          "tested-dsh-0.2.2-rc.2"
+          "tested-dsh-0.2.2-rc.2",
+          "tested-dsh-0.2.2-rc.3"
         ]
       },
       "versions": [
+        {
+          "publishTimestamp": 1794626694,
+          "version": "0.1.19",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-pocket-ui",
+            "commit": "13a9a92831384b72de052d84e788fe2b2374546e"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794488247,
           "version": "0.1.18",
@@ -131,10 +150,23 @@
         "labels": [
           "tested-dsh-0.2.1-rc.5",
           "tested-dsh-0.2.2-rc.1",
-          "tested-dsh-0.2.2-rc.2"
+          "tested-dsh-0.2.2-rc.2",
+          "tested-dsh-0.2.2-rc.3"
         ]
       },
       "versions": [
+        {
+          "publishTimestamp": 1794626694,
+          "version": "0.1.10",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
+            "commit": "825e0170de68be7afdf769b0a2f1d35a0ecee501"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        },
         {
           "publishTimestamp": 1794485316,
           "version": "0.1.9",

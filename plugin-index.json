@@ -156,6 +156,44 @@
           }
         }
       ]
+    },
+    {
+      "name": "dsh-im-gateway",
+      "title": {
+        "en": "DSH IM Gateway",
+        "zh": "DSH IM Gateway · 聊天软件接入"
+      },
+      "description": {
+        "en": "Use DSH from WeChat, Feishu, DingTalk, QQ, Telegram and 20+ other chat apps, with approvals and questions answered in the chat.",
+        "zh": "在微信、飞书、钉钉、QQ、Telegram 等聊天软件里使用 DSH，审批和提问也能在聊天里回答。"
+      },
+      "author": "timecatbit",
+      "homepage": "https://github.com/timecatbit/dsh-im-gateway",
+      "repository": {
+        "url": "https://github.com/timecatbit/dsh-im-gateway"
+      },
+      "metadata": {
+        "labels": [
+          "tested-dsh-0.2.1-rc.5",
+          "tested-dsh-0.2.2-rc.1",
+          "tested-dsh-0.2.2-rc.2",
+          "tested-dsh-0.2.2-rc.3"
+        ]
+      },
+      "versions": [
+        {
+          "publishTimestamp": 1794746564,
+          "version": "0.3.4",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/timecatbit/dsh-im-gateway",
+            "commit": "7ec30de7031464dfdeca258d38e71bce106a78c6"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
+        }
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "dsh-im-gateway",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "DSH IM Gateway: drive DSH agents from WeChat, Feishu, DingTalk, WeCom, QQ, Telegram, Discord, Slack, WhatsApp and 20+ other chat apps, with session routing, remote approvals, questions, reminders and allowlists.",
   "license": "MIT",
   "author": "zhuiyueya",

@@ -27,10 +27,10 @@ The package keeps the name `dsh-im-gateway`. A profile that has the original fro
 
 3. Click the **DSH IM Gateway** card title, then **Versions → Install**. Updates take the same path; there is no need to uninstall first. Enable the plugin and restart the DSH instance if prompted. The first install downloads the platform SDKs and can take a minute or two.
 
-**Manual install:** for standalone Web, use the same system account and `DSH_HOME` that run DSH. Download the [0.3.4 package](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.4/dsh-im-gateway-0.3.4.tgz) and run this in its folder:
+**Manual install:** for standalone Web, use the same system account and `DSH_HOME` that run DSH. Download the [0.3.5 package](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.5/dsh-im-gateway-0.3.5.tgz) and run this in its folder:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.4.tgz"
+dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
 ```
 
 Replace `web` if you use a custom web profile. Restart that `dsh web` process afterwards.
@@ -40,6 +40,7 @@ Replace `web` if you use a custom web profile. Restart that `dsh web` process af
 - **Works on DSH 0.2.x without an exemption.** The plugin declares `engines.dsh: >=0.2.1-rc.5`. DSH moved the agent preset service to `@deepseek-ai/dsh-agent-preset-registry`, and the dependencies follow it; the code was type-checked again against the DSH `0.2.2-rc.3` interfaces.
 - **The WeChat login QR code is drawn locally.** The original handed the login link to the third-party site `api.qrserver.com` to render the image, and scanning that link signs in. The plugin now draws the image itself, and the browser no longer contacts an outside site.
 - **The QR code appears after Connect (scan).** The original stopped refreshing at that point, so the code only showed after reopening Settings.
+- **WeChat reconnects after a DSH restart.** The original did not remember channels connected by scanning on the settings page (WeChat, WhatsApp), so every DSH restart left them disconnected until you clicked Connect again (fixed in 0.3.5).
 - **The settings page follows the DSH theme.** Button labels no longer disappear in light mode.
 - **WhatsApp uses a patched Baileys.** It is limited to 6.7.24 and later 6.7 releases; the original range could install 6.17.16, which is affected by a message-spoofing flaw (GHSA-qvv5-jq5g-4cgg).
 - **One name everywhere: DSH IM Gateway.** The plugin list, the settings nav and these docs use the same name.

@@ -27,10 +27,10 @@
 
 3. 点 **DSH IM Gateway 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。第一次安装要下载各平台的 SDK，可能需要一两分钟。
 
-**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.3.4 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.4/dsh-im-gateway-0.3.4.tgz)，在文件所在目录运行：
+**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.3.5 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.5/dsh-im-gateway-0.3.5.tgz)，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.4.tgz"
+dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。
@@ -40,6 +40,7 @@ dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.4.tgz"
 - **支持 DSH 0.2.x，不再需要豁免。** 插件声明 `engines.dsh: >=0.2.1-rc.5`。DSH 把 agent preset 服务移到了 `@deepseek-ai/dsh-agent-preset-registry`，依赖随之更新；代码按 DSH `0.2.2-rc.3` 的接口重新做过类型检查。
 - **微信登录二维码在本机生成。** 原版把登录链接交给第三方网站 `api.qrserver.com` 生成图片，而这个链接扫码就能登录。现在由插件自己画成图片，浏览器不再访问外部网站。
 - **点「连接（扫码）」后二维码会自动出现。** 原版此时停止刷新，要重新打开设置页才看得到二维码。
+- **重启 DSH 后微信自动重连。** 原版在设置页扫码连上的渠道（微信、WhatsApp）不会记下来，每次重启 DSH 都要回设置页重新点「连接」（0.3.5 修复）。
 - **设置页颜色跟随 DSH 主题。** 浅色模式下按钮文字不再看不见。
 - **WhatsApp 依赖固定在已修复漏洞的版本。** Baileys 限定为 6.7.24 及之后的 6.7 版本，原版的范围可能装上受消息伪造漏洞（GHSA-qvv5-jq5g-4cgg）影响的 6.17.16。
 - **名称统一为 DSH IM Gateway。** 插件列表、设置导航和说明文档用同一个名字。

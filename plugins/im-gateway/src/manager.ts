@@ -278,6 +278,16 @@ export class ChannelManager {
   }
 
   /**
+   * 记下用户在设置页连上的渠道，重启后由 initAll 自动恢复。扫码类渠道（微信、WhatsApp）
+   * 连接时不带凭据，connect 不会写 store；不记下来的话，每次重启 DSH 都要重新点「连接」。
+   */
+  markEnabled(id: string): void {
+    if (this.store[id]?.enabled === true) return
+    this.store[id] = { ...(this.store[id] ?? {}), enabled: true }
+    this.flush()
+  }
+
+  /**
    * 停用并停止一个渠道（仅运行态，不持久化 enabled——重启后按配置自动恢复）。
    * 彻底移除配置请用 {@link remove}。
    */
@@ -526,6 +536,7 @@ export class ChannelManager {
           const body = await readBody(req)
           if (action === 'connect') {
             const result = await this.connect(id, body.config as Record<string, unknown> | undefined)
+            if (result.ok) this.markEnabled(id)
             send(res, result.ok ? 200 : 400, result.ok ? { ok: true, channel: this.list().find((c) => c.id === id) } : { ok: false, error: result.error })
             return
           }

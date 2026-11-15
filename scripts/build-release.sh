@@ -34,8 +34,8 @@ python3 "$mobile/build_dsh_phone_layout.py" "$temp/layout.tgz" "$dist/dsh-ui-mob
 (
   cd "$dist"
   if command -v sha256sum >/dev/null; then
-    sha256sum dsh-ui-mobile-0.1.23.tgz smanx-dsh-proxy-0.1.16.tgz dsh-im-gateway-0.3.4.tgz > SHA256SUMS
+    sha256sum dsh-ui-mobile-0.1.23.tgz smanx-dsh-proxy-0.1.16.tgz dsh-im-gateway-0.3.5.tgz > SHA256SUMS
   else
-    shasum -a 256 dsh-ui-mobile-0.1.23.tgz smanx-dsh-proxy-0.1.16.tgz dsh-im-gateway-0.3.4.tgz > SHA256SUMS
+    shasum -a 256 dsh-ui-mobile-0.1.23.tgz smanx-dsh-proxy-0.1.16.tgz dsh-im-gateway-0.3.5.tgz > SHA256SUMS
   fi
 )

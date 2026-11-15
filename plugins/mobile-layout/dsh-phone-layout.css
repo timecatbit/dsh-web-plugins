@@ -1,7 +1,8 @@
 html[data-dsh-phone] {
   --dsh-phone-height: 100dvh;
   --dsh-phone-gutter: clamp(8px, 3vw, 16px);
-  --dsh-phone-safe-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  --dsh-phone-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --dsh-phone-safe-bottom: max(8px, var(--dsh-phone-inset-bottom));
   --dsh-phone-sidebar-width: min(calc(280px + env(safe-area-inset-left, 0px)),
     calc(100% - 44px - env(safe-area-inset-right, 0px)));
 }
@@ -500,13 +501,30 @@ html[data-dsh-phone] [data-composer-dock]:has([data-composer-stat], > :not([data
   width: calc(100% + 2 * var(--dsh-composer-side-clearance, 0px));
   max-width: none;
   margin: 4px calc(-1 * var(--dsh-composer-side-clearance, 0px)) 0;
-  padding: 0;
+  padding: var(--dsh-phone-bar-drop, 0px) 0 0;
   border-top: 0.5px solid var(--dsh-phone-status-rule);
   overflow: hidden;
 }
 /* The bar already separates the readings from the screen edge. */
 html[data-dsh-phone] [data-composer-seat]:has([data-composer-dock] [data-composer-stat]) {
-  --dsh-phone-safe-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+  --dsh-phone-safe-bottom: max(4px, var(--dsh-phone-inset-bottom));
+}
+/* With the keyboard up, the bar sits between the input card and the keyboard
+   and the home-indicator inset below it shows as empty space, so the readings
+   looked pinned to the bar's top rule. Move them 8px down out of that inset.
+   The seat keeps its height, so the card and the rule stay where they are. */
+html[data-dsh-phone] [data-composer-seat]:has([data-composer-dock] [data-composer-stat]):has(:is([contenteditable="true"], textarea, input):focus) {
+  --dsh-phone-bar-drop: 8px;
+  --dsh-phone-safe-bottom: max(0px, max(4px, var(--dsh-phone-inset-bottom)) - 8px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Both paddings move together, with the keyboard. */
+  html[data-dsh-phone] [data-composer-seat]:has([data-composer-dock] [data-composer-stat]) {
+    transition: padding-block-end var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1));
+  }
+  html[data-dsh-phone] [data-composer-dock]:has([data-composer-stat], > :not([data-slot])) {
+    transition: padding-top var(--ds-transition-duration-slow, .3s) var(--ds-ease-in-out, cubic-bezier(.4, 0, .2, 1));
+  }
 }
 html[data-dsh-phone] [data-composer-dock] [data-composer-stat],
 html[data-dsh-phone] [data-composer-dock] > :not([data-slot]) {

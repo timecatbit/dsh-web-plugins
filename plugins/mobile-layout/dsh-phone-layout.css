@@ -636,6 +636,19 @@ html[data-dsh-phone] [role=dialog] {
   overflow: auto;
   overscroll-behavior: contain;
 }
+/* An open composer popup (model menu, session readings) that the script
+   places from its trigger on every frame. Without an anchor the browser no
+   longer shifts it as the streaming transcript scrolls; the top keeps clear
+   of the status bar and the height of the trigger. */
+html[data-dsh-phone] [data-dsh-phone-pinned] {
+  position-anchor: --dsh-phone-unanchored !important;
+  position-area: none !important;
+  position-try-fallbacks: none !important;
+  position-visibility: always !important;
+  inset: max(calc(env(safe-area-inset-top, 0px) + 12px), var(--dsh-pin-top)) auto auto var(--dsh-pin-left) !important;
+  max-height: calc(var(--dsh-pin-room) - env(safe-area-inset-top, 0px) - 12px) !important;
+  margin: 0 !important;
+}
 html[data-dsh-phone] .X_2TxG_page {
   padding-inline: var(--dsh-phone-gutter);
   padding-bottom: var(--dsh-phone-safe-bottom);

@@ -58,12 +58,12 @@
       },
       "versions": [
         {
-          "publishTimestamp": 1794757458,
-          "version": "0.1.25",
+          "publishTimestamp": 1794760342,
+          "version": "0.1.26",
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "1b6d861585156c2581ff315a0b5dcbcf6e52ab4f"
+            "commit": "e6ea157b5456ad566869fde40965f32855bf60ca"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"

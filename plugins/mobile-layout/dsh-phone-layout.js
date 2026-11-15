@@ -89,6 +89,87 @@ function stampDshPhoneColumns(frame) {
   }
 }
 
+function installPhonePopupPin(media) {
+  // The model menu and the session readings open fixed popups that CSS
+  // anchors place on their trigger in the composer seat. The seat is sticky
+  // in the transcript scroller. While an answer streams, the scroller follows
+  // the tail, and WebKit and Chromium shift an anchored popup by that scroll
+  // before they read the anchor again, so it jumps a line per update and
+  // snaps back. On phones, place the open popup from the trigger's measured
+  // box on every frame instead: above it, aligned the way the host aligns it.
+  const gap = 8;
+  const edge = 12;
+  let frame = 0;
+  let waited = 0;
+  let pinned = null;
+
+  function release() {
+    if (!pinned) return;
+    pinned.removeAttribute("data-dsh-phone-pinned");
+    pinned.removeAttribute("data-dsh-phone-anchor");
+    for (const name of ["--dsh-pin-top", "--dsh-pin-left", "--dsh-pin-room"]) pinned.style.removeProperty(name);
+    pinned = null;
+  }
+
+  function anchorOf(trigger) {
+    for (let el = trigger; el && !el.matches("[data-composer-seat]"); el = el.parentElement) {
+      const name = getComputedStyle(el).anchorName;
+      if (name && name !== "none") return { el, name };
+    }
+    return null;
+  }
+
+  function popupFor(name) {
+    for (const el of document.body.children) {
+      if (el instanceof HTMLElement && getComputedStyle(el).positionAnchor === name) return el;
+    }
+    return null;
+  }
+
+  function tick() {
+    frame = 0;
+    const trigger = media.matches ? document.querySelector('[data-composer-seat] [aria-expanded="true"]') : null;
+    const anchor = trigger && anchorOf(trigger);
+    const popup = anchor && (pinned?.isConnected && pinned.dataset.dshPhoneAnchor === anchor.name ? pinned : popupFor(anchor.name));
+    if (popup !== pinned) release();
+    if (!popup) {
+      // The host mounts the popup a frame or two after the trigger expands.
+      if (anchor && ++waited < 30) frame = requestAnimationFrame(tick);
+      return;
+    }
+    waited = 0;
+    if (!pinned) {
+      pinned = popup;
+      popup.dataset.dshPhoneAnchor = anchor.name;
+      popup.setAttribute("data-dsh-phone-pinned", "");
+    }
+    const a = anchor.el.getBoundingClientRect();
+    // Layout size, not the box an opening transition is still scaling.
+    const boxWidth = popup.offsetWidth;
+    const boxHeight = popup.offsetHeight;
+    const width = document.documentElement.clientWidth;
+    // The model menu hangs from the trigger's right edge, the readings from its left.
+    const left = popup.getAttribute("role") === "menu" ? a.right - boxWidth : a.left;
+    popup.style.setProperty("--dsh-pin-left", `${Math.max(edge, Math.min(left, width - edge - boxWidth))}px`);
+    popup.style.setProperty("--dsh-pin-top", `${a.top - gap - boxHeight}px`);
+    popup.style.setProperty("--dsh-pin-room", `${a.top - gap}px`);
+    frame = requestAnimationFrame(tick);
+  }
+
+  function check() {
+    if (!frame) frame = requestAnimationFrame(tick);
+  }
+
+  return {
+    check,
+    stop() {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      release();
+    }
+  };
+}
+
 function installPhoneViewport(media) {
   // The keyboard pans WebKit's visual viewport across the fixed app, in step
   // with its own animation, and the final geometry is reported only after
@@ -130,6 +211,7 @@ function installPhoneLayout(layout) {
   const media = window.matchMedia(MOBILE_QUERY$2);
   const stopComposerFocus = installPhoneComposerFocus(media);
   const stopViewport = installPhoneViewport(media);
+  const popups = installPhonePopupPin(media);
   const observer = new MutationObserver(schedule);
   const nav = document.createElement("button");
   nav.type = "button";
@@ -149,6 +231,7 @@ function installPhoneLayout(layout) {
 
   function sync() {
     pending = 0;
+    popups.check();
     const phone = media.matches;
     html.toggleAttribute("data-dsh-phone", phone);
     const frame = document.querySelector("[data-mobile-frame]");
@@ -239,12 +322,13 @@ function installPhoneLayout(layout) {
   document.addEventListener("click", onPhoneClick, true);
   observer.observe(document.getElementById("root") ?? document.body, {
     subtree: true, childList: true, attributes: true,
-    attributeFilter: ["data-conversation-session", "data-sidebar-collapsed", "data-rightbar-collapsed", "data-rightbar-fullscreen", "contenteditable"]
+    attributeFilter: ["data-conversation-session", "data-sidebar-collapsed", "data-rightbar-collapsed", "data-rightbar-fullscreen", "contenteditable", "aria-expanded"]
   });
   sync();
   return () => {
     stopComposerFocus();
     stopViewport();
+    popups.stop();
     observer.disconnect();
     if (pending) window.cancelAnimationFrame(pending);
     media.removeEventListener("change", schedule);

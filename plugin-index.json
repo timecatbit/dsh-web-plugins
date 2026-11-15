@@ -192,18 +192,6 @@
           "engines": {
             "dsh": ">=0.2.1-rc.5"
           }
-        },
-        {
-          "publishTimestamp": 1794746564,
-          "version": "0.3.4",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-im-gateway",
-            "commit": "7ec30de7031464dfdeca258d38e71bce106a78c6"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
         }
       ]
     }

@@ -9,8 +9,8 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type { Agent, AgentHandle, AgentSetup } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
-// dsh-agent-presets 模块增强（ctx.agentPresets：把 agent 挂入 preset，否则无核心工具）
-import type {} from '@deepseek-ai/dsh-agent-presets'
+// dsh-agent-preset-registry 模块增强（ctx.agentPresets：把 agent 挂入 preset，否则无核心工具）
+import type {} from '@deepseek-ai/dsh-agent-preset-registry'
 
 interface WorkspaceRegistryLike {
   resolveByPath(path: string): Promise<{ attachSession(sessionId: SessionId): Promise<void> } | undefined>

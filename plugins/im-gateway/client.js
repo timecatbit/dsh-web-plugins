@@ -1,7 +1,7 @@
 /**
  * dsh-im-gateway — browser half.
  *
- * 设置面板「IM 网关」：点选渠道 → 扫码 / 填凭据 → 立即连接，无需重启。
+ * 设置面板「IM Gateway」：点选渠道 → 扫码 / 填凭据 → 立即连接，无需重启。
  *  - 微信/WhatsApp：点「连接」直接弹出二维码扫描
  *  - 飞书/Telegram/QQ 等：展开表单填凭据 → 保存并连接
  *  - WebChat：一键开启，给出访问地址
@@ -21,24 +21,30 @@ window.__ModuleLoader__.load({
     const inject = ["slots"];
 
     const API_BASE = "/dsh-im-gateway/api";
-    const QR_API = (data) =>
-      `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(data)}`;
+    // 设备登录二维码（微信等）由插件在本机画成 PNG，登录链接不发给第三方。
+    // v 随登录链接变化，二维码刷新后浏览器会重新取图。
+    const loginQrSrc = (ch) => {
+      let hash = 0;
+      for (let i = 0; i < ch.loginUrl.length; i++) hash = (hash * 31 + ch.loginUrl.charCodeAt(i)) | 0;
+      return `${API_BASE}/channels/${encodeURIComponent(ch.id)}/login-qr?v=${(hash >>> 0).toString(36)}`;
+    };
 
     // ── 样式 ──────────────────────────────────────────────────────────────
+    // 颜色取 DSH 主题变量（--dsw-alias-*），浅色和深色模式都可读；括号里是取不到时的深色回退值。
     const CSS = `
 .imgw-panel { font-size: 13px; line-height: 1.6; }
 .imgw-head { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
 .imgw-head h2 { margin:0; font-size:16px; }
-.imgw-sub { color:var(--dsh-text-muted, #8b949e); margin:0 0 14px; }
+.imgw-sub { color:var(--dsw-alias-label-tertiary, #8b949e); margin:0 0 14px; }
 .imgw-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; }
-.imgw-card { border:1px solid var(--dsh-border, #30363d); border-radius:10px; padding:12px 14px; background:var(--dsh-bg-card, rgba(255,255,255,.02)); display:flex; flex-direction:column; gap:8px; }
+.imgw-card { border:1px solid var(--dsw-alias-border-l2, #30363d); border-radius:10px; padding:12px 14px; background:var(--dsw-alias-bg-layer-1, rgba(255,255,255,.02)); display:flex; flex-direction:column; gap:8px; }
 .imgw-card-row { display:flex; align-items:center; gap:10px; }
 .imgw-emoji { font-size:22px; }
 .imgw-icon-wrap { position:relative; width:22px; height:22px; display:inline-block; flex:none; }
 .imgw-icon-img { width:22px; height:22px; border-radius:5px; object-fit:contain; background:rgba(255,255,255,.85); padding:1px; }
 .imgw-icon-wrap .imgw-emoji { position:absolute; inset:0; display:none; }
 .imgw-name { font-weight:600; font-size:14px; }
-.imgw-hint { color:var(--dsh-text-muted, #8b949e); font-size:12px; flex:1; }
+.imgw-hint { color:var(--dsw-alias-label-tertiary, #8b949e); font-size:12px; flex:1; }
 .imgw-docs { font-size:11px; color:#58a6ff; text-decoration:none; }
 .imgw-docs:hover { text-decoration:underline; }
 .imgw-badge { font-size:11px; padding:2px 8px; border-radius:20px; white-space:nowrap; }
@@ -49,19 +55,19 @@ window.__ModuleLoader__.load({
 .imgw-btn { border:0; border-radius:8px; padding:6px 14px; font-size:12px; cursor:pointer; color:#fff; background:#238636; }
 .imgw-btn:hover { filter:brightness(1.1); }
 .imgw-btn.danger { background:#da3633; }
-.imgw-btn.ghost { background:transparent; border:1px solid var(--dsh-border, #30363d); color:var(--dsh-text, #e6edf3); }
+.imgw-btn.ghost { background:transparent; border:1px solid var(--dsw-alias-border-l2, #30363d); color:var(--dsw-alias-label-primary, #e6edf3); }
 .imgw-btn:disabled { opacity:.5; cursor:not-allowed; }
 .imgw-btn.stub { background:#6e7681; cursor:not-allowed; }
 .imgw-qr { text-align:center; padding:8px; }
 .imgw-qr img { border-radius:8px; background:#fff; padding:6px; max-width:260px; width:100%; }
-.imgw-qr-tip { color:var(--dsh-text-muted, #8b949e); font-size:12px; margin-top:6px; }
+.imgw-qr-tip { color:var(--dsw-alias-label-tertiary, #8b949e); font-size:12px; margin-top:6px; }
 .imgw-form { display:flex; flex-direction:column; gap:8px; padding:8px 0 2px; }
-.imgw-form label { font-size:12px; color:var(--dsh-text-muted, #8b949e); }
-.imgw-form input { padding:7px 10px; border-radius:8px; border:1px solid var(--dsh-border, #30363d); background:var(--dsh-bg-input, #161b22); color:var(--dsh-text, #e6edf3); font-size:13px; width:100%; box-sizing:border-box; }
+.imgw-form label { font-size:12px; color:var(--dsw-alias-label-tertiary, #8b949e); }
+.imgw-form input { padding:7px 10px; border-radius:8px; border:1px solid var(--dsw-alias-border-l2, #30363d); background:var(--dsw-alias-bg-layer-2, #21262d); color:var(--dsw-alias-label-primary, #e6edf3); font-size:13px; width:100%; box-sizing:border-box; }
 .imgw-form input:focus { outline:2px solid rgba(56,139,253,.4); border-color:#388bfd; }
 .imgw-form-row { display:flex; justify-content:flex-end; gap:8px; margin-top:2px; }
 .imgw-ok { color:#3fb950; font-size:12px; }
-.imgw-loading { color:var(--dsh-text-muted, #8b949e); padding:20px 0; text-align:center; }
+.imgw-loading { color:var(--dsw-alias-label-tertiary, #8b949e); padding:20px 0; text-align:center; }
 .imgw-error { color:#f85149; font-size:12px; }
 .imgw-saved-tags { display:flex; gap:4px; flex-wrap:wrap; }
 .imgw-tag { font-size:10px; padding:1px 7px; border-radius:10px; background:rgba(56,139,253,.12); color:#58a6ff; }
@@ -171,7 +177,7 @@ window.__ModuleLoader__.load({
         if (ch.loginUrl) {
           children.push(
             h("div", { key: "qr", className: "imgw-qr" },
-              h("img", { src: QR_API(ch.loginUrl), alt: "微信登录二维码", title: ch.loginUrl }),
+              h("img", { src: loginQrSrc(ch), alt: "微信登录二维码", title: ch.loginUrl }),
               h("div", { className: "imgw-qr-tip" }, "用手机微信扫一扫，确认登录后自动连接"),
             ),
           );
@@ -281,11 +287,12 @@ window.__ModuleLoader__.load({
         return () => { if (timerRef.current) clearInterval(timerRef.current); };
       }, [refresh]);
 
-      // 等待扫码/连接中/有待授权时轮询状态（2.5s）
+      // 等待扫码/连接中/有待授权时轮询状态（2.5s）。服务端只给统一状态（已连接/未连接/连接中/异常），
+      // 刚点「连接（扫码）」时登录链接往往还没到，要靠「连接中」继续轮询，二维码才会出现。
       useEffect(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         const anyWaiting = (channels || []).some((c) =>
-          c.running && (c.loginUrl || c.status === "等待扫码" || c.status === "登录中") || c.provisioningStatus && !["已连接", "已取消", "扫码失败", "扫码启动失败"].includes(c.provisioningStatus) || busyRef.current[c.id],
+          c.running && (c.loginUrl || c.status === "连接中") || c.provisioningStatus && !["已连接", "已取消", "扫码失败", "扫码启动失败"].includes(c.provisioningStatus) || busyRef.current[c.id],
         ) || (pending || []).length > 0;
         if (anyWaiting) {
           timerRef.current = setInterval(refresh, 2500);
@@ -369,7 +376,7 @@ window.__ModuleLoader__.load({
       }
 
       return h("div", { className: "imgw-panel" },
-        h("div", { className: "imgw-head" }, h("h2", null, "🐋 IM 网关"), h("span", { className: "imgw-hint" }, "把 dsh agent 接入你的聊天软件")),
+        h("div", { className: "imgw-head" }, h("h2", null, "IM Gateway"), h("span", { className: "imgw-hint" }, "把 dsh agent 接入你的聊天软件")),
         error && h("div", { className: "imgw-error" }, `⚠️ ${error}`),
         body,
       );
@@ -380,7 +387,7 @@ window.__ModuleLoader__.load({
       ensureStyle();
       ctx.slots.inject("settings.section", () => {
         const dispose = ctx.slots.register(
-          { name: "settings.section", id: "im-gateway", order: 40, label: "🐋 IM 网关" },
+          { name: "settings.section", id: "im-gateway", order: 40, label: "IM Gateway" },
           ChannelPanel,
         );
         return () => dispose();

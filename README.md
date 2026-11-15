@@ -2,7 +2,7 @@
 
 [English](README.en.md) · [MIT 许可证](LICENSE) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
 
-DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单独安装、更新和回退：Pocket UI 负责手机上的界面，Passkey Proxy 负责访问入口和登录。无需把本仓库作为第三个插件安装。
+DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单独安装、更新和回退：Pocket UI 负责手机上的界面，Passkey Proxy 负责访问入口和登录，IM Gateway 让你在微信、飞书等聊天软件里使用 DSH。本仓库本身不用当作插件安装。
 
 本仓库提供独立 `dsh web` 和 [DeepSeek Harness 官方桌面 App](https://www.deepseek.com/en/harness/) 的安装说明。桌面版用它自己的插件管理器安装；Safari 则用于把可访问的 DSH 网页加到主屏幕或程序坞。
 
@@ -10,25 +10,26 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 | --- | --- | --- |
 | [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` | 手机布局、侧栏、聊天输入和主屏幕图标 |
 | [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` | 局域网和 HTTPS 访问入口，密码和 Passkey 登录 |
+| [DSH IM Gateway](https://github.com/timecatbit/dsh-im-gateway) | `dsh-im-gateway` | 在微信、飞书、钉钉、QQ、Telegram 等聊天软件里使用 DSH |
 
-## 三个仓库怎么用
+## 这几个仓库怎么用
 
-- **本仓库**维护 [统一插件索引](plugin-index.json)、[手机布局补丁](plugins/mobile-layout)、[代理源码](plugins/passkey-proxy/dsh-proxy)、[构建说明](BUILDING.md)和[合集发行记录](https://github.com/timecatbit/dsh-web-plugins/releases)。DSH 的「发现」从这里读取两个插件的版本；已添加过的索引地址可以继续用。
-- **两个独立仓库**各自发布可直接安装的构建包、单插件使用说明和问题反馈入口。只想下载或使用其中一个插件，去对应仓库即可；不需要克隆本仓库。
-- **怎么选**：网页已经能访问，只想优化手机界面，装 Pocket UI；需要局域网访问、密码或 Passkey，装 Passkey Proxy；两个都需要就分别安装。
+- **本仓库**维护 [统一插件索引](plugin-index.json)、[手机布局补丁](plugins/mobile-layout)、[代理源码](plugins/passkey-proxy/dsh-proxy)、[IM 网关源码](plugins/im-gateway)、[构建说明](BUILDING.md)和[合集发行记录](https://github.com/timecatbit/dsh-web-plugins/releases)。DSH 的「发现」从这里读取三个插件的版本；已添加过的索引地址可以继续用。
+- **三个插件仓库**各自发布可直接安装的构建包、单插件使用说明和问题反馈入口。只想下载或使用其中一个插件，去对应仓库即可；不需要克隆本仓库。
+- **怎么选**：网页已经能访问，只想优化手机界面，装 Pocket UI；需要局域网访问、密码或 Passkey，装 Passkey Proxy；想在聊天软件里给 agent 发消息，装 IM Gateway。需要几个就分别装几个。
 
 <a id="测试范围"></a>
 
 ## 支持范围与已测试版本
 
-**支持范围：DSH `0.2.1-rc.5` 及之后的所有版本。** 两个插件从 Pocket UI 0.1.16、Passkey Proxy 0.1.9 起声明 `>=0.2.1-rc.5`，DSH 发布新版后可以直接安装和启用，不用等这里更新。插件依赖 DSH 的界面接口，没测过的新版本可能出现显示或连接问题；遇到问题请到对应插件仓库提 issue，修复后发布新版。
+**支持范围：DSH `0.2.1-rc.5` 及之后的所有版本。** 三个插件从 Pocket UI 0.1.16、Passkey Proxy 0.1.9、IM Gateway 0.3.4 起声明 `>=0.2.1-rc.5`，DSH 发布新版后可以直接安装和启用，不用等这里更新。插件依赖 DSH 的界面和服务接口，没测过的新版本可能出现显示或连接问题；遇到问题请到对应插件仓库提 issue，修复后发布新版。
 
 **已测试版本**是实际装上测过的版本。你的 DSH 版本不在表里，只表示还没测过。DSH「发现」里插件卡片上的「已测 DSH …」标签也是这份列表。
 
 | 环境 | 已测试的 DSH 版本 |
 | --- | --- |
 | 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` |
-| 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1` |
+| 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1`（IM Gateway 未测） |
 | 官方 Windows 桌面版 | 未测试 |
 
 命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
@@ -40,13 +41,13 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
 ### 在 DSH 里安装和更新
 
 1. 从 **DSH 左侧栏**打开「插件」。找到「实验性插件」一栏，列表里没有目标开关就点该栏右侧「更多」。DSH `0.2.1-rc.5` 的开关叫 **「自定义插件市场」**，`0.2.2-rc.1` 及之后叫 **「自定义插件索引」**。打开开关。
-2. 进入「发现 → 添加索引源」，粘贴下面的地址。一个 profile 只需添加一次，两个插件共用：
+2. 进入「发现 → 添加索引源」，粘贴下面的地址。一个 profile 只需添加一次，三个插件共用：
 
    ```text
    https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
    ```
 
-3. 点 **DSH Pocket UI** 或 **DSH Passkey Proxy** 的卡片标题，进入「版本」选新版并安装。看到「有更新」时也走这条路径，由你确认更新。之前通过 `.tgz` 安装过，可直接覆盖，不用先卸载。按 DSH 提示启用插件或重启当前实例。
+3. 点 **DSH Pocket UI**、**DSH Passkey Proxy** 或 **DSH IM Gateway** 的卡片标题，进入「版本」选新版并安装。看到「有更新」时也走这条路径，由你确认更新。之前通过 `.tgz` 安装过，可直接覆盖，不用先卸载。按 DSH 提示启用插件或重启当前实例。
 
 ### 手动安装：官方桌面 App
 
@@ -56,10 +57,11 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。两个插件可单
    ```text
    https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.23/dsh-ui-mobile-0.1.23.tgz
    https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.16/smanx-dsh-proxy-0.1.16.tgz
+   https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.4/dsh-im-gateway-0.3.4.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
-4. 若要让手机访问**这个桌面实例**，还要给它提供一个手机能访问的网页入口。用本仓库代理时，在桌面 App 的「设置 → Passkey Proxy」里设置账号密码，开启「允许局域网设备访问」，并在「高级」里开启「认证后自动进入 DSH」。保存后用手机打开 `http://电脑的局域网IP:代理端口`。也可给代理配置 HTTPS 后使用 Passkey。两个插件不相互依赖；Mobile UI 单独安装不会开启远程入口。
+4. 若要让手机访问**这个桌面实例**，还要给它提供一个手机能访问的网页入口。用本仓库代理时，在桌面 App 的「设置 → Passkey Proxy」里设置账号密码，开启「允许局域网设备访问」，并在「高级」里开启「认证后自动进入 DSH」。保存后用手机打开 `http://电脑的局域网IP:代理端口`。也可给代理配置 HTTPS 后使用 Passkey。三个插件互不依赖；Pocket UI 单独安装不会开启远程入口。
 
 ### 手动安装：独立 `dsh web`
 
@@ -73,6 +75,9 @@ dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.23.tgz"
 
 # Passkey 代理
 dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.16.tgz"
+
+# IM 网关
+dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.4.tgz"
 ```
 
 安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。
@@ -99,13 +104,17 @@ dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.16.tgz"
 
 HTTPS 域名和 Passkey 开关相互独立：可以保留 HTTPS、关闭 Passkey，只用密码登录。设置 `DSH_PROXY_PASSKEY_ORIGIN` 和 `DSH_PROXY_TLS_PROXIES` 时，域名及来源地址由环境变量管理，网页上只读，登录开关仍可修改。更改域名或可信来源前，先保留或重新开启密码登录。
 
+## 使用 IM 网关
+
+安装并重启后，打开「设置 → IM Gateway」连接渠道。微信点「连接（扫码）」，用手机扫页面上的二维码；飞书、QQ、钉钉、企业微信可以「扫码接入机器人」；其他平台按卡片里的官方文档填写凭据。默认任何能给机器人发消息的人都能驱动你的 agent，机器人账号公开时要关掉默认放行。聊天命令、安全说明和与原版的区别见 [DSH IM Gateway](https://github.com/timecatbit/dsh-im-gateway)。
+
 ## 回退与源码
 
-- 回退时，把上一版的可信 `.tgz` 装回同一个 profile，再重启对应的 DSH 实例。两个插件可以分别回退。
+- 回退时，把上一版的可信 `.tgz` 装回同一个 profile，再重启对应的 DSH 实例。三个插件可以分别回退。
 - 退回不支持登录开关的旧版代理时，旧版不会保留「仅 Passkey」策略。
-- 代理设置和凭据记录保存在各自部署的 DSH 数据目录。备份时妥善保管；不要把数据文件或服务配置提交到仓库。
-- [代理源码](plugins/passkey-proxy) · [手机布局构建补丁](plugins/mobile-layout) · [构建说明](BUILDING.md)
+- 代理设置和凭据记录、IM 网关的渠道凭据（`dsh-im-gateway/` 目录）保存在各自部署的 DSH 数据目录。备份时妥善保管；不要把数据文件或服务配置提交到仓库。
+- [代理源码](plugins/passkey-proxy) · [手机布局构建补丁](plugins/mobile-layout) · [IM 网关源码](plugins/im-gateway) · [构建说明](BUILDING.md)
 
 ## 许可证与致谢
 
-本仓库和两个独立发布仓库均采用 [MIT 许可证](LICENSE)。代理基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7；手机布局基于 [jasondu/dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8。两个安装包保留各自的上游版权声明；代理另附[第三方依赖许可证](plugins/passkey-proxy/THIRD-PARTY-NOTICES.md)。
+本仓库和三个插件仓库均采用 [MIT 许可证](LICENSE)。代理基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7；手机布局基于 [jasondu/dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8；IM 网关基于 [zhuiyueya/dsh-im-gateway](https://github.com/zhuiyueya/dsh-im-gateway) 0.3.3。三个安装包保留各自的上游版权声明；代理另附[第三方依赖许可证](plugins/passkey-proxy/THIRD-PARTY-NOTICES.md)。

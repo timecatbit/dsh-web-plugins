@@ -1,278 +1,123 @@
-# 🐋 dsh-im-gateway
+# DSH IM Gateway
 
-<h3 align="center">把 DeepSeek Harness 接入你常用的每一个聊天软件</h3>
-<p align="center">Aggregated IM gateway for <b>DeepSeek Harness (dsh)</b> — drive your coding agents from <b>WeChat, Feishu, Telegram, Discord, QQ</b> and 25+ chat platforms, with unified sessions, remote approvals, interactive questions and one-command setup.</p>
+[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-im-gateway/releases) · [MIT 许可证](LICENSE)
 
-<p align="center">
-  <img alt="npm version" src="https://img.shields.io/npm/v/dsh-im-gateway?color=4d6bfe">
-  <img alt="npm downloads" src="https://img.shields.io/npm/dm/dsh-im-gateway?color=4d6bfe">
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-4d6bfe">
-  <img alt="Platform" src="https://img.shields.io/badge/platform-DeepSeek%20Harness-4d6bfe">
-  <img alt="Channels" src="https://img.shields.io/badge/channels-25%2B-238636">
-  <img alt="DSH bundle" src="https://img.shields.io/badge/dsh-bundle%20plugin-4d6bfe">
-  <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-106%20passed-238636">
-</p>
+在微信、飞书、钉钉、企业微信、QQ、Telegram、Discord、Slack 等聊天软件里使用 DeepSeek Harness（DSH）。给机器人发消息就是在驱动 agent，回复会实时推回聊天；工具审批和 agent 的提问也可以直接在聊天里回答。**可以单独安装**，不依赖 [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) 或 [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy)。
 
-<p align="center"><a href="README.en.md">English</a> · <b>简体中文</b></p>
+## 兼容性和安装
 
----
+**支持范围：DSH `0.2.1-rc.5` 及之后的所有版本**（从 0.3.4 起）。DSH 发布新版后可以直接安装和启用，不需要兼容豁免。没测过的新版本可能出现连接或会话问题，遇到请[提 issue](https://github.com/timecatbit/dsh-im-gateway/issues)，修复后发布新版。
 
-## 📸 效果预览
+**已测试版本**是实际装上测过的版本；你的 DSH 版本不在表里，只表示还没测过。DSH「发现」里卡片上的「已测 DSH …」标签也是这份列表。
 
-<p align="center">
-  <img src="docs/screenshots/im-gateway-settings.png" width="92%" alt="dsh IM 网关设置界面">
-</p>
+| DSH 环境 | 已测试的 DSH 版本 |
+| --- | --- |
+| 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3` |
+| 官方 macOS 桌面版 | 未测试 |
+| 官方 Windows 桌面版 | 未测试 |
 
-<p align="center">
-  <img src="docs/screenshots/wechat-chat.jpg" width="30%" alt="微信聊天截图">
-  <img src="docs/screenshots/qq-chat.jpg" width="30%" alt="QQ 聊天截图">
-  <img src="docs/screenshots/feishu-chat.jpg" width="30%" alt="飞书聊天截图">
-</p>
+包名保留为 `dsh-im-gateway`。装过 npm 上原版（0.3.3 及更早）的 profile 可以直接更新，渠道配置、微信登录状态和定时提醒都保留。原版在 DSH 0.2.x 上要靠兼容豁免才能加载；换成本版后，旧豁免可以撤销。
 
----
+1. 从 DSH 左侧栏点「插件」，找到「实验性插件」。没有看到开关就点该栏右侧「更多」。在 `0.2.1-rc.5` 打开 **「自定义插件市场」**，在 `0.2.2-rc.1` 及之后打开 **「自定义插件索引」**。
+2. 进「发现 → 添加索引源」，添加下面的地址。和 Pocket UI、Passkey Proxy 共用，只需每个 profile 添加一次。
 
-## ⚡ 一键安装
+   ```text
+   https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
+   ```
 
-任选一种方式，把下面整段提示词发给你的 dsh（Web GUI 聊天框、`dsh --profile headless "…"` 或已接入的 IM 聊天），agent 会自动完成安装。安装插件后重启一次 dsh web。
+3. 点 **DSH IM Gateway 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。第一次安装要下载各平台的 SDK，可能需要一两分钟。
 
-<details open>
-<summary><b>方式 A · npm 安装（推荐）</b></summary>
+**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.3.4 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.4/dsh-im-gateway-0.3.4.tgz)，在文件所在目录运行：
 
-```text
-请安装 dsh-im-gateway 插件：dsh plugin --profile web add dsh-im-gateway
-装完提醒我重启 dsh web。
-```
-</details>
-
-<details>
-<summary><b>方式 B · GitHub 克隆安装</b></summary>
-
-```text
-请帮我安装 dsh-im-gateway 插件（DeepSeek Harness 的聚合 IM 网关）：
-1. 执行 git clone --depth 1 https://github.com/zhuiyueya/dsh-im-gateway.git /tmp/dsh-im-gateway
-2. 执行 cd /tmp/dsh-im-gateway && npm install && npm run build
-3. 执行 dsh plugin --profile web add /tmp/dsh-im-gateway
-4. 汇报结果；如果提示需要重启，提醒我重启 dsh web。
-```
-</details>
-
-<details>
-<summary><b>方式 C · 远程仓库直装</b></summary>
-
-```text
-请安装 dsh-im-gateway 插件：dsh plugin --profile web add https://github.com/zhuiyueya/dsh-im-gateway.git
-装完提醒我重启 dsh web（首次安装依赖约 1-2 分钟）。
-```
-</details>
-
-<details>
-<summary><b>方式 D · 本机已有项目目录</b></summary>
-
-```text
-请把本机项目 dsh-im-gateway 安装为 dsh 插件：
-1. 进入项目目录执行 npm install && npm run build
-2. 执行 dsh plugin --profile web add <项目绝对路径>
-3. 提醒我重启 dsh web。
-```
-</details>
-
----
-
-## 🚀 快速开始
-
-### 1. 安装并打开设置
-
-安装完成后重启 dsh web，打开：**设置 ⚙️ → 🐋 IM 网关**。
-
-### 2. 连接渠道
-
-- **微信 / WhatsApp**：点击「连接（扫码）」，用手机关联设备。
-- **飞书 / QQ / 钉钉 / 企业微信**：点击「扫码接入机器人」，使用对应平台 App 扫码确认；也可以手动填写凭据。
-- **Telegram / Discord / Slack 等**：按卡片中的官方文档和凭据表单完成接入。
-
-连接后无需重启，状态统一显示为：**已连接 / 未连接 / 连接中 / 异常**。重启 dsh 后，已保存配置的渠道会自动恢复；微信登录态已持久化，无需重复扫码。
-
-> **断开 vs 删除配置**：暂时断开只停止运行并保留配置，重启后会自动恢复；删除配置会移除凭据，之后需要重新接入。
-
-### 3. 开始使用
-
-在连接好的聊天软件里给机器人发消息：
-
-```text
-/help        ← 查看可用命令
-你好，帮我看看当前工作区    ← 普通聊天 = 驱动 agent
+```bash
+dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.4.tgz"
 ```
 
-如果设置了 `allowAllUsers: false`，未授权用户首次发消息会收到授权提示，Web 设置页顶部会出现访问请求；默认 `allowAllUsers: true` 时无需授权步骤。
+使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。
 
-agent 回复会实时回推；需要批准时在聊天里回复「批准 / 拒绝」；agent 也可以使用 `im_send_file` 将工作区文件发送到聊天。
+## 和原版 0.3.3 的区别
+
+- **支持 DSH 0.2.x，不再需要豁免。** 插件声明 `engines.dsh: >=0.2.1-rc.5`。DSH 把 agent preset 服务移到了 `@deepseek-ai/dsh-agent-preset-registry`，依赖随之更新；代码按 DSH `0.2.2-rc.3` 的接口重新做过类型检查。
+- **微信登录二维码在本机生成。** 原版把登录链接交给第三方网站 `api.qrserver.com` 生成图片，而这个链接扫码就能登录。现在由插件自己画成图片，浏览器不再访问外部网站。
+- **点「连接（扫码）」后二维码会自动出现。** 原版此时停止刷新，要重新打开设置页才看得到二维码。
+- **设置页颜色跟随 DSH 主题。** 浅色模式下按钮文字不再看不见。
+- **WhatsApp 依赖固定在已修复漏洞的版本。** Baileys 限定为 6.7.24 及之后的 6.7 版本，原版的范围可能装上受消息伪造漏洞（GHSA-qvv5-jq5g-4cgg）影响的 6.17.16。
+- **名称统一为 DSH IM Gateway。** 插件列表、设置导航和说明文档用同一个名字。
+
+## 连接渠道
+
+安装并重启后，打开 **「设置 → IM Gateway」**。
+
+- **微信 / WhatsApp：** 点「连接（扫码）」，用手机扫描页面上的二维码。微信走腾讯官方 iLink 协议，只支持私聊，建议用专用小号。
+- **飞书 / QQ / 钉钉 / 企业微信：** 点「扫码接入机器人」，在对应平台的 App 里扫码确认；也可以展开表单手动填写凭据。
+- **Telegram / Discord / Slack 等：** 按卡片里的官方文档拿到凭据，填入表单后「保存并连接」。
+
+连接后不用重启。状态统一显示为「已连接 / 未连接 / 连接中 / 异常」。DSH 重启后，保存过配置的渠道会自动恢复，微信不用重新扫码。「暂时断开」只停止运行、保留配置；「删除配置」会删除凭据，之后要重新接入。
 
 各平台为什么支持或不支持扫码，见 [`docs/qr-login-matrix.md`](docs/qr-login-matrix.md)。
 
----
-
-## 📡 支持的渠道
+## 支持的渠道
 
 | 渠道 | 状态 | 接收方式 | 接入方式 |
-|---|---|---|---|
-| **Telegram** | ✅ 完整 | Bot API 长轮询 | @BotFather token |
-| **Discord** | ✅ 完整 | Gateway WebSocket | Bot token |
-| **Slack** | ✅ 完整 | Socket Mode | xoxb- + xapp- token |
-| **飞书 / Lark** | ✅ 完整 | 官方 SDK 长连接 | 官方扫码或 App ID + Secret |
-| **钉钉** | ✅ 完整 | 官方 Stream 长连接 | 官方扫码或 Client ID + Secret |
-| **企业微信** | ✅ 完整 | 官方智能机器人 WebSocket | 官方扫码或 Bot ID + Secret |
-| **微信** | ✅ 完整* | 腾讯官方 iLink 长轮询（设备扫码） | 官方 iLink 账号（建议专用账号） |
-| **QQ 机器人** | ✅ 完整 | 官方 WebSocket | 官方扫码或 AppID + Secret |
-| **LINE** | ✅ 完整 | REST + webhook | Channel token |
-| **Matrix** | ✅ 完整 | 客户端同步 | Homeserver + token |
-| **Mattermost** | ✅ 完整 | WebSocket + REST | Server URL + token |
-| **IRC** | ✅ 完整 | 原生 socket | 服务器地址 |
-| **Twitch** | ✅ 完整 | WebSocket IRC | OAuth token |
-| **Signal** | ✅ 完整 | signal-cli 子进程 | 本机 signal-cli |
-| **Nextcloud Talk** | ✅ 完整 | REST 轮询 | 实例账号 |
-| **Synology Chat** | ✅ 完整 | webhook | Incoming webhook |
-| **Zalo** | ✅ 完整 | REST + webhook | OA token |
-| **iMessage** | ✅ 完整* | imsg / osascript | macOS |
-| **WhatsApp** | 🔄 动态依赖 | Baileys 扫码 | `npm i @whiskeysockets/baileys` |
-| **Nostr** | 🔄 动态依赖 | NIP-04 私信 | `npm i @noble/curves` |
-| **Teams** | 🧪 实验性 | Bot Framework | Azure 注册 |
-| **Google Chat** | 🧪 实验性 | webhook | 公网地址 |
-| **Tlon / 元宝 / 语音** | 🧪 骨架 | — | 基础设施 |
+| --- | --- | --- | --- |
+| 微信 | ✅ | 腾讯官方 iLink 长轮询 | 设备扫码（建议专用账号） |
+| 飞书 / Lark | ✅ | 官方 SDK 长连接 | 官方扫码，或 App ID + Secret |
+| 钉钉 | ✅ | 官方 Stream 长连接 | 官方扫码，或 Client ID + Secret |
+| 企业微信 | ✅ | 官方智能机器人 WebSocket | 官方扫码，或 Bot ID + Secret |
+| QQ 机器人 | ✅ | 官方 WebSocket | 官方扫码，或 AppID + Secret |
+| Telegram | ✅ | Bot API 长轮询 | @BotFather token |
+| Discord | ✅ | Gateway WebSocket | Bot token |
+| Slack | ✅ | Socket Mode | `xoxb-` + `xapp-` token |
+| LINE、Matrix、Mattermost、IRC、Twitch、Nextcloud Talk、Synology Chat、Zalo | ✅ | 各平台接口 | 卡片表单 |
+| Signal | ✅ | 本机 `signal-cli` | 需要先装 signal-cli |
+| iMessage | ✅ | `imsg` / osascript | 仅 macOS |
+| WhatsApp | ✅ | Baileys 设备扫码 | 设备扫码 |
+| Nostr | 需另装依赖 | NIP-04 私信 | 在 profile 里另装 `@noble/curves` |
+| Teams、Google Chat | 🧪 实验性 | Bot Framework / webhook | 需要公网地址 |
 
-✅ 完整 = 收发可用 ｜ 🔄 动态依赖 = 未装 SDK 时提示安装 ｜ 🧪 实验性 = 需公网或专用基础设施 ｜ *微信 = 腾讯官方 iLink 渠道（媒体收发 + 语音转文字 + typing）
+## 在聊天里使用
 
----
+普通消息直接发给 agent。消息结尾加 `..` 表示还没说完，加 `!!` 立即提交；几段短消息在 5 秒内会合并成一次。长回复按各平台的长度上限分段发送。
 
-## ✨ 核心功能
+| 命令 | 作用 |
+| --- | --- |
+| `/help` | 列出命令 |
+| `/status` | 当前会话、工作区和待批准的请求 |
+| `/new`、`/clear` | 开一个新会话 |
+| `/workspaces`、`/workspace <路径>` | 列出或切换工作区（之后 `/new` 生效） |
+| `/sessions [all\|路径]`、`/continue <会话 id>` | 列出会话，或继续已有会话 |
+| `/bind <会话 id>`、`/unbind` | 绑定或解绑本机正在运行的会话（bound 模式） |
+| `/channels` | 各渠道的连接状态 |
+| `/cron list`、`/cron rm <id>` | 查看或删除本聊天的定时提醒 |
+| `批准` / `拒绝` | 回答待批准的工具请求（也认 yes / no / 同意） |
 
-### 💬 IM 命令
+- **审批：** agent 请求工具权限时，请求会推到聊天里，回复「批准」或「拒绝」即可。回复会核对聊天和会话是否对应；超时后回到 DSH 本机的审批流程。
+- **提问：** agent 调用 `ask_user_question` 时，问题会同时发到网页和绑定的聊天，哪边先给出有效回答就用哪边。单选回编号或选项文字，多选用逗号分隔，多个问题每行写 `问题序号: 答案`。
+- **定时提醒：** 在聊天里说「每天 9 点提醒我喝水」，agent 会建一个绑定到这个聊天的提醒，换会话或重启 DSH 都不影响。
+- **发文件：** agent 可以用 `im_send_file` 把工作区里的文件发到聊天。
 
-在连接好的聊天软件里，发给机器人的消息以 `/` 开头即命令：
+## 安全和数据
 
-| 命令 | 说明 |
-|---|---|
-| `/help` | 本帮助 |
-| `/status` | 查询当前会话（会话 id / 工作区 / 待批准） |
-| `/new` · `/clear` | 开启全新会话（per-chat 模式） |
-| `/workspaces` | 列出所有工作区 |
-| `/workspace <路径>` | 切换工作区（后续 `/new` 生效） |
-| `/sessions [all\|路径]` | 列出会话（默认当前工作区；`all` 全部） |
-| `/continue <会话id>` | 继续已有会话（跨渠道/跨工作区） |
-| `/bind <session-id>` | 绑定本机 live 会话（bound 模式） |
-| `/unbind` | 解绑（bound 模式） |
-| `/channels` | 各渠道连接状态 |
-| `/cron list` | 查看本聊天定时任务 |
-| `/cron rm <id>` | 删除本聊天的定时任务 |
-| `批准` / `拒绝` | 应答待批准请求（也支持 yes / no / 同意） |
-| 普通文本 | 发给 agent；结尾 `..` 表示还有后续，`!!` 立即提交 |
+- **默认放行所有人。** 任何能给机器人发消息的人都能驱动你的 agent，而 agent 能在这台机器上运行工具。机器人账号对外公开时，在 profile 的 `cordis.patch.yml` 里关掉默认放行，再在设置页批准具体用户：
 
-### ✅ 远程审批
+  ```yaml
+  - id: im-gateway
+    config:
+      allowAllUsers: false
+  ```
 
-agent 请求工具批准时会把请求推送到聊天；直接回复「批准 / 拒绝」即可。审批回复会校验聊天与会话归属，超时后转回本机批准体系。
+- **插件接口不经过 DSH 登录。** 设置页调用的 `/dsh-im-gateway/api` 和 DSH 其他插件接口一样，DSH 自己不校验登录。让 DSH 端口只监听本机或可信网络；需要从外面访问时，用 [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) 这类带登录的入口。
+- **数据位置：** 渠道凭据、白名单和定时提醒保存在 `$DSH_HOME/dsh-im-gateway/`（默认 `~/.dsh/dsh-im-gateway/`），运行日志是其中的 `gateway.log`。更新前可以备份这个目录；不要把它提交到仓库或发给别人。
 
-### ❓ 交互式提问
+## 维护和排查
 
-当 agent 调用 `ask_user_question` 时，Web GUI 的问题和选项会同步发送到该会话绑定的全部 IM 聊天。Web 和 IM 均可回答，**第一份有效答案生效**，其余渠道会收到已回答通知。
+| 现象 | 先检查 |
+| --- | --- |
+| 设置里没有 IM Gateway | DSH 日志里有没有 `skipping profile bundle "dsh-im-gateway"`；装的是不是本版（原版要豁免） |
+| 点了「连接（扫码）」没有二维码 | 等几秒；`gateway.log` 里有没有「请用微信扫码登录」；本机能否访问微信服务器 |
+| 已连接但聊天没反应 | `gateway.log` 里的报错；关掉默认放行后，设置页顶部有没有待批准的访问请求 |
+| 微信突然掉线 | 登录过期，点「刷新二维码」重新扫码 |
 
-| 问题类型 | IM 回答方式 | 示例 |
-|---|---|---|
-| 单选 | 选项编号、完整标签或自定义文字 | `2`、`完整模式`、`以后再说` |
-| 多选 | 用逗号、中文逗号、顿号或分号分隔 | `1,3`、`快速、测试` |
-| 自由输入 | 直接回复完整文本 | `项目名叫 dsh-im-gateway` |
-| 多个问题 | 每行使用 `问题序号: 答案` | `1: 2` 换行 `2: 1,3` |
+## 源码和许可证
 
-回答窗口由 `questionTimeoutSecs` 控制，默认 600 秒。窗口超时只会停止 IM 等待，Web GUI 中的问题仍可继续回答；等待按 session 隔离。
-
-### ⏰ 聊天级定时提醒
-
-定时任务绑定**聊天（chatId）而非会话（sessionId）**。在聊天里说「每天 9 点提醒我喝水」或「每周一 9 点生成今日待办」，agent 会创建提醒；无论 `/new` 轮换多少次或会话是否重启，到点都会直接推送到该聊天。
-
-- `/cron list`：查看本聊天的定时任务
-- `/cron rm <id>`：删除定时任务
-- 支持一次性提醒、每天提醒和按星期提醒
-- 支持 IANA 时区与 DST 间隙/重叠处理
-- 状态落盘，重启自动恢复；发送失败自动重试
-
-### 📱 消息与媒体
-
-- 手机多段输入：`..` 表示还有后续，`!!` 立即提交，裸文本在 5 秒窗口内合并，崩溃后自动恢复。
-- 长回复按各渠道上限分片，优先在换行或句号处断行，带 `（i/n）` 序号。
-- 微信支持图片、语音转文字、文件、视频；agent 可通过 `im_send_file` 发送工作区文件。
-
-### 🛡️ 访问控制
-
-默认 `allowAllUsers: true` 便于开箱使用；需要管控时设为 `false` 并配置渠道白名单。审批应答始终校验会话归属。
-
----
-
-## 🏗 架构
-
-```text
-   IM 渠道 (Telegram / 微信 / 飞书 / Discord / …)              DSH agent
-        │  adapter 归一化入站                                    ▲
-        ▼                                                       │
-┌─────────────────────────┐      ┌────────────────────────┐    │
-│  ChannelAdapter          │◄────►│  ImGateway (核心网关)    │────┘
-│  · 每渠道一个适配器       │      │  · 会话路由 (per-chat)   │
-│  · 收: 轮询/WebSocket/   │      │  · 白名单 & IM 命令      │
-│     webhook → ImMessage  │      │  · 审批桥 / 提问桥       │
-│  · 发: send(chatId,text) │      │  · 分片 / 多段合并       │
-└─────────────────────────┘      └────────────────────────┘
-        ▲
-        │  session/event · assistant/message · turn/end
-        └────────────────────────────────────────────────────
-```
-
-```text
-用户消息 → 渠道 adapter → 网关(白名单→合并→会话路由) → agent.followup()
-agent 回复 ← 网关(按渠道分片) ← session/event(assistant/message) ← agent
-工具批准 → approval/request → 推送到聊天 → 「批准」→ allowed-once
-```
-
----
-
-## 🧪 开发
-
-```bash
-npm install
-npm run build          # tsc 构建到 lib/
-npm test               # node --test（106 个用例）
-```
-
-**新增一个渠道只需 4 步**：
-
-1. 在 `src/channels/` 新建 `yourchannel.ts`，实现 `ChannelAdapter`（6 个方法）
-2. 在 `src/channels/index.ts` 注册
-3. 在 `src/index.ts` 的 Config 里补配置字段
-4. 在 README 渠道表加一行 ✨
-
-```typescript
-export function createYourChannel(config, log): ChannelAdapter | undefined {
-  if (!config.token) return undefined          // 未配置凭据 → 不启动
-  return {
-    id: 'yourchannel', label: 'YourChannel', maxMessageLength: 2000,
-    start() { /* 连接 / 轮询 / 扫码 */ },
-    stop() { /* 释放 */ },
-    async send(chatId, text) { /* 发消息 */ },
-    setMessageHandler(h) { /* 入站回调 */ },
-    status() { return 'running' },
-  }
-}
-```
-
----
-
-## 🤝 贡献
-
-- 修 bug、补渠道、完善文档都欢迎！
-- 请先 `npm test` 保证 106 个用例全绿
-- 给仓库加 `dsh-plugin` 和 `deepseek-harness` topic 可以进 awesome 插件列表
-
-## 📄 许可证
-
-[MIT](./LICENSE) © zhuiyueya
-
----
-
-<p align="center">Made with 🐋 for the DeepSeek Harness ecosystem</p>
+这里发布已构建的安装包。[源码、构建脚本和统一更新索引](https://github.com/timecatbit/dsh-web-plugins)在原仓库维护。此插件基于 [zhuiyueya/dsh-im-gateway](https://github.com/zhuiyueya/dsh-im-gateway) 0.3.3，采用 [MIT 许可证](LICENSE)，保留上游版权声明；[第三方说明](THIRD_PARTY_NOTICES.md)随包分发。问题可报到 [Issues](https://github.com/timecatbit/dsh-im-gateway/issues)，请注明 DSH 和插件版本，并删去 token、密钥和登录链接。

@@ -26,6 +26,14 @@ PLUGINS = {
             "zh": "通过局域网或 HTTPS 域名访问 DSH，支持密码和 Passkey 登录。",
         },
     },
+    "dsh-im-gateway": {
+        "repo": "dsh-im-gateway",
+        "title": {"en": "DSH IM Gateway", "zh": "DSH IM Gateway · 聊天软件接入"},
+        "description": {
+            "en": "Use DSH from WeChat, Feishu, DingTalk, QQ, Telegram and 20+ other chat apps, with approvals and questions answered in the chat.",
+            "zh": "在微信、飞书、钉钉、QQ、Telegram 等聊天软件里使用 DSH，审批和提问也能在聊天里回答。",
+        },
+    },
 }
 
 

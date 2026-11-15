@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url'
 import type { ChannelAdapter, ImGatewayConfig } from './core/types.js'
 import { ImGateway } from './core/gateway.js'
 import type { CronRegistry } from './core/cron.js'
-import { provisionerFor, type ProvisionerHandle } from './core/provisioning.js'
+import { provisionerFor, qrPng, type ProvisionerHandle } from './core/provisioning.js'
 import { CHANNEL_IDS, CHANNEL_META, createChannel, type ChannelMeta } from './channels/index.js'
 
 /** 本模块目录（ESM 无 __dirname；lib/manager.js 的 ../assets 即包根 assets）。 */
@@ -388,6 +388,12 @@ export class ChannelManager {
     await Promise.resolve(attempt.handle?.cancel()).catch(() => undefined)
   }
 
+  /** 运行中渠道当前登录二维码的 PNG；没有待扫的登录链接时为 undefined。 */
+  async loginQr(id: string): Promise<Buffer | undefined> {
+    const loginUrl = this.running.get(id)?.loginUrl?.()
+    return loginUrl ? qrPng(loginUrl) : undefined
+  }
+
   /** 渠道视图列表（UI 渲染用）。 */
   list(): ChannelView[] {
     const out: ChannelView[] = []
@@ -496,6 +502,17 @@ export class ChannelManager {
             return
           }
           send(res, 404, { ok: false, error: `unknown cron action ${id}` })
+          return
+        }
+        // /dsh-im-gateway/api/channels/<id>/login-qr：设备登录二维码（本机生成 PNG，登录链接不发给第三方）
+        if (parts[2] === 'channels' && parts.length === 5 && parts[4] === 'login-qr' && (req.method === 'GET' || req.method === 'HEAD')) {
+          const png = await this.loginQr(parts[3]!)
+          if (!png) {
+            send(res, 404, { ok: false, error: 'no login QR' })
+            return
+          }
+          res.writeHead(200, { 'content-type': 'image/png', 'content-length': String(png.length), 'cache-control': 'no-store' })
+          res.end(req.method === 'HEAD' ? undefined : png)
           return
         }
         // /dsh-im-gateway/api/channels/<id>/connect|disconnect|refresh

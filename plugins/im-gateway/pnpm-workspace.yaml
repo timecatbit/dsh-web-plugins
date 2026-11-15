@@ -1,0 +1,10 @@
+packages:
+  - .
+
+autoInstallPeers: true
+# Baileys 6.7 pulls libsignal from Git; DSH installs it the same way.
+blockExoticSubdeps: false
+# Type checks and tests do not need their install scripts.
+allowBuilds:
+  "@whiskeysockets/baileys": false
+  protobufjs: false

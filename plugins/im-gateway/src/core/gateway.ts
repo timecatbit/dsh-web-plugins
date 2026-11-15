@@ -548,7 +548,7 @@ export class ImGateway {
       const firstUser = snapshot.events.find((e) => e.type === 'user/message')
       if (!firstUser) return undefined
       // user/message 事件的 data 即 UserMessage（{ id, role, content, source }）
-      const data = firstUser.data as { content?: Array<{ type?: string; text?: string }> }
+      const data = firstUser.data as { content?: ReadonlyArray<{ type?: string; text?: string }> }
       const text = (data.content ?? [])
         .filter((b) => b.type === 'text')
         .map((b) => b.text ?? '')

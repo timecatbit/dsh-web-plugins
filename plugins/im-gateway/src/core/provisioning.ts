@@ -33,6 +33,20 @@ async function qrDataUrl(value: string): Promise<string> {
   })
 }
 
+/**
+ * 本机把扫码内容画成 PNG（微信等设备登录二维码用）。登录链接等同一次性登录凭据，
+ * 不交给任何第三方二维码服务。
+ */
+export async function qrPng(value: string): Promise<Buffer> {
+  const mod = await import('qrcode')
+  return mod.toBuffer(value, {
+    type: 'png',
+    margin: 2,
+    width: 320,
+    errorCorrectionLevel: 'M',
+  })
+}
+
 function cleanString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() ? value.trim() : undefined
 }

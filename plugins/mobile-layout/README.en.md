@@ -1,6 +1,6 @@
 # DSH Pocket UI
 
-[简体中文](README.md) · [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) · [MIT license](LICENSE)
+[简体中文](README.md) · [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) · [Changelog](CHANGELOG.md) · [MIT license](LICENSE)
 
 A narrow-screen layout for DeepSeek Harness (DSH). **Install it on its own.** It works with your existing DSH URL and sign-in method, including a reachable LAN IP and port. It needs no proxy, Passkey, or domain.
 

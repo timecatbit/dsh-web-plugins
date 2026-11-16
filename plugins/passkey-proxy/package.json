@@ -60,6 +60,7 @@
     "THIRD-PARTY-NOTICES.md",
     "README.md",
     "README.en.md",
+    "CHANGELOG.md",
     "dsh-proxy/lib",
     "dsh-proxy/locale",
     "dsh-proxy/cordis.patch.yml",

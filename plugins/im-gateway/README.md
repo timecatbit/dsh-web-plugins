@@ -1,6 +1,6 @@
 # DSH IM Gateway
 
-[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-im-gateway/releases) · [MIT 许可证](LICENSE)
+[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-im-gateway/releases) · [更新日志](CHANGELOG.md) · [MIT 许可证](LICENSE)
 
 在微信、飞书、钉钉、企业微信、QQ、Telegram、Discord、Slack 等聊天软件里使用 DeepSeek Harness（DSH）。给机器人发消息就是在驱动 agent，回复会实时推回聊天；工具审批和 agent 的提问也可以直接在聊天里回答。**可以单独安装**，不依赖 [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) 或 [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy)。
 

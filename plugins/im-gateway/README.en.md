@@ -1,6 +1,6 @@
 # DSH IM Gateway
 
-[简体中文](README.md) · [Download](https://github.com/timecatbit/dsh-im-gateway/releases) · [MIT license](LICENSE)
+[简体中文](README.md) · [Download](https://github.com/timecatbit/dsh-im-gateway/releases) · [Changelog](CHANGELOG.md) · [MIT license](LICENSE)
 
 Use DeepSeek Harness (DSH) from WeChat, Feishu, DingTalk, WeCom, QQ, Telegram, Discord, Slack and other chat apps. A message to the bot drives your agent, and the replies stream back into the chat; tool approvals and the agent's questions can be answered there too. **It installs on its own** and does not need [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) or [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy).
 

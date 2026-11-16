@@ -1,6 +1,6 @@
 # DSH Passkey Proxy
 
-[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-passkey-proxy/releases) · [MIT 许可证](LICENSE)
+[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-passkey-proxy/releases) · [更新日志](CHANGELOG.md) · [MIT 许可证](LICENSE)
 
 给 DeepSeek Harness（DSH）增加一个独立的网页入口，支持局域网账号密码、HTTPS Passkey 和 WebSocket 转发。**可以单独安装**，不依赖 [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui)。没有域名也可以在可信局域网用 IP 和密码；Passkey 需要配置受浏览器信任的 HTTPS 域名。
 

@@ -1,6 +1,6 @@
 # DSH Web Plugins
 
-[English](README.en.md) · [MIT 许可证](LICENSE) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
+[English](README.en.md) · [MIT 许可证](LICENSE) · [下载 Release](https://github.com/timecatbit/dsh-web-plugins/releases/latest) · [更新日志](CHANGELOG.md)
 
 DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单独安装、更新和回退：Pocket UI 负责手机上的界面，Passkey Proxy 负责访问入口和登录，IM Gateway 让你在微信、飞书等聊天软件里使用 DSH。本仓库本身不用当作插件安装。
 

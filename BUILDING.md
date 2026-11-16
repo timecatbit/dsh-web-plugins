@@ -10,6 +10,17 @@ The script checks and bundles the proxy source, fetches the integrity-pinned mob
 
 For each release, unpack the archive's `package/` contents at the root of its release repository (`dsh-pocket-ui`, `dsh-passkey-proxy` or `dsh-im-gateway`). Commit, tag with the package version, and publish the matching tarball as a release asset. These Git repositories ship prebuilt files so DSH can install them without a build script. Keep the package names (`@timecatbit/dsh-pocket-ui`, `@timecatbit/dsh-passkey-proxy`, `@timecatbit/dsh-im-gateway` since Pocket UI 0.2.0, Passkey Proxy 0.2.0 and IM Gateway 0.4.0) unchanged so installations remain updatable.
 
+### Changelog and release notes
+
+Every user-visible change goes into the plugin's `CHANGELOG.md` (`plugins/<plugin>/CHANGELOG.md`, [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)) under **Unreleased**. At release time that section becomes `## [x.y.z] - YYYY-MM-DD`, and the link list at the bottom gets the new tag. The archives ship the changelog, so each release repository has it at its root. The combined releases are listed in the root `CHANGELOG.md`.
+
+A GitHub release note only says what a user needs to know:
+- one or two sentences on what changes for them;
+- anything they must do, such as a breaking change with a link to the upgrade steps;
+- where to install or update, and a link to the changelog.
+
+Leave out test details, causes and the history of earlier versions; those live in the changelog and the commits. The combined release note lists the bundled versions in a table, plus the same short summary. `release-notes.md` holds the combined note for the next release.
+
 After the commits are public, update the Discover index in this repository:
 
 ```bash

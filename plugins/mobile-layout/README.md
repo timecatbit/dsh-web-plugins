@@ -1,6 +1,6 @@
 # DSH Pocket UI
 
-[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-pocket-ui/releases) · [MIT 许可证](LICENSE)
+[English](README.en.md) · [下载](https://github.com/timecatbit/dsh-pocket-ui/releases) · [更新日志](CHANGELOG.md) · [MIT 许可证](LICENSE)
 
 让 DeepSeek Harness（DSH）的网页在 iPhone、iPad 和 Android 窄屏上更好用。**可以单独安装。** 不需要 Passkey、域名或代理插件，继续用原来的 DSH 地址和登录方式即可。
 

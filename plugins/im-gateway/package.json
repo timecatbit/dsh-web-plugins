@@ -42,6 +42,7 @@
     "lib",
     "src",
     "client.js",
+    "CHANGELOG.md",
     "cordis.patch.yml",
     "locale",
     "assets",

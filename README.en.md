@@ -1,6 +1,6 @@
 # DSH Web Plugins
 
-[简体中文](README.md) · [MIT license](LICENSE) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest)
+[简体中文](README.md) · [MIT license](LICENSE) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest) · [Changelog](CHANGELOG.md)
 
 The **source and update index repository** for three optional DeepSeek Harness (DSH) plugins. Install, update, and roll them back separately: Pocket UI handles the phone layout, Passkey Proxy the entry point and sign-in, and IM Gateway lets you use DSH from WeChat, Feishu and other chat apps. This repository itself is not a plugin to install.
 

@@ -1,6 +1,6 @@
 # DSH IM Gateway
 
-[简体中文](README.md) · [Download](https://github.com/timecatbit/dsh-im-gateway/releases) · [Changelog](CHANGELOG.md) · [MIT license](LICENSE)
+[简体中文](README.md) · [Download](https://github.com/timecatbit/dsh-im-gateway/releases) · [Changelog](CHANGELOG.en.md) · [MIT license](LICENSE)
 
 Use DeepSeek Harness (DSH) from WeChat, Feishu, DingTalk, WeCom, QQ, Telegram, Discord, Slack and other chat apps. A message to the bot drives your agent, and the replies stream back into the chat; tool approvals and the agent's questions can be answered there too. **It installs on its own** and does not need [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) or [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy).
 
@@ -55,7 +55,7 @@ After installing and restarting, open **Settings → IM Gateway**.
 
 No restart is needed after connecting. Every channel shows one of Connected, Not connected, Connecting or Error. After DSH restarts, saved channels reconnect on their own and WeChat does not need a new scan. Disconnect for now only stops a channel and keeps its settings; Delete settings removes the credentials, and the channel then has to be set up again.
 
-See [`docs/qr-login-matrix.md`](docs/qr-login-matrix.md) for why each platform does or does not support QR setup.
+See [`docs/qr-login-matrix.en.md`](docs/qr-login-matrix.en.md) for why each platform does or does not support QR setup.
 
 ## Supported channels
 

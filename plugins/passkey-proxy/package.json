@@ -61,6 +61,7 @@
     "README.md",
     "README.en.md",
     "CHANGELOG.md",
+    "CHANGELOG.en.md",
     "dsh-proxy/lib",
     "dsh-proxy/locale",
     "dsh-proxy/cordis.patch.yml",

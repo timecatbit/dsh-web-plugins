@@ -1,6 +1,6 @@
 # DSH Web Plugins
 
-[简体中文](README.md) · [MIT license](LICENSE) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest) · [Changelog](CHANGELOG.md)
+[简体中文](README.md) · [MIT license](LICENSE) · [Download releases](https://github.com/timecatbit/dsh-web-plugins/releases/latest) · [Changelog](CHANGELOG.en.md)
 
 The **source and update index repository** for three optional DeepSeek Harness (DSH) plugins. Install, update, and roll them back separately: Pocket UI handles the phone layout, Passkey Proxy the entry point and sign-in, and IM Gateway lets you use DSH from WeChat, Feishu and other chat apps. This repository itself is not a plugin to install.
 
@@ -14,7 +14,7 @@ This repository provides installation instructions for standalone `dsh web` and 
 
 ## What each repository is for
 
-- **This repository** maintains the [shared Discover index](plugin-index.json), [mobile layout patches](plugins/mobile-layout), [proxy source](plugins/passkey-proxy/dsh-proxy), [IM gateway source](plugins/im-gateway), [build instructions](BUILDING.md), and [combined release history](https://github.com/timecatbit/dsh-web-plugins/releases). Keep using the same index URL if you already added it.
+- **This repository** maintains the [shared Discover index](plugin-index.json), [mobile layout patches](plugins/mobile-layout), [proxy source](plugins/passkey-proxy/dsh-proxy), [IM gateway source](plugins/im-gateway), [build instructions](BUILDING.en.md), and [combined release history](https://github.com/timecatbit/dsh-web-plugins/releases). Keep using the same index URL if you already added it.
 - **The three plugin repositories** publish prebuilt bundles, detailed guides, and issue trackers for each plugin. You do not need to clone this repository to install any of them.
 - **Which should I install?** Use Pocket UI if the DSH website is already reachable and you want a better phone layout. Use Passkey Proxy if you need a LAN entry, password sign-in, or Passkeys. Use IM Gateway if you want to message your agent from a chat app. Install whichever ones you need.
 

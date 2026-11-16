@@ -1,41 +1,43 @@
-# Changelog
+# 更新日志
 
-All notable changes to DSH IM Gateway are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
+[English](CHANGELOG.en.md)
 
-## [Unreleased]
+DSH IM Gateway 的重要改动都记在这里。格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
+
+## [未发布]
 
 ## [0.4.0] - 2026-11-16
 
-### Changed
+### 变更
 
-- **Breaking:** the package is now `@timecatbit/dsh-im-gateway` (was `dsh-im-gateway`, the same name as the original on npm). Remove the old package before installing this one; channels, WeChat login and reminders carry over. See [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names).
-- The help reply in chat reads "DSH IM Gateway".
+- **不兼容变更：** 包名改为 `@timecatbit/dsh-im-gateway`（原来是 `dsh-im-gateway`，和 npm 上的原版同名）。先移除旧包再装这一版；渠道配置、微信登录状态和定时提醒都会保留。见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。
+- 聊天里的帮助回复显示「DSH IM Gateway」。
 
 ## [0.3.5] - 2026-11-15
 
-### Fixed
+### 修复
 
-- Channels connected by scanning, such as WeChat and WhatsApp, reconnect after a DSH restart.
+- 扫码连接的渠道（如微信、WhatsApp）在 DSH 重启后会自动重连。
 
 ## 0.3.4 - 2026-11-15
 
-First release of this fork of [zhuiyueya/dsh-im-gateway](https://github.com/zhuiyueya/dsh-im-gateway) 0.3.3.
+本项目基于 [zhuiyueya/dsh-im-gateway](https://github.com/zhuiyueya/dsh-im-gateway) 0.3.3 维护的第一个版本。
 
-### Changed
+### 变更
 
-- Named DSH IM Gateway in the plugin list, the settings and the docs.
+- 插件列表、设置和文档里都叫 DSH IM Gateway。
 
-### Fixed
+### 修复
 
-- Loads on DSH 0.2.x without a compatibility exemption.
-- The WeChat login QR code appears right after **Connect (scan)**.
-- The settings page follows the DSH theme, so buttons are readable in light mode.
+- 在 DSH 0.2.x 上不需要兼容豁免也能加载。
+- 点「连接（扫码）」后，微信登录二维码立即出现。
+- 设置页跟随 DSH 主题，浅色模式下按钮文字看得清。
 
-### Security
+### 安全
 
-- The WeChat login QR code is drawn locally. The original sent the login link to a third-party image service.
-- Baileys is limited to the patched 6.7 line (GHSA-qvv5-jq5g-4cgg).
+- 微信登录二维码在本机生成。原版会把登录链接发给第三方图片服务。
+- Baileys 限定在已修补的 6.7 系列（GHSA-qvv5-jq5g-4cgg）。
 
-[Unreleased]: https://github.com/timecatbit/dsh-im-gateway/compare/v0.4.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-im-gateway/compare/v0.4.0...HEAD
 [0.4.0]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.4.0
 [0.3.5]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.3.5

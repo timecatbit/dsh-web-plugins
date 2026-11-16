@@ -1,114 +1,116 @@
-# Changelog
+# 更新日志
 
-All notable changes to DSH Pocket UI are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
+[English](CHANGELOG.en.md)
 
-## [Unreleased]
+DSH Pocket UI 的重要改动都记在这里。格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
+
+## [未发布]
 
 ## [0.2.0] - 2026-11-16
 
-### Changed
+### 变更
 
-- **Breaking:** the package is now `@timecatbit/dsh-pocket-ui` (was `dsh-ui-mobile`). Remove the old package before installing this one, then choose the home-screen icon again. See [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names).
-- Where DSH has fixed a problem itself, its own styles now stay. This covers the composer font that made iOS zoom, the 45% model-picker cap, long-word wrapping and the transcript rubber band. Pocket UI checks each of these on the page and steps in only where the problem remains.
+- **不兼容变更：** 包名改为 `@timecatbit/dsh-pocket-ui`（原来是 `dsh-ui-mobile`）。先移除旧包再装这一版，装好后重新选一次主屏幕图标。见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。
+- DSH 自己修好的问题，现在保留 DSH 自己的样式，包括让 iOS 放大页面的输入框字号、模型选择器 45% 宽度上限、长单词换行和聊天记录的回弹。Pocket UI 会在页面上逐项检查，只在问题还在的地方介入。
 
 ## [0.1.26] - 2026-11-15
 
-### Fixed
+### 修复
 
-- While an answer streams, the model menu and the session, token and context popups no longer jump with every new line.
+- 模型输出时，打开的模型菜单和会话、Token、上下文弹窗不再随每一行输出跳动。
 
 ## 0.1.25 - 2026-11-15
 
-### Changed
+### 变更
 
-- With the keyboard up, the readings under the composer move 8px down, so they no longer hug the top of their bar.
+- 键盘弹出时，输入框下方的统计往下移 8px，不再贴着状态栏的上边。
 
 ## 0.1.24 - 2026-11-15
 
-### Fixed
+### 修复
 
-- The chat no longer rubber-bands past its top or bottom on iOS.
+- iOS 上，聊天记录滚到顶部或底部后不再回弹。
 
 ## 0.1.23 - 2026-11-14
 
-### Fixed
+### 修复
 
-- The page no longer drops 14px a moment after the app opens on a phone.
+- 手机上打开 App 片刻后，页面不再往下掉 14px。
 
 ## 0.1.22 - 2026-11-14
 
-### Changed
+### 变更
 
-- The home-screen icon choice moved to its own page, **Settings → Pocket UI**.
+- 主屏幕图标的选择移到单独的「设置 → Pocket UI」页面。
 
-### Fixed
+### 修复
 
-- Installs from Discover or GitHub show the name DSH Pocket UI in the plugin list.
+- 从「发现」或 GitHub 安装后，插件列表里也显示 DSH Pocket UI。
 
 ## 0.1.21 - 2026-11-14
 
-### Added
+### 新增
 
-- A home-screen icon choice: DSH's own icon, a white whale on black, or a black whale on white.
+- 可选主屏幕图标：DSH 自带、黑底白鲸、白底黑鲸。
 
-### Changed
+### 变更
 
-- The plugin list shows **DSH Pocket UI**.
+- 插件列表里显示 **DSH Pocket UI**。
 
 ## 0.1.20 - 2026-11-14
 
-### Fixed
+### 修复
 
-- Settings pages keep the same margin on both sides; dropdowns and the Appearance buttons are no longer cut off at the right edge.
-- On Built-in plugins, the agent preset switcher moves to its own line when it does not fit.
+- 设置页左右边距一致，下拉框和「外观」按钮不再被右边裁掉。
+- 「内置插件」页的 Agent 预设切换放不下时，换到单独一行。
 
 ## 0.1.19 - 2026-11-14
 
-### Fixed
+### 修复
 
-- The Settings title is no longer squeezed behind the tabs on DSH 0.2.2-rc.2 and later.
+- 在 DSH 0.2.2-rc.2 及之后，「设置」标题不再被挤到标签栏后面。
 
 ## 0.1.18 - 2026-11-12
 
-### Fixed
+### 修复
 
-- The page's sidebar button fades in and out with the sidebar instead of popping in.
+- 页面上的侧栏按钮随侧栏淡入淡出，不再突然出现。
 
 ## 0.1.17 - 2026-11-12
 
-### Fixed
+### 修复
 
-- The page moves together with the sidebar drawer as it opens and closes.
+- 侧栏打开和关闭时，页面跟着侧栏同步移动。
 
 ## 0.1.16 - 2026-11-12
 
-### Changed
+### 变更
 
-- Supports DSH 0.2.1-rc.5 and every later version. The README lists the versions actually tested.
+- 支持 DSH 0.2.1-rc.5 及之后的所有版本；README 列出实际测过的版本。
 
 ## 0.1.15 - 2026-11-11
 
-### Changed
+### 变更
 
-- The sidebar, the page and the status bar share one surface; a soft shadow replaces the rounded corners and the divider, and the duplicate close buttons are gone.
+- 侧栏、页面和状态栏用同一种底色；用柔和阴影代替圆角和分隔线，去掉了重复的关闭按钮。
 
-### Fixed
+### 修复
 
-- Opening a drawer while typing closes the keyboard.
+- 打字时打开侧栏，键盘会收起。
 
 ## 0.1.14 - 2026-11-11
 
-### Changed
+### 变更
 
-- The session readings below the composer form a status bar with one cell per reading, so nothing is cut off.
-- The model picker uses the free space in its row, so a full model name fits.
+- 输入框下方的会话统计变成状态栏，每项一格，不再被截断。
+- 模型选择器用满整行的空余宽度，完整的模型名能显示出来。
 
-## 0.1.9 – 0.1.13 - 2026-11-10 to 2026-11-11
+## 0.1.9 – 0.1.13 - 2026-11-10 至 2026-11-11
 
-### Added
+### 新增
 
-- First releases: a phone layout for DSH built on [dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8, with touch drawers, tap-to-focus chat input and a page that follows the iOS keyboard without jumping.
+- 最初几版：基于 [dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8 的 DSH 手机布局，包括触屏侧栏、点按才聚焦的聊天输入框，以及跟随 iOS 键盘、不跳动的页面。
 
-[Unreleased]: https://github.com/timecatbit/dsh-pocket-ui/compare/v0.2.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-pocket-ui/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.2.0
 [0.1.26]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.1.26

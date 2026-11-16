@@ -1,73 +1,75 @@
-# Changelog
+# 更新日志
 
-All notable changes to DSH Passkey Proxy are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
+[English](CHANGELOG.en.md)
 
-## [Unreleased]
+DSH Passkey Proxy 的重要改动都记在这里。格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
+
+## [未发布]
 
 ## [0.2.0] - 2026-11-16
 
-### Changed
+### 变更
 
-- **Breaking:** the package is now `@timecatbit/dsh-passkey-proxy` (was `@smanx/dsh-proxy`). Remove the old package before installing this one; your username, password, Passkeys and port carry over. See [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names).
+- **不兼容变更：** 包名改为 `@timecatbit/dsh-passkey-proxy`（原来是 `@smanx/dsh-proxy`）。先移除旧包再装这一版；账号密码、Passkey 和端口都会保留。见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。
 
 ## [0.1.16] - 2026-11-14
 
-### Changed
+### 变更
 
-- The docs point to **Settings → Pocket UI** for the home-screen icon. The proxy itself is unchanged.
+- 文档改为指向「设置 → Pocket UI」设置主屏幕图标。代理本身没有改动。
 
 ## 0.1.15 - 2026-11-14
 
-### Changed
+### 变更
 
-- Named **Passkey Proxy** everywhere (was 局域网代理 / LAN Proxy).
+- 各处统一叫 **Passkey Proxy**（原来是「局域网代理 / LAN Proxy」）。
 
-### Removed
+### 移除
 
-- The home-screen icon choice, which moved to DSH Pocket UI. The proxy still lets Pocket UI's home-screen icons through without a login.
+- 去掉主屏幕图标选项，它已移到 DSH Pocket UI。代理仍然放行 Pocket UI 的主屏幕图标，不需要登录。
 
 ## 0.1.14 - 2026-11-14
 
-### Fixed
+### 修复
 
-- A newly chosen home-screen icon shows up even when the phone has cached the old one.
+- 手机缓存了旧图标时，新选的主屏幕图标也能显示出来。
 
 ## 0.1.13 - 2026-11-14
 
-### Added
+### 新增
 
-- A home-screen icon choice: DSH's own icon, a white whale on black, or a black whale on white.
+- 可选主屏幕图标：DSH 自带、黑底白鲸、白底黑鲸。
 
 ## 0.1.12 - 2026-11-14
 
-### Fixed
+### 修复
 
-- A phone that adds DSH to its home screen through the proxy shows the DeepSeek icon instead of a blank tile.
+- 通过代理把 DSH 添加到手机主屏幕时，显示 DeepSeek 图标，不再是空白。
 
 ## 0.1.11 - 2026-11-14
 
-### Fixed
+### 修复
 
-- The status card in the proxy settings fits narrow windows; long values wrap instead of being cut off.
+- 代理设置页的状态卡片适应窄窗口，较长的状态会换行，不再被截断。
 
 ## 0.1.10 - 2026-11-14
 
-### Changed
+### 变更
 
-- Tested on DSH 0.2.2-rc.3. No code change.
+- 在 DSH 0.2.2-rc.3 上测试通过，代码没有改动。
 
 ## 0.1.9 - 2026-11-12
 
-### Changed
+### 变更
 
-- Supports DSH 0.2.1-rc.5 and every later version. The README lists the versions actually tested.
+- 支持 DSH 0.2.1-rc.5 及之后的所有版本；README 列出实际测过的版本。
 
 ## 0.1.8 - 2026-11-10
 
-### Added
+### 新增
 
-- First release in its own repository, installable from DSH Discover. Derived from [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7, with password and HTTPS Passkey sign-in.
+- 首次在独立仓库发布，可从 DSH「发现」安装。基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7，支持账号密码和 HTTPS Passkey 登录。
 
-[Unreleased]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.0
 [0.1.16]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.1.16

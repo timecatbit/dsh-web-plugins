@@ -113,7 +113,7 @@ def main(source, target):
     pkg["exports"]["./locale/*"] = "./locale/*"
     # A git install only copies `files`; without these DSH lists the plugin
     # by its package name and the notices go missing.
-    for entry in ("locale", "THIRD-PARTY-NOTICES.md", "CHANGELOG.md"):
+    for entry in ("locale", "THIRD-PARTY-NOTICES.md", "CHANGELOG.md", "CHANGELOG.en.md"):
         if entry not in pkg["files"]:
             pkg["files"].append(entry)
     for dep in ("@deepseek-ai/dsh-client-ui-settings", "@deepseek-ai/dsh-client-locale"):
@@ -136,6 +136,7 @@ def main(source, target):
     files["package/README.md"] = (ROOT / "README.md").read_bytes()
     files["package/README.en.md"] = (ROOT / "README.en.md").read_bytes()
     files["package/CHANGELOG.md"] = (ROOT / "CHANGELOG.md").read_bytes()
+    files["package/CHANGELOG.en.md"] = (ROOT / "CHANGELOG.en.md").read_bytes()
     with target.open("wb") as out:
         with gzip.GzipFile(filename="", fileobj=out, mode="wb", mtime=0) as gz:
             with tarfile.open(fileobj=gz, mode="w") as f:

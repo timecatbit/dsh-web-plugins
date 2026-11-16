@@ -1,6 +1,6 @@
 # DSH Passkey Proxy
 
-[简体中文](README.md) · [Releases](https://github.com/timecatbit/dsh-passkey-proxy/releases) · [Changelog](CHANGELOG.md) · [MIT license](LICENSE)
+[简体中文](README.md) · [Releases](https://github.com/timecatbit/dsh-passkey-proxy/releases) · [Changelog](CHANGELOG.en.md) · [MIT license](LICENSE)
 
 A separate web entry for DeepSeek Harness (DSH) with LAN password sign-in, HTTPS Passkeys, and WebSocket forwarding. It works independently of [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui). A domain is optional for password access over a trusted LAN. Passkeys require a configured HTTPS domain trusted by the browser.
 

@@ -1,9 +1,9 @@
 {
-  "name": "@smanx/dsh-proxy",
+  "name": "@timecatbit/dsh-passkey-proxy",
   "description": "DSH LAN reverse proxy with password and HTTPS Passkey login, persistent browser sessions, and WebSocket forwarding.",
-  "version": "0.1.16",
+  "version": "0.2.0",
   "license": "MIT",
-  "author": "smanx",
+  "author": "timecatbit",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/timecatbit/dsh-passkey-proxy.git"

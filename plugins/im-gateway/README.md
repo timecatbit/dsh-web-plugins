@@ -16,7 +16,7 @@
 | 官方 macOS 桌面版 | 未测试 |
 | 官方 Windows 桌面版 | 未测试 |
 
-包名保留为 `dsh-im-gateway`。装过 npm 上原版（0.3.3 及更早）的 profile 可以直接更新，渠道配置、微信登录状态和定时提醒都保留。原版在 DSH 0.2.x 上要靠兼容豁免才能加载；换成本版后，旧豁免可以撤销。
+从 0.4.0 起包名是 `@timecatbit/dsh-im-gateway`（之前和 npm 上的原版一样叫 `dsh-im-gateway`）。从本项目 0.3.x 或 npm 原版升级，要先移除旧包再装新版，渠道配置、微信登录状态和定时提醒都保留，见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。原版在 DSH 0.2.x 上要靠兼容豁免才能加载；换成本版后，旧豁免可以撤销。
 
 1. 从 DSH 左侧栏点「插件」，找到「实验性插件」。没有看到开关就点该栏右侧「更多」。在 `0.2.1-rc.5` 打开 **「自定义插件市场」**，在 `0.2.2-rc.1` 及之后打开 **「自定义插件索引」**。
 2. 进「发现 → 添加索引源」，添加下面的地址。和 Pocket UI、Passkey Proxy 共用，只需每个 profile 添加一次。
@@ -27,10 +27,10 @@
 
 3. 点 **DSH IM Gateway 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。第一次安装要下载各平台的 SDK，可能需要一两分钟。
 
-**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.3.5 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.5/dsh-im-gateway-0.3.5.tgz)，在文件所在目录运行：
+**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.4.0 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.0/timecatbit-dsh-im-gateway-0.4.0.tgz)，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。
@@ -114,7 +114,7 @@ dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
 
 | 现象 | 先检查 |
 | --- | --- |
-| 设置里没有 IM Gateway | DSH 日志里有没有 `skipping profile bundle "dsh-im-gateway"`；装的是不是本版（原版要豁免） |
+| 设置里没有 IM Gateway | DSH 日志里有没有 `skipping profile bundle "@timecatbit/dsh-im-gateway"`；装的是不是本版（原版要豁免） |
 | 点了「连接（扫码）」没有二维码 | 等几秒；`gateway.log` 里有没有「请用微信扫码登录」；本机能否访问微信服务器 |
 | 已连接但聊天没反应 | `gateway.log` 里的报错；关掉默认放行后，设置页顶部有没有待批准的访问请求 |
 | 微信突然掉线 | 登录过期，点「刷新二维码」重新扫码 |

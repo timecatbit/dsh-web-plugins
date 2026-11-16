@@ -29,7 +29,7 @@ export { lanAddresses, startLanProxy } from './proxy.ts'
 export type { LanProxyHandle, LanProxyOptions } from './proxy.ts'
 
 /** Stable Cordis plugin name (the Loader entry and package name). */
-export const name = '@smanx/dsh-proxy'
+export const name = '@timecatbit/dsh-passkey-proxy'
 
 /** The launcher supplies the actual profile independently of the working directory. */
 export const inject = ['webServer', 'connection', 'profileContext']

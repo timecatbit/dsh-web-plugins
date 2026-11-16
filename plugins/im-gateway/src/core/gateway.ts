@@ -35,10 +35,10 @@ import { splitText } from './split.js'
 import { toPlainText } from './format.js'
 import type { ChannelAdapter, ImGatewayConfig, ImMessage } from './types.js'
 
-const PLUGIN_NAME = 'dsh-im-gateway'
+const PLUGIN_NAME = '@timecatbit/dsh-im-gateway'
 
 const HELP_TEXT = [
-  '🤖 dsh-im-gateway 可用命令：',
+  '🤖 DSH IM Gateway 可用命令：',
   '/help — 本帮助',
   '/status — 查询当前会话（会话 id / 工作区 / 待批准）',
   '/new — 开启全新会话（per-chat 模式）',

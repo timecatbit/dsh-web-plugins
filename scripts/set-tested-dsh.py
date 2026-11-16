@@ -26,7 +26,7 @@ def sort_key(version):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("index", type=Path)
-    parser.add_argument("plugin", help="Package name, e.g. dsh-ui-mobile")
+    parser.add_argument("plugin", help="Package name, e.g. @timecatbit/dsh-pocket-ui")
     parser.add_argument("versions", nargs="+", help="Exact DSH versions, e.g. 0.2.2-rc.2")
     args = parser.parse_args()
     for version in args.versions:

@@ -28,7 +28,7 @@
 | 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1`；宽窗口没有手机布局变化属正常 |
 | 官方 Windows 桌面版 | 未测试 |
 
-安装包名是 `dsh-ui-mobile`。已经装过本项目的旧版，可覆盖更新。同名上游插件也会被替换，请先确认要使用这个分支。
+从 0.2.0 起包名是 `@timecatbit/dsh-pocket-ui`（之前是 `dsh-ui-mobile`）。从 0.1.x 升级要先移除旧包再装新版，主屏幕图标需要重选一次，见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。
 
 ## 在 DSH 里安装或更新
 
@@ -43,11 +43,11 @@
 
 ## 手动安装
 
-- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.1.26 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.26/dsh-ui-mobile-0.1.26.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
+- **官方 macOS 桌面 App**：在 App 左侧点「插件 → 添加插件」，粘贴 [0.2.0 安装包的下载地址](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.0/timecatbit-dsh-pocket-ui-0.2.0.tgz)，或粘贴下载后文件的绝对路径。安装后点「立即启用」。如提示重启，完全退出再打开。桌面 App 的 profile 由 App 自己管理。
 - **独立 `dsh web`**：从 [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases) 下载 `.tgz`。用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录执行：
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.26.tgz"
+  dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.0.tgz"
   ```
 
   使用自定义 profile 时替换 `web`，安装后重启该 `dsh web` 进程。

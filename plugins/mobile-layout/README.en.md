@@ -28,7 +28,7 @@ The layout applies mainly below 768 CSS pixels and also covers some touch device
 | Official macOS desktop app (Apple Silicon) | `0.2.2-rc.1`; a wide window keeps the desktop layout |
 | Official Windows desktop app | Not tested |
 
-The package remains `dsh-ui-mobile`. It replaces a previous build of this project or the upstream package with the same ID in the selected profile.
+From 0.2.0 on the package is `@timecatbit/dsh-pocket-ui` (previously `dsh-ui-mobile`). To upgrade from 0.1.x, remove the old package before installing the new one and choose the home-screen icon again; see [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names).
 
 ## Install or update in DSH
 
@@ -43,11 +43,11 @@ The package remains `dsh-ui-mobile`. It replaces a previous build of this projec
 
 ## Install manually
 
-- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.1.26 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.26/dsh-ui-mobile-0.1.26.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
+- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.2.0 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.0/timecatbit-dsh-pocket-ui-0.2.0.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
 - **Standalone `dsh web`:** Download the `.tgz` from [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases). Use the same system account and `DSH_HOME` as the running instance. From the directory containing the download, run:
 
   ```bash
-  dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.26.tgz"
+  dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.0.tgz"
   ```
 
   Replace `web` if you use a custom profile, then restart that `dsh web` process.

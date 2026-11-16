@@ -3,8 +3,8 @@
 // value is the host part's live `homeScreenIcon` Config field, read and
 // written through DSH's shared settings forms (`configForms`), so it is stored
 // in the DSH profile and applies without a restart.
-const dshPocketEntry = "dsh-ui-mobile";
-const dshPocketNs = "dsh-ui-mobile";
+const dshPocketEntry = "dsh-pocket-ui";
+const dshPocketNs = "dsh-pocket-ui";
 const dshHomeScreenChoices = ["dsh", "black", "white"];
 const dshPocketCopy = {
   zh: {
@@ -89,8 +89,8 @@ function installPocketSettings(ctx) {
     child.effect(() => child.locale.register(dshPocketNs, dshPocketCopy), "ui-mobile: settings copy");
     child.effect(() => {
       const tag = document.createElement("style");
-      tag.dataset.plugin = "dsh-ui-mobile";
-      tag.dataset.pluginCss = "dsh-ui-mobile/settings";
+      tag.dataset.plugin = "dsh-pocket-ui";
+      tag.dataset.pluginCss = "dsh-pocket-ui/settings";
       tag.textContent = dshPocketCss;
       document.head.appendChild(tag);
       return () => tag.remove();
@@ -99,7 +99,7 @@ function installPocketSettings(ctx) {
     const form = child.configForms.get(dshPocketEntry);
     child.slots.inject("settings.section", () => child.slots.register({
       name: "settings.section",
-      id: "dsh-ui-mobile",
+      id: "dsh-pocket-ui",
       order: 68,
       label: () => t("nav"),
       locale: dshPocketNs,

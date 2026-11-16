@@ -1,5 +1,5 @@
 // Bundle the Pocket UI host part (src/host.js + schemastery) into one ESM file
-// that build_dsh_phone_layout.py ships as dsh-ui-mobile's lib/index.js.
+// that build_dsh_phone_layout.py ships as Pocket UI's lib/index.js.
 import { build } from 'esbuild'
 import { rmSync } from 'node:fs'
 

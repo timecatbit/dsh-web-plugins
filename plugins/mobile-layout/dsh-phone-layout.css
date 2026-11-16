@@ -438,10 +438,11 @@ html[data-dsh-phone] [data-conversation-scroll] {
   padding-bottom: 0;
   scrollbar-gutter: auto;
   overflow-x: hidden;
-  /* No rubber band at either end: at the bottom the transcript stays put when
-     dragged further up, as DSH itself sets from 0.2.2-rc.2 on. This rule
-     outranks the host's, so it must say none too, and older hosts get the
-     same behavior. */
+}
+/* No rubber band at either end: at the bottom the transcript stays put when
+   dragged further up. DSH sets this itself from 0.2.2-rc.2 on; the script
+   flags the scroller only on hosts that leave it at auto. */
+html[data-dsh-phone] [data-conversation-scroll][data-dsh-phone-host-overscroll=fix] {
   overscroll-behavior-y: none;
 }
 html[data-dsh-phone] [data-content-phase=hero] > [data-conversation-scroll] {
@@ -466,24 +467,29 @@ html[data-dsh-phone] [data-composer-card] {
   min-width: 0;
   max-width: 100%;
 }
-html[data-dsh-phone] :is([contenteditable], input:not([type=checkbox]):not([type=radio]), textarea, select) {
-  font-size: max(16px, 1em);
-}
-/* Safari decides whether to zoom from the editable element's font size.
-   DSH's editor is a Lexical div, so an input/textarea rule misses it. */
-html[data-dsh-phone] [data-composer-card] [contenteditable="true"] {
+/* Safari zooms into an editable whose font is below 16px. The script flags
+   only fields whose host font is that small (the composer on 0.2.1-rc.5);
+   where DSH already uses 16px, its own size and line height stay. */
+html[data-dsh-phone] [data-dsh-phone-host-zoom=fix] {
   font-size: 16px !important;
+}
+html[data-dsh-phone] [data-composer-card] [contenteditable="true"][data-dsh-phone-host-zoom=fix] {
   line-height: 1.45;
+}
+/* Long unbroken text (links, paths) wraps inside the card on hosts that do
+   not wrap it themselves. */
+html[data-dsh-phone] [data-composer-card] [contenteditable="true"][data-dsh-phone-host-wrap=fix] {
   overflow-wrap: anywhere;
 }
 html[data-dsh-phone] [data-composer-toolbar] {
   flex-wrap: wrap;
   gap: 4px;
 }
-/* The host caps the model picker at 45% of the composer, which cuts a full
-   model name short on a phone while the toolbar has room. It still shrinks
-   with an ellipsis when the row is full. */
-html[data-dsh-phone] [data-composer-card] button:has(> [class$="_triggerLabel"]) {
+/* 0.2.1-rc.5 caps the composer pickers at 45% of the card, which cuts a full
+   model name short on a phone while the toolbar has room. The script flags
+   only pickers the host caps below half the card; newer hosts' own caps stay.
+   A flagged picker still shrinks with an ellipsis when the row is full. */
+html[data-dsh-phone] [data-composer-card] button[data-dsh-phone-host-cap=fix] {
   max-width: none;
 }
 

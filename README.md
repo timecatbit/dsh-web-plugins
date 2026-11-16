@@ -8,9 +8,9 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
 
 | 插件 | 包名 | 作用 |
 | --- | --- | --- |
-| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` | 手机布局、侧栏、聊天输入和主屏幕图标 |
-| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` | 局域网和 HTTPS 访问入口，密码和 Passkey 登录 |
-| [DSH IM Gateway](https://github.com/timecatbit/dsh-im-gateway) | `dsh-im-gateway` | 在微信、飞书、钉钉、QQ、Telegram 等聊天软件里使用 DSH |
+| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `@timecatbit/dsh-pocket-ui` | 手机布局、侧栏、聊天输入和主屏幕图标 |
+| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@timecatbit/dsh-passkey-proxy` | 局域网和 HTTPS 访问入口，密码和 Passkey 登录 |
+| [DSH IM Gateway](https://github.com/timecatbit/dsh-im-gateway) | `@timecatbit/dsh-im-gateway` | 在微信、飞书、钉钉、QQ、Telegram 等聊天软件里使用 DSH |
 
 ## 这几个仓库怎么用
 
@@ -47,7 +47,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
    https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
    ```
 
-3. 点 **DSH Pocket UI**、**DSH Passkey Proxy** 或 **DSH IM Gateway** 的卡片标题，进入「版本」选新版并安装。看到「有更新」时也走这条路径，由你确认更新。之前通过 `.tgz` 安装过，可直接覆盖，不用先卸载。按 DSH 提示启用插件或重启当前实例。
+3. 点 **DSH Pocket UI**、**DSH Passkey Proxy** 或 **DSH IM Gateway** 的卡片标题，进入「版本」选新版并安装。看到「有更新」时也走这条路径，由你确认更新。同一包名之前通过 `.tgz` 安装过，可直接覆盖，不用先卸载；从旧包名升级见[下文](#从旧包名升级)。按 DSH 提示启用插件或重启当前实例。
 
 ### 手动安装：官方桌面 App
 
@@ -55,9 +55,9 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
 2. 粘贴所需安装包的完整地址，一次装一个：
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.26/dsh-ui-mobile-0.1.26.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.16/smanx-dsh-proxy-0.1.16.tgz
-   https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.5/dsh-im-gateway-0.3.5.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.0/timecatbit-dsh-pocket-ui-0.2.0.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.0/timecatbit-dsh-passkey-proxy-0.2.0.tgz
+   https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.0/timecatbit-dsh-im-gateway-0.4.0.tgz
    ```
 
 3. 也可以下载 `.tgz` 后在同一输入框填入文件的绝对路径。安装后点「立即启用」。如果 App 提示重启，完全退出后重新打开。别用系统 npm 安装的 `dsh` CLI 往 `desktop` profile 装包；它不管理桌面 App 的插件。
@@ -71,16 +71,37 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
 
 ```bash
 # 手机布局
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.26.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.0.tgz"
 
 # Passkey 代理
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.16.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.0.tgz"
 
 # IM 网关
-dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
 ```
 
-安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。同名上游插件会被替换。**手机布局不需要 Passkey、代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。
+安装后**重启对应的 `dsh web` 进程**，再重新打开网页。只刷新页面不会挂载新装的插件。**手机布局不需要 Passkey、代理插件或域名。** 继续用原有 DSH 地址和登录方式即可；如果该网页已允许局域网访问，也可以用局域网 IP 和端口。
+
+### 从旧包名升级
+
+从 Pocket UI 0.2.0、Passkey Proxy 0.2.0、IM Gateway 0.4.0 起，三个插件改用本项目自己的包名：
+
+| 插件 | 旧包名 | 新包名 |
+| --- | --- | --- |
+| DSH Pocket UI | `dsh-ui-mobile` | `@timecatbit/dsh-pocket-ui` |
+| DSH Passkey Proxy | `@smanx/dsh-proxy` | `@timecatbit/dsh-passkey-proxy` |
+| DSH IM Gateway | `dsh-im-gateway` | `@timecatbit/dsh-im-gateway` |
+
+DSH 按包名区分插件，新版不会覆盖旧版。先移除旧包名的插件，再装新版，否则同一个插件会装两份，两个代理还会抢同一个端口。独立 `dsh web` 先停掉网页进程，移除装过的旧包（只写你装过的）：
+
+```bash
+dsh plugin --profile web remove dsh-ui-mobile @smanx/dsh-proxy dsh-im-gateway
+```
+
+然后按上面的步骤安装新版，再启动 `dsh web`。桌面 App 先在插件管理里移除旧插件，再添加新版。
+
+- **自动保留**：Passkey Proxy 的账号密码、Passkey 和端口（`DSH_HOME` 下的 `dsh-proxy.json`、`dsh-proxy-auth.json`）；IM Gateway 的渠道配置、微信等登录状态和定时提醒（`DSH_HOME/dsh-im-gateway/`）。
+- **需要重选**：Pocket UI 的主屏幕图标，在「设置 → Pocket UI」里选一次即可。也可以直接改 profile 目录里的 `cordis.patch.yml`：把 `id: dsh-ui-mobile` 改成 `id: dsh-pocket-ui`，下一行改成 `name: "@timecatbit/dsh-pocket-ui"`。
 
 ## 用 Safari 保存为网页 App
 

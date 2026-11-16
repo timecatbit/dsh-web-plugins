@@ -1,8 +1,8 @@
 {
-  "name": "dsh-ui-mobile-home-screen",
+  "name": "dsh-pocket-ui-home-screen",
   "private": true,
   "type": "module",
-  "description": "Pocket UI host part: the home-screen icon choice. Bundled into dsh-ui-mobile's lib/index.js by build.mjs.",
+  "description": "Pocket UI host part: the home-screen icon choice. Bundled into Pocket UI's lib/index.js by build.mjs.",
   "scripts": {
     "build": "node build.mjs",
     "test": "vitest run",

@@ -10,7 +10,9 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.1.26"
+VERSION = "0.2.0"
+PACKAGE = "@timecatbit/dsh-pocket-ui"  # 0.2.0 dropped the upstream name dsh-ui-mobile
+ENTRY = "dsh-pocket-ui"
 HOST_RANGE = ">=0.2.1-rc.5"
 PHONE_QUERY = "(max-width: 767px), (max-width: 980px) and (max-height: 520px) and (pointer: coarse)"
 ROOT = Path(__file__).parent
@@ -35,6 +37,10 @@ def main(source, target):
     s = files[name].decode()
     assert s.count("(max-width: 767px)") >= 3
     s = s.replace("(max-width: 767px)", PHONE_QUERY)
+    # Our own names: the module id is the package name; style tags, storage
+    # keys and the Cordis entry use the short id.
+    s = replace(s, 'id: "dsh-ui-mobile",', f'id: "{PACKAGE}",')
+    s = s.replace("dsh-ui-mobile", ENTRY)
     s = replace(s, "className: HeaderMenuButton_module_css_default.button,",
         'className: HeaderMenuButton_module_css_default.button,\n\t\t\t\t"data-dsh-phone-header-menu": true,')
     s = replace(s, '["data-sidebar-collapsed", "data-rightbar-collapsed"]',
@@ -75,7 +81,12 @@ def main(source, target):
         "\t\t\t\t\t\t...drawerControls(),\n"
         "\t\t\t\t\t\ttoggleSidebar: () => controller.snapshot().detailsOpen ? ctx.layout.closeRightbar() : ctx.layout.toggleSidebar()\n"
         "\t\t\t\t\t})\n\t\t\t\t}, DrawerScrim);")
+    # Only the storage migration still names the upstream id.
+    assert s.count("dsh-ui-mobile") == 1, s.count("dsh-ui-mobile")
     files[name] = s.encode()
+    files["package/client.d.ts"] = files["package/client.d.ts"].decode().replace("dsh-ui-mobile", PACKAGE).encode()
+    files["package/lib/invariant.js"] = replace(files["package/lib/invariant.js"].decode(),
+        'const PACKAGE_NAME = "dsh-ui-mobile";', f'const PACKAGE_NAME = "{PACKAGE}";').encode()
     # Host part: the home-screen icon choice (built by home-screen/build.mjs).
     files["package/lib/index.js"] = (HOME / "lib" / "index.js").read_bytes()
     files["package/THIRD-PARTY-NOTICES.md"] = (HOME / "lib" / "THIRD-PARTY-NOTICES.md").read_bytes()
@@ -87,7 +98,9 @@ def main(source, target):
         files[f"package/locale/{lang}.json"] = (json.dumps({"meta": meta}, ensure_ascii=False, indent=2) + "\n").encode()
     pkg = json.loads(files["package/package.json"])
     assert pkg["version"] == "0.1.8-subuntu.4"
+    pkg["name"] = PACKAGE
     pkg["version"] = VERSION
+    pkg["author"] = "timecatbit"
     pkg["license"] = "MIT"
     pkg["description"] = "DSH Pocket UI: mobile layout, touch drawers, tap-to-focus chat input, and a home-screen icon choice"
     pkg["repository"] = {"type": "git", "url": "git+https://github.com/timecatbit/dsh-pocket-ui.git"}
@@ -113,6 +126,8 @@ def main(source, target):
     # This derivative only adds a layout bundle; it does not replace host PWA support.
     patch_name = "package/cordis.patch.yml"
     patch = files[patch_name].decode()
+    patch = replace(patch, "    - id: dsh-ui-mobile\n      name: dsh-ui-mobile\n",
+        f'    - id: {ENTRY}\n      name: "{PACKAGE}"\n')
     files[patch_name] = replace(patch,
         "# Standalone bundle layer: this plugin owns the mobile PWA surface, so it\n"
         "# replaces the Web bundle's built-in ui-mobile entry before mounting itself.\n"

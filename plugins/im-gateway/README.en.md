@@ -16,7 +16,7 @@ Use DeepSeek Harness (DSH) from WeChat, Feishu, DingTalk, WeCom, QQ, Telegram, D
 | Official macOS Desktop | Not tested |
 | Official Windows Desktop | Not tested |
 
-The package keeps the name `dsh-im-gateway`. A profile that has the original from npm (0.3.3 or earlier) updates in place and keeps its channel settings, WeChat login and reminders. On DSH 0.2.x the original only loads with a compatibility exemption; after switching to this version you can revoke that exemption.
+From 0.4.0 on the package is `@timecatbit/dsh-im-gateway` (previously `dsh-im-gateway`, the same name as the original on npm). To upgrade from this project's 0.3.x or the npm original, remove the old package before installing the new one; channel settings, WeChat login and reminders are kept. See [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names). On DSH 0.2.x the original only loads with a compatibility exemption; after switching to this version you can revoke that exemption.
 
 1. Open **Plugins** from the DSH sidebar and find **Experimental plugins**. If the switch is not listed, click **More** in that section. Turn on **Custom plugin markets** on `0.2.1-rc.5`, or **Custom plugin indexes** on `0.2.2-rc.1` and later.
 2. Go to **Discover → Add index source** and add the address below. Pocket UI and Passkey Proxy use the same index, so each profile needs it only once.
@@ -27,10 +27,10 @@ The package keeps the name `dsh-im-gateway`. A profile that has the original fro
 
 3. Click the **DSH IM Gateway** card title, then **Versions → Install**. Updates take the same path; there is no need to uninstall first. Enable the plugin and restart the DSH instance if prompted. The first install downloads the platform SDKs and can take a minute or two.
 
-**Manual install:** for standalone Web, use the same system account and `DSH_HOME` that run DSH. Download the [0.3.5 package](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.5/dsh-im-gateway-0.3.5.tgz) and run this in its folder:
+**Manual install:** for standalone Web, use the same system account and `DSH_HOME` that run DSH. Download the [0.4.0 package](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.0/timecatbit-dsh-im-gateway-0.4.0.tgz) and run this in its folder:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
 ```
 
 Replace `web` if you use a custom web profile. Restart that `dsh web` process afterwards.
@@ -114,7 +114,7 @@ Plain messages go to the agent. End a message with `..` to say more is coming, o
 
 | Symptom | Check first |
 | --- | --- |
-| No IM Gateway in Settings | Whether the DSH log says `skipping profile bundle "dsh-im-gateway"`, and whether this version is installed (the original needs an exemption) |
+| No IM Gateway in Settings | Whether the DSH log says `skipping profile bundle "@timecatbit/dsh-im-gateway"`, and whether this version is installed (the original needs an exemption) |
 | No QR code after Connect (scan) | Wait a few seconds; look for the WeChat login line in `gateway.log`; check that the machine can reach WeChat's servers |
 | Connected but the chat gets no reply | Errors in `gateway.log`; with the default turned off, pending access requests at the top of the settings page |
 | WeChat dropped out | The login expired; click Refresh QR and scan again |

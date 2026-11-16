@@ -8,9 +8,9 @@ This repository provides installation instructions for standalone `dsh web` and 
 
 | Extension | Package name |
 | --- | --- |
-| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `dsh-ui-mobile` |
-| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@smanx/dsh-proxy` |
-| [DSH IM Gateway](https://github.com/timecatbit/dsh-im-gateway) | `dsh-im-gateway` |
+| [DSH Pocket UI](https://github.com/timecatbit/dsh-pocket-ui) | `@timecatbit/dsh-pocket-ui` |
+| [DSH Passkey Proxy](https://github.com/timecatbit/dsh-passkey-proxy) | `@timecatbit/dsh-passkey-proxy` |
+| [DSH IM Gateway](https://github.com/timecatbit/dsh-im-gateway) | `@timecatbit/dsh-im-gateway` |
 
 ## What each repository is for
 
@@ -45,7 +45,7 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
    https://raw.githubusercontent.com/timecatbit/dsh-web-plugins/main/plugin-index.json
    ```
 
-3. Open the **DSH Pocket UI**, **DSH Passkey Proxy** or **DSH IM Gateway** card by clicking its title. In **Versions**, select the newer release and install it. Existing tarball installations can update this way because the package names and settings paths stay the same. Restart the current instance if DSH asks. When the card shows **Update available**, click its title to open **Versions** and confirm the update yourself.
+3. Open the **DSH Pocket UI**, **DSH Passkey Proxy** or **DSH IM Gateway** card by clicking its title. In **Versions**, select the newer release and install it. Tarball installations with the same package name can update this way; to move from the old package names, see [below](#upgrading-from-the-old-package-names). Restart the current instance if DSH asks. When the card shows **Update available**, click its title to open **Versions** and confirm the update yourself.
 
 ### Manual install: Official desktop app
 
@@ -53,9 +53,9 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 2. Paste one release URL at a time:
 
    ```text
-   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.1.26/dsh-ui-mobile-0.1.26.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.16/smanx-dsh-proxy-0.1.16.tgz
-   https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.3.5/dsh-im-gateway-0.3.5.tgz
+   https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.0/timecatbit-dsh-pocket-ui-0.2.0.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.0/timecatbit-dsh-passkey-proxy-0.2.0.tgz
+   https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.0/timecatbit-dsh-im-gateway-0.4.0.tgz
    ```
 
 3. You can also download a `.tgz` and enter its absolute path in the same field. Choose **Enable now** after installing. If prompted, fully quit and reopen the app. The npm-installed CLI does not manage the desktop app's `desktop` profile.
@@ -66,12 +66,33 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 Install on the machine running `dsh web`, with the same OS account and `DSH_HOME` (default: `~/.dsh`). If your web process uses a custom profile, replace `web` with its name. From the directory containing the downloaded assets, run the commands you need:
 
 ```bash
-dsh plugin --profile web add "$PWD/dsh-ui-mobile-0.1.26.tgz"
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.16.tgz"
-dsh plugin --profile web add "$PWD/dsh-im-gateway-0.3.5.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.0.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.0.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
 ```
 
-Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. The packages replace the corresponding upstream plugin in the same profile. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.
+Restart the same `dsh web` process and reopen the page. Refreshing the browser alone will not load newly installed bundles. To roll back, reinstall the previous trusted package into that profile and restart the process. Older proxy builds without the sign-in switches do not enforce Passkey-only mode.
+
+### Upgrading from the old package names
+
+From Pocket UI 0.2.0, Passkey Proxy 0.2.0 and IM Gateway 0.4.0 on, the three plugins use this project's own package names:
+
+| Plugin | Old package | New package |
+| --- | --- | --- |
+| DSH Pocket UI | `dsh-ui-mobile` | `@timecatbit/dsh-pocket-ui` |
+| DSH Passkey Proxy | `@smanx/dsh-proxy` | `@timecatbit/dsh-passkey-proxy` |
+| DSH IM Gateway | `dsh-im-gateway` | `@timecatbit/dsh-im-gateway` |
+
+DSH tells plugins apart by package name, so a new release does not replace an old one. Remove the old package first, then install the new release; otherwise the plugin runs twice, and two proxies compete for one port. For standalone `dsh web`, stop the web process and remove the old packages you have installed (list only those):
+
+```bash
+dsh plugin --profile web remove dsh-ui-mobile @smanx/dsh-proxy dsh-im-gateway
+```
+
+Then install the new releases as above and start `dsh web` again. In the desktop app, remove the old plugin in its plugin manager before adding the new release.
+
+- **Kept automatically:** Passkey Proxy's username, password, Passkeys and port (`dsh-proxy.json` and `dsh-proxy-auth.json` in `DSH_HOME`), and IM Gateway's channels, WeChat and other logins, and reminders (`DSH_HOME/dsh-im-gateway/`).
+- **Choose again:** Pocket UI's home-screen icon, once, under **Settings → Pocket UI**. Or edit the profile's `cordis.patch.yml`: change `id: dsh-ui-mobile` to `id: dsh-pocket-ui` and the next line to `name: "@timecatbit/dsh-pocket-ui"`.
 
 ## Save the website as an app in Safari
 

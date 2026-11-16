@@ -37,7 +37,7 @@ import { join } from 'node:path'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { acquireDshHomeInstanceLock } from './instance-lock.js'
 
-export const name = 'dsh-im-gateway'
+export const name = '@timecatbit/dsh-im-gateway'
 // agents：创建/查找 agent 会话；jobs：后台任务（扫码/轮询状态对 Web UI 可见）；
 // tools：注册 im_send_file（agent → IM 发文件）；attachments：图片入站转 image block；
 // webServer：提供设置面板调用的 HTTP API；agentPresets：创建/继续 agent 时挂入 preset；

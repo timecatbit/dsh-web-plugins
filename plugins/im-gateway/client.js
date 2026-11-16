@@ -10,7 +10,7 @@
  */
 
 window.__ModuleLoader__.load({
-  id: "dsh-im-gateway",
+  id: "@timecatbit/dsh-im-gateway",
   factory: (require) => {
     var module = { exports: {} };
     var exports = module.exports;

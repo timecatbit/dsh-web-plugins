@@ -1,9 +1,9 @@
 {
-  "name": "@smanx/dsh-proxy",
+  "name": "@timecatbit/dsh-passkey-proxy",
   "description": "DSH Passkey Proxy: LAN and HTTPS access to the DSH web app with password and Passkey sign-in",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "entry": {
-    "name": "@smanx/dsh-proxy",
+    "name": "@timecatbit/dsh-passkey-proxy",
     "inject": [
       "webServer",
       "connection"

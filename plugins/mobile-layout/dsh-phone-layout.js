@@ -206,7 +206,72 @@ function installPhoneViewport(media) {
   };
 }
 
+// Host problems that later DSH versions fixed themselves. Each element is
+// measured as the host styles it, and Pocket UI steps in only where the
+// problem is still there, so DSH's own fix wins wherever it exists. A
+// verdict of "ok" is measured again for a while in case the host's styles
+// land after the element. A "fix" normally stays, since the fix hides the
+// host's own value; a check marked live is measured on every pass with its
+// fix lifted for the reading, for host rules that depend on the content.
+const dshPhoneHostChecks = [
+  // iOS zooms into an editable whose font is below 16px.
+  ["zoom", 'input:not([type=checkbox]):not([type=radio]), textarea, select, [contenteditable]:not([contenteditable="false"])',
+    (el) => parseFloat(getComputedStyle(el).fontSize) < 16],
+  // Long unbroken text in the composer has to wrap inside the card.
+  ["wrap", dshPhoneComposerEditor, (el) => {
+    const style = getComputedStyle(el);
+    return style.overflowWrap === "normal" && style.wordBreak === "normal";
+  }],
+  // A composer picker capped below half the card cuts a model name short.
+  ["cap", '[data-composer-card] button:has(> [class$="_triggerLabel"])', (el) => {
+    const card = el.closest("[data-composer-card]");
+    return !!card && card.clientWidth > 0 && parseFloat(getComputedStyle(el).maxWidth) < card.clientWidth * 0.5;
+  }],
+  // The transcript must not rubber-band. Newer hosts say so themselves once
+  // the conversation view is inside the scroller (a :has() rule), so this
+  // one is live; the property does not animate, so lifting it is unseen.
+  ["overscroll", "[data-conversation-scroll]", (el) => getComputedStyle(el).overscrollBehaviorY === "auto", true]
+];
+const dshPhoneHostSeen = new WeakMap();
+
+function checkDshPhoneHost() {
+  const now = performance.now();
+  for (const [name, selector, needs, live] of dshPhoneHostChecks) {
+    const attribute = `data-dsh-phone-host-${name}`;
+    for (const el of document.querySelectorAll(selector)) {
+      const verdict = el.getAttribute(attribute);
+      if (live) {
+        if (verdict === "fix") el.removeAttribute(attribute);
+        const next = needs(el) ? "fix" : "ok";
+        if (next !== verdict || verdict === "fix") el.setAttribute(attribute, next);
+        continue;
+      }
+      if (verdict === "fix") continue;
+      const seen = dshPhoneHostSeen.get(el) ?? now;
+      if (verdict === "ok" && now - seen > 3000) continue;
+      dshPhoneHostSeen.set(el, seen);
+      const next = needs(el) ? "fix" : "ok";
+      if (next !== verdict) el.setAttribute(attribute, next);
+    }
+  }
+}
+
+// 0.2.0 renamed the plugin from the upstream id; keep the install hints a
+// phone has already dismissed.
+function migrateDshPocketStorage() {
+  try {
+    for (const key of ["ios-install-hint", "install-promotion-dismissed"]) {
+      const old = "dsh-ui-mobile:" + key;
+      const value = localStorage.getItem(old);
+      if (value === null) continue;
+      if (localStorage.getItem("dsh-pocket-ui:" + key) === null) localStorage.setItem("dsh-pocket-ui:" + key, value);
+      localStorage.removeItem(old);
+    }
+  } catch {}
+}
+
 function installPhoneLayout(layout) {
+  migrateDshPocketStorage();
   const html = document.documentElement;
   const media = window.matchMedia(MOBILE_QUERY$2);
   const stopComposerFocus = installPhoneComposerFocus(media);
@@ -234,6 +299,7 @@ function installPhoneLayout(layout) {
     popups.check();
     const phone = media.matches;
     html.toggleAttribute("data-dsh-phone", phone);
+    if (phone) checkDshPhoneHost();
     const frame = document.querySelector("[data-mobile-frame]");
     const center = frame?.querySelector(":scope > [data-mobile-role=center]");
     if (!phone || !center) {
@@ -320,7 +386,8 @@ function installPhoneLayout(layout) {
   media.addEventListener("change", schedule);
   document.addEventListener("keydown", onEscape);
   document.addEventListener("click", onPhoneClick, true);
-  observer.observe(document.getElementById("root") ?? document.body, {
+  // The whole body: settings and popups render outside #root.
+  observer.observe(document.body, {
     subtree: true, childList: true, attributes: true,
     attributeFilter: ["data-conversation-session", "data-sidebar-collapsed", "data-rightbar-collapsed", "data-rightbar-fullscreen", "contenteditable", "aria-expanded"]
   });

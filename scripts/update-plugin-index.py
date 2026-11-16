@@ -10,7 +10,7 @@ import time
 
 
 PLUGINS = {
-    "dsh-ui-mobile": {
+    "@timecatbit/dsh-pocket-ui": {
         "repo": "dsh-pocket-ui",
         "title": {"en": "DSH Pocket UI", "zh": "DSH Pocket UI · 手机界面"},
         "description": {
@@ -18,7 +18,7 @@ PLUGINS = {
             "zh": "适配手机的对话页面、侧栏和输入框，可选主屏幕图标。",
         },
     },
-    "@smanx/dsh-proxy": {
+    "@timecatbit/dsh-passkey-proxy": {
         "repo": "dsh-passkey-proxy",
         "title": {"en": "DSH Passkey Proxy", "zh": "DSH Passkey Proxy · 远程访问"},
         "description": {
@@ -26,7 +26,7 @@ PLUGINS = {
             "zh": "通过局域网或 HTTPS 域名访问 DSH，支持密码和 Passkey 登录。",
         },
     },
-    "dsh-im-gateway": {
+    "@timecatbit/dsh-im-gateway": {
         "repo": "dsh-im-gateway",
         "title": {"en": "DSH IM Gateway", "zh": "DSH IM Gateway · 聊天软件接入"},
         "description": {

@@ -16,7 +16,7 @@ A separate web entry for DeepSeek Harness (DSH) with LAN password sign-in, HTTPS
 | Official macOS desktop app (Apple Silicon) | `0.2.2-rc.1` |
 | Official Windows desktop app | Not tested |
 
-The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to keep your settings.
+From 0.2.0 on the package is `@timecatbit/dsh-passkey-proxy` (previously `@smanx/dsh-proxy`). To upgrade from 0.1.x, remove the old package before installing the new one; your username, password, Passkeys and port are kept. See [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names).
 
 1. Open **Plugins** from the sidebar. Under **Experimental plugins**, click **More** if the switch is hidden. Enable **Custom plugin markets** on `0.2.1-rc.5` or **Custom plugin indexes** on `0.2.2-rc.1` and later.
 2. Open **Discover → Add index source** and add this URL once per profile. Pocket UI uses the same source.
@@ -27,10 +27,10 @@ The package ID remains `@smanx/dsh-proxy`; upgrade it in the same profile to kee
 
 3. Click the **DSH Passkey Proxy card title → Versions → Install**. Use the same path for updates without uninstalling first. Enable the plugin and restart the current instance if DSH prompts you.
 
-**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.1.16 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.1.16/smanx-dsh-proxy-0.1.16.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
+**Manual install:** In the official macOS app, use **Plugins → Add plugin** and paste the [0.2.0 asset URL](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.0/timecatbit-dsh-passkey-proxy-0.2.0.tgz) or the absolute path of the downloaded file. Enable it and fully quit and reopen the app if prompted. For standalone Web, use the same system account and `DSH_HOME` as the web process. From the directory containing the download, run:
 
 ```bash
-dsh plugin --profile web add "$PWD/smanx-dsh-proxy-0.1.16.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.0.tgz"
 ```
 
 Replace `web` if you use a custom profile, then restart that web process. The standalone CLI does not manage the official app's `desktop` profile.

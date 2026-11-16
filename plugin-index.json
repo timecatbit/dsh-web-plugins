@@ -34,7 +34,7 @@
   },
   "plugins": [
     {
-      "name": "dsh-ui-mobile",
+      "name": "@timecatbit/dsh-pocket-ui",
       "title": {
         "en": "DSH Pocket UI",
         "zh": "DSH Pocket UI · 手机界面"
@@ -58,36 +58,12 @@
       },
       "versions": [
         {
-          "publishTimestamp": 1794760342,
-          "version": "0.1.26",
+          "publishTimestamp": 1794797966,
+          "version": "0.2.0",
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "e6ea157b5456ad566869fde40965f32855bf60ca"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794635066,
-          "version": "0.1.20",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "191998a6f0aa3cc287781b704d0cc89bc862aa0d"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794485316,
-          "version": "0.1.16",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-pocket-ui",
-            "commit": "9224a2f157a80cec0af38462ea896d783add5d05"
+            "commit": "7e5896de2d2e582215a93b2ad6eac859eab9424a"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"
@@ -96,7 +72,7 @@
       ]
     },
     {
-      "name": "@smanx/dsh-proxy",
+      "name": "@timecatbit/dsh-passkey-proxy",
       "title": {
         "en": "DSH Passkey Proxy",
         "zh": "DSH Passkey Proxy · 远程访问"
@@ -120,36 +96,12 @@
       },
       "versions": [
         {
-          "publishTimestamp": 1794656037,
-          "version": "0.1.16",
+          "publishTimestamp": 1794797966,
+          "version": "0.2.0",
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "7b0709b2d7128b1b1ad854100b1fe5a9f1ffb9e7"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794643674,
-          "version": "0.1.12",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "1d3c74b5d0607560675674a24ae29dd62d758c6e"
-          },
-          "engines": {
-            "dsh": ">=0.2.1-rc.5"
-          }
-        },
-        {
-          "publishTimestamp": 1794485316,
-          "version": "0.1.9",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/timecatbit/dsh-passkey-proxy",
-            "commit": "5d25e9b6120ac7cffad201954323f9aaaf0d0de3"
+            "commit": "7b0011929bd4d0c68e87815cc73f48b439fc605c"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"
@@ -158,7 +110,7 @@
       ]
     },
     {
-      "name": "dsh-im-gateway",
+      "name": "@timecatbit/dsh-im-gateway",
       "title": {
         "en": "DSH IM Gateway",
         "zh": "DSH IM Gateway · 聊天软件接入"
@@ -182,12 +134,12 @@
       },
       "versions": [
         {
-          "publishTimestamp": 1794746939,
-          "version": "0.3.5",
+          "publishTimestamp": 1794797966,
+          "version": "0.4.0",
           "source": {
             "type": "git",
             "url": "https://github.com/timecatbit/dsh-im-gateway",
-            "commit": "256af4a9d8beae3dbfd81078854e79be9df1b4f3"
+            "commit": "0893ce21a3e1e0dcf5bab2d971e129e3523b7a39"
           },
           "engines": {
             "dsh": ">=0.2.1-rc.5"

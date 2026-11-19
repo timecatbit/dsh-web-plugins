@@ -12,7 +12,7 @@ Use DeepSeek Harness (DSH) from WeChat, Feishu, DingTalk, WeCom, QQ, Telegram, D
 
 | DSH environment | Tested DSH versions |
 | --- | --- |
-| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3` |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5` |
 | Official macOS Desktop | Not tested |
 | Official Windows Desktop | Not tested |
 

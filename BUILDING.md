@@ -50,9 +50,9 @@ python3 scripts/update-plugin-index.py plugin-index.json dist/timecatbit-dsh-im-
 4. 在「发现」索引里为每个插件记录完整列表。「发现」会把它们显示成插件卡片上的「已测 DSH …」标签：
 
    ```bash
-   python3 scripts/set-tested-dsh.py plugin-index.json @timecatbit/dsh-pocket-ui 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3
-   python3 scripts/set-tested-dsh.py plugin-index.json @timecatbit/dsh-passkey-proxy 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3
-   python3 scripts/set-tested-dsh.py plugin-index.json @timecatbit/dsh-im-gateway 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3
+   python3 scripts/set-tested-dsh.py plugin-index.json @timecatbit/dsh-pocket-ui 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3 0.2.2-rc.5
+   python3 scripts/set-tested-dsh.py plugin-index.json @timecatbit/dsh-passkey-proxy 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3 0.2.2-rc.5
+   python3 scripts/set-tested-dsh.py plugin-index.json @timecatbit/dsh-im-gateway 0.2.1-rc.5 0.2.2-rc.1 0.2.2-rc.2 0.2.2-rc.3 0.2.2-rc.5
    ```
 
    脚本会替换该插件的已测标签，并删掉没有插件用的标签声明。标签描述的是每个插件的最新版。只需加标签的 DSH 新版不需要重新构建插件。

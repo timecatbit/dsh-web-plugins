@@ -24,7 +24,7 @@ mkdir -p "$dist"
 )
 python3 "$mobile/build_dsh_ui_mobile_compat.py" "$temp/compat.tgz"
 python3 "$mobile/build_dsh_ui_mobile_layout_only.py" "$temp/compat.tgz" "$temp/layout.tgz"
-python3 "$mobile/build_dsh_phone_layout.py" "$temp/layout.tgz" "$dist/timecatbit-dsh-pocket-ui-0.2.0.tgz"
+python3 "$mobile/build_dsh_phone_layout.py" "$temp/layout.tgz" "$dist/timecatbit-dsh-pocket-ui-0.2.1.tgz"
 (
   cd "$gateway"
   pnpm install --frozen-lockfile
@@ -34,8 +34,8 @@ python3 "$mobile/build_dsh_phone_layout.py" "$temp/layout.tgz" "$dist/timecatbit
 (
   cd "$dist"
   if command -v sha256sum >/dev/null; then
-    sha256sum timecatbit-dsh-pocket-ui-0.2.0.tgz timecatbit-dsh-passkey-proxy-0.2.0.tgz timecatbit-dsh-im-gateway-0.4.0.tgz > SHA256SUMS
+    sha256sum timecatbit-dsh-pocket-ui-0.2.1.tgz timecatbit-dsh-passkey-proxy-0.2.1.tgz timecatbit-dsh-im-gateway-0.4.0.tgz > SHA256SUMS
   else
-    shasum -a 256 timecatbit-dsh-pocket-ui-0.2.0.tgz timecatbit-dsh-passkey-proxy-0.2.0.tgz timecatbit-dsh-im-gateway-0.4.0.tgz > SHA256SUMS
+    shasum -a 256 timecatbit-dsh-pocket-ui-0.2.1.tgz timecatbit-dsh-passkey-proxy-0.2.1.tgz timecatbit-dsh-im-gateway-0.4.0.tgz > SHA256SUMS
   fi
 )

@@ -6,6 +6,12 @@ All notable changes to DSH Pocket UI are listed here. The format follows [Keep a
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-22
+
+### Fixed
+
+- Works with the new sign-in of DSH 0.2.3-alpha.1 and later: the home-screen icons and the web app manifest load without a session, so a home-screen shortcut shows the whale icon you chose.
+
 ## [0.2.0] - 2026-11-16
 
 ### Changed
@@ -111,6 +117,7 @@ All notable changes to DSH Pocket UI are listed here. The format follows [Keep a
 
 - First releases: a phone layout for DSH built on [dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8, with touch drawers, tap-to-focus chat input and a page that follows the iOS keyboard without jumping.
 
-[Unreleased]: https://github.com/timecatbit/dsh-pocket-ui/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/timecatbit/dsh-pocket-ui/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.2.1
 [0.2.0]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.2.0
 [0.1.26]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.1.26

@@ -102,9 +102,22 @@ interface ConnectionChannelRegistrar {
  * implementation reads `this.browserAuth` internally, so `const f = ctx
  * .connection.authenticatedUrl` followed by `f()` throws on an unbound `this`.
  *
+ * DSH 0.2.3-alpha.1 moved the method off the Connection service: the token
+ * provider now answers the WebServer's `webserver/entry-url` event instead
+ * (the same event DSH's own Remote Connection settings use for "copy link").
+ * Both are tried, old API first, so one build serves every DSH in range.
+ *
  * @returns the token, or undefined when the service cannot supply one.
  */
 function readLaunchToken(ctx: Context): string | undefined {
+  const base = 'http://dsh-proxy.local/'
+  // Only an entry for this exact root that carries exactly one non-empty token.
+  const tokenOf = (raw: string): string | undefined => {
+    const url = new URL(raw)
+    if (url.origin !== new URL(base).origin || url.pathname !== '/') return undefined
+    const tokens = url.searchParams.getAll('token')
+    return tokens.length === 1 && tokens[0] !== '' ? tokens[0] : undefined
+  }
   try {
     // Typed structurally because the published `connection` type predates the
     // method (it arrived with DSH's launch-token gate) and the peer dependency
@@ -113,13 +126,23 @@ function readLaunchToken(ctx: Context): string | undefined {
       authenticatedUrl?: (url: string) => string
     }
     const authenticatedUrl = connection.authenticatedUrl
-    if (typeof authenticatedUrl !== 'function') return undefined
-    const raw = authenticatedUrl.call(connection, 'http://dsh-proxy.local/')
-    const token = new URL(raw).searchParams.get('token')
-    return token === null || token === '' ? undefined : token
+    if (typeof authenticatedUrl === 'function') return tokenOf(authenticatedUrl.call(connection, base))
   } catch {
-    return undefined
+    // fall through to the newer API
   }
+  try {
+    // DSH >= 0.2.3-alpha.1: listeners append `{ label, url, open }` entries synchronously.
+    const entries: { url: string }[] = []
+    const emitter = ctx as unknown as { emit(thisArg: unknown, name: string, ...args: unknown[]): unknown }
+    emitter.emit(ctx.webServer, 'webserver/entry-url', base, entries)
+    for (const entry of entries) {
+      const token = tokenOf(entry.url)
+      if (token !== undefined) return token
+    }
+  } catch {
+    // no provider: auto-login stays off
+  }
+  return undefined
 }
 
 /**

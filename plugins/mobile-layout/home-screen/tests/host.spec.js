@@ -87,7 +87,7 @@ describe('apply', () => {
       inject: (deps, cb) => { if (deps[0] === 'webServer') cb({ webServer, effect: (fn, label) => { effects.push(label); fn() } }) },
     }
     apply(ctx, { homeScreenIcon: { get: () => current } })
-    expect(routes.map(r => [r.kind, r.path])).toEqual([['prefix', '/home-screen']])
+    expect(routes.map(r => [r.kind, r.path, r.auth])).toEqual([['prefix', '/home-screen', 'anonymous']])
     expect(taps[0](DSH_HEAD)).toBe(DSH_HEAD)
     current = 'black'
     expect(taps[0](DSH_HEAD)).toContain('href="/home-screen/black/apple-touch-icon.png"')

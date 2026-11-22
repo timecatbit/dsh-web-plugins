@@ -24,7 +24,7 @@ The layout applies mainly below 768 CSS pixels and also covers some touch device
 
 | Environment | Tested DSH versions |
 | --- | --- |
-| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5` |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5`, `0.2.3-alpha.2` |
 | Official macOS desktop app (Apple Silicon) | `0.2.2-rc.1`; a wide window keeps the desktop layout |
 | Official Windows desktop app | Not tested |
 

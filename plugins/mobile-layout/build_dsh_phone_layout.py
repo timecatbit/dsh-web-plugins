@@ -10,7 +10,7 @@ import sys
 import tarfile
 
 BASE = "5d6d45192464553bcec75f3e6501d9d20eb87a12b8a56dfb04560fd47f06ca01"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 PACKAGE = "@timecatbit/dsh-pocket-ui"  # 0.2.0 dropped the upstream name dsh-ui-mobile
 ENTRY = "dsh-pocket-ui"
 HOST_RANGE = ">=0.2.1-rc.5"

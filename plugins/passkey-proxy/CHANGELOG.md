@@ -6,6 +6,12 @@ DSH Passkey Proxy 的重要改动都记在这里。格式参照 [Keep a Changelo
 
 ## [未发布]
 
+## [0.2.1] - 2026-11-22
+
+### 修复
+
+- 适配 DSH 0.2.3-alpha.1 起的新登录方式：通过代理登录后能直接进入 DSH，不再停在 DSH 的「连接到此 Host」页面。
+
 ## [0.2.0] - 2026-11-16
 
 ### 变更
@@ -70,6 +76,7 @@ DSH Passkey Proxy 的重要改动都记在这里。格式参照 [Keep a Changelo
 
 - 首次在独立仓库发布，可从 DSH「发现」安装。基于 [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7，支持账号密码和 HTTPS Passkey 登录。
 
-[未发布]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.1
 [0.2.0]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.0
 [0.1.16]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.1.16

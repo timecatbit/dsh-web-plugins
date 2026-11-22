@@ -69,8 +69,14 @@ export interface LaunchTokenAutoLoginOptions {
   upstreamHost: string
   /** Upstream DSH port. */
   upstreamPort: number
-  /** The host's launch token; undefined/empty disables the feature. */
+  /** The host's launch token; undefined/empty disables the feature unless `readLaunchToken` supplies one. */
   launchToken?: string
+  /**
+   * Reads the token from the host on first use when `launchToken` is empty.
+   * DSH >= 0.2.3-alpha.1 registers its token provider after this plugin starts,
+   * so a read at start can come back empty although a token exists moments later.
+   */
+  readLaunchToken?: () => string | undefined
   /** Log sink. */
   log?: (level: 'info' | 'warn' | 'error', message: string) => void
 }
@@ -146,18 +152,34 @@ function probeStatus(
  */
 export class LaunchTokenAutoLogin {
   private readonly target: AutoLoginTarget
-  private readonly token: string
+  private token: string
   private readonly log: LaunchTokenAutoLoginOptions['log']
+
+  private readonly read: LaunchTokenAutoLoginOptions['readLaunchToken']
 
   constructor(options: LaunchTokenAutoLoginOptions) {
     this.target = { host: options.upstreamHost, port: options.upstreamPort }
     this.token = options.launchToken ?? ''
+    this.read = options.readLaunchToken
     this.log = options.log
   }
 
-  /** True when a token was supplied and the feature can act. */
+  /** The token, read from the host on first use if it was not known at start; '' when there is none. */
+  private currentToken(): string {
+    if (this.token === '' && this.read !== undefined) {
+      try {
+        this.token = this.read() ?? ''
+      } catch {
+        this.token = ''
+      }
+      if (this.token !== '') this.log?.('info', 'launch-token auto-login: token read from the host on first use')
+    }
+    return this.token
+  }
+
+  /** True when a token was supplied (or can now be read) and the feature can act. */
   get enabled(): boolean {
-    return this.token !== ''
+    return this.currentToken() !== ''
   }
 
   /**
@@ -204,6 +226,6 @@ export class LaunchTokenAutoLogin {
       'info',
       'launch-token auto-login: upstream answered 401, completing the token exchange on the client’s behalf',
     )
-    req.url = withToken(req.url ?? '/', this.token)
+    req.url = withToken(req.url ?? '/', this.currentToken())
   }
 }

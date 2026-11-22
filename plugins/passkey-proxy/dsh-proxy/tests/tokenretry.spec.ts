@@ -64,6 +64,31 @@ describe('LaunchTokenAutoLogin', () => {
     server.close()
   })
 
+  it('reads the token on first use when the host had none at start (DSH 0.2.3-alpha.1+)', async () => {
+    const { server, port } = await upstream(401)
+    let available: string | undefined
+    let reads = 0
+    const auto = new LaunchTokenAutoLogin({
+      upstreamHost: '127.0.0.1',
+      upstreamPort: port,
+      readLaunchToken: () => { reads++; return available },
+    })
+    // The provider is not registered yet: off for now, and asked again next time.
+    expect(auto.enabled).toBe(false)
+    const early = fakeRequest('/')
+    await auto.grant(early)
+    expect(early.url).toBe('/')
+    available = TOKEN
+    const req = fakeRequest('/')
+    await auto.grant(req)
+    expect(req.url).toBe('/?token=launch-token-abc123')
+    // Once known, the token is kept instead of being read for every request.
+    const before = reads
+    await auto.grant(fakeRequest('/'))
+    expect(reads).toBe(before)
+    server.close()
+  })
+
   it('leaves the URL alone when the upstream accepts the request', async () => {
     const { server, port } = await upstream(200)
     const auto = new LaunchTokenAutoLogin({ upstreamHost: '127.0.0.1', upstreamPort: port, launchToken: TOKEN })

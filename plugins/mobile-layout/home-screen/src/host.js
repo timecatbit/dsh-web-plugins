@@ -159,6 +159,10 @@ export function apply(ctx, config) {
     child.effect(() => webServer.register({
       kind: 'prefix',
       path: HOME_SCREEN_PREFIX,
+      // Icons and the manifest are not secret, and browsers fetch the manifest without cookies.
+      // DSH >= 0.2.3-alpha.1 requires a login for plugin routes unless they say otherwise;
+      // older DSH ignores the field (every plugin route was public there).
+      auth: 'anonymous',
       handler: homeScreenHandler(source),
     }), 'pocket-ui: home-screen icons')
     child.effect(() => webServer.tapIndex((html) => pinHomeScreenLinks(html, choice())), 'pocket-ui: home-screen links')

@@ -6,6 +6,12 @@ DSH Web Plugins 合集版本：每个合集打包了哪些插件版本，以及�
 
 ## [未发布]
 
+## [1.5.1] - 2026-11-22
+
+Pocket UI 0.2.1、Passkey Proxy 0.2.1、IM Gateway 0.4.0。
+
+- 适配 DSH 0.2.3-alpha：通过 Passkey Proxy 登录后能进入 DSH，主屏幕图标照常显示。用 DSH 0.2.3-alpha 或更新版本时请装这两个新版。
+
 ## [1.5.0] - 2026-11-16
 
 Pocket UI 0.2.0、Passkey Proxy 0.2.0、IM Gateway 0.4.0。
@@ -63,6 +69,7 @@ Pocket UI 0.1.16 至 0.1.18 和 Passkey Proxy 0.1.9：支持 DSH 0.2.1-rc.5 之�
 
 Pocket UI 0.1.14、0.1.15 和 Passkey Proxy 0.1.8：输入框下方的状态栏，侧栏与页面统一底色。
 
-[未发布]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.1
 [1.5.0]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.0
 [1.4.22]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.4.22

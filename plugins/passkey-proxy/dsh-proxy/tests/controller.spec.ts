@@ -450,7 +450,7 @@ describe('ProxyController launch-token auto-login', () => {
     expect(controller.status().skipLaunchToken).toBe(false)
   })
 
-  it('warns and keeps the surface token-gated when the host supplies no token', async () => {
+  it('keeps the surface token-gated and reads again later when the host has no token yet', async () => {
     const upstreamPort = await startUpstream('A')
     controller = new ProxyController({
       base: { ...baseOptions(upstreamPort), skipLaunchToken: true },
@@ -459,7 +459,9 @@ describe('ProxyController launch-token auto-login', () => {
       readLaunchToken: () => undefined,
     })
     await controller.start()
-    expect(logs.some((entry) => entry.startsWith('warn:') && entry.includes('no launch token'))).toBe(true)
+    // DSH >= 0.2.3-alpha.1 registers its token provider after the proxy starts.
+    expect(logs.some((entry) => entry.startsWith('info:') && entry.includes('no launch token yet'))).toBe(true)
+    expect(logs.some((entry) => entry.includes('auto-login ON'))).toBe(false)
   })
 
   it('turning auto-login off drops the cached token', async () => {

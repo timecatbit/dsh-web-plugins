@@ -6,6 +6,12 @@ All notable changes to DSH Passkey Proxy are listed here. The format follows [Ke
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-22
+
+### Fixed
+
+- Works with the new sign-in of DSH 0.2.3-alpha.1 and later: after signing in through the proxy you land in DSH instead of DSH's "Connect to this Host" page.
+
 ## [0.2.0] - 2026-11-16
 
 ### Changed
@@ -70,6 +76,7 @@ All notable changes to DSH Passkey Proxy are listed here. The format follows [Ke
 
 - First release in its own repository, installable from DSH Discover. Derived from [smanx/dsh-proxy](https://github.com/smanx/dsh-proxy) 0.1.7, with password and HTTPS Passkey sign-in.
 
-[Unreleased]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.1
 [0.2.0]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.0
 [0.1.16]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.1.16

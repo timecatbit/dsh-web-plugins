@@ -6,6 +6,12 @@ DSH Pocket UI 的重要改动都记在这里。格式参照 [Keep a Changelog](h
 
 ## [未发布]
 
+## [0.2.1] - 2026-11-22
+
+### 修复
+
+- 适配 DSH 0.2.3-alpha.1 起的新登录方式：没登录时也能取到主屏幕图标和 Web 应用清单，添加到主屏幕后显示选好的鲸鱼图标。
+
 ## [0.2.0] - 2026-11-16
 
 ### 变更
@@ -111,6 +117,7 @@ DSH Pocket UI 的重要改动都记在这里。格式参照 [Keep a Changelog](h
 
 - 最初几版：基于 [dsh-ui-mobile](https://github.com/jasondu/dsh-ui-mobile) 0.1.8 的 DSH 手机布局，包括触屏侧栏、点按才聚焦的聊天输入框，以及跟随 iOS 键盘、不跳动的页面。
 
-[未发布]: https://github.com/timecatbit/dsh-pocket-ui/compare/v0.2.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-pocket-ui/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.2.1
 [0.2.0]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.2.0
 [0.1.26]: https://github.com/timecatbit/dsh-pocket-ui/releases/tag/v0.1.26

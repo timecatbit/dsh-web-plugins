@@ -28,7 +28,7 @@ This repository provides installation instructions for standalone `dsh web` and 
 
 | Environment | Tested DSH versions |
 | --- | --- |
-| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5` |
+| Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5`, `0.2.3-alpha.2` |
 | Official macOS Desktop (Apple Silicon) | `0.2.2-rc.1` (IM Gateway not tested) |
 | Official Windows Desktop | Not tested |
 

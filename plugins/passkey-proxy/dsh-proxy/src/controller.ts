@@ -131,10 +131,13 @@ export class ProxyController {
     // Resolve the launch token HERE, not at construction: the read is deferred
     // until the harness is serving, and `start()` is the first point where the
     // webServer (and therefore BrowserAuth behind `connection`) is fully up.
+    // DSH >= 0.2.3-alpha.1 may register its token provider only after this
+    // start, so an empty read here is retried on the first proxied request.
+    const lazyToken = this.options.skipLaunchToken === true ? this.opts.readLaunchToken : undefined
     if (this.options.skipLaunchToken === true && this.opts.readLaunchToken !== undefined) {
       const token = this.opts.readLaunchToken()
       if (token === undefined || token === '') {
-        log('warn', 'dsh-proxy: skipLaunchToken is on but the host supplied no launch token; the LAN surface still requires DSH authentication')
+        log('info', 'dsh-proxy: the host has no launch token yet; auto-login reads it on the first request')
       } else {
         this.options.launchToken = token
         log('info', 'dsh-proxy: launch-token auto-login enabled — a first-time browser is authenticated without the token')
@@ -148,6 +151,7 @@ export class ProxyController {
       username: this.options.username,
       password: this.options.password,
       launchToken: this.options.launchToken,
+      readLaunchToken: lazyToken,
       authFile: this.authFile,
       passkeyOrigin: this.options.passkeyOrigin || undefined,
       trustedTLSProxyIPs: trustedProxyIPs(this.options.tlsProxyIPs),

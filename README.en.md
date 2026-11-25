@@ -30,7 +30,9 @@ This repository provides installation instructions for standalone `dsh web` and 
 | --- | --- |
 | Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5`, `0.2.3-alpha.2` |
 | Official macOS Desktop (Apple Silicon) | `0.2.2-rc.1` (IM Gateway not tested) |
-| Official Windows Desktop | Not tested |
+| Official Windows Desktop | `0.2.2-rc.5` |
+
+Standalone Web was tested on Ubuntu 24.04, Ubuntu 26.04 and Windows 11. The Windows desktop app is the installer from DeepSeek's website, which ships its own pnpm 11.
 
 The official desktop app ships its own runtime; for CLI installs, follow the Node.js requirement of your DSH version.
 
@@ -54,7 +56,7 @@ The official desktop app ships its own runtime; for CLI installs, follow the Nod
 
    ```text
    https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.1/timecatbit-dsh-pocket-ui-0.2.1.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.1/timecatbit-dsh-passkey-proxy-0.2.1.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.2/timecatbit-dsh-passkey-proxy-0.2.2.tgz
    https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.1/timecatbit-dsh-im-gateway-0.4.1.tgz
    ```
 
@@ -67,7 +69,7 @@ Install on the machine running `dsh web`, with the same OS account and `DSH_HOME
 
 ```bash
 dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.1.tgz"
-dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.1.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.2.tgz"
 dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.1.tgz"
 ```
 

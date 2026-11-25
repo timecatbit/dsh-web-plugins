@@ -30,7 +30,9 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
 | --- | --- |
 | 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3`、`0.2.2-rc.5`、`0.2.3-alpha.2` |
 | 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1`（IM Gateway 未测） |
-| 官方 Windows 桌面版 | 未测试 |
+| 官方 Windows 桌面版 | `0.2.2-rc.5` |
+
+独立 Web 版测过的系统：Ubuntu 24.04、Ubuntu 26.04、Windows 11。Windows 桌面版用的是 DeepSeek 官网的安装包，它自带 pnpm 11。
 
 命令行版的 Node.js 版本以 DSH CLI 要求为准，官方桌面 App 自带运行环境。
 
@@ -56,7 +58,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
 
    ```text
    https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.1/timecatbit-dsh-pocket-ui-0.2.1.tgz
-   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.1/timecatbit-dsh-passkey-proxy-0.2.1.tgz
+   https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.2/timecatbit-dsh-passkey-proxy-0.2.2.tgz
    https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.1/timecatbit-dsh-im-gateway-0.4.1.tgz
    ```
 
@@ -74,7 +76,7 @@ DeepSeek Harness（DSH）的**源码与更新索引仓库**。三个插件可单
 dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.1.tgz"
 
 # Passkey 代理
-dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.1.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.2.tgz"
 
 # IM 网关
 dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.1.tgz"

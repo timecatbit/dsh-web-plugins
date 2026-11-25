@@ -26,7 +26,9 @@ The layout applies mainly below 768 CSS pixels and also covers some touch device
 | --- | --- |
 | Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5`, `0.2.3-alpha.2` |
 | Official macOS desktop app (Apple Silicon) | `0.2.2-rc.1`; a wide window keeps the desktop layout |
-| Official Windows desktop app | Not tested |
+| Official Windows desktop app | `0.2.2-rc.5` |
+
+Standalone Web was tested on Ubuntu 24.04, Ubuntu 26.04 and Windows 11. The Windows desktop app is the installer from DeepSeek's website, which ships its own pnpm 11.
 
 From 0.2.0 on the package is `@timecatbit/dsh-pocket-ui` (previously `dsh-ui-mobile`). To upgrade from 0.1.x, remove the old package before installing the new one and choose the home-screen icon again; see [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names).
 

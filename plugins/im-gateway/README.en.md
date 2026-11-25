@@ -14,7 +14,9 @@ Use DeepSeek Harness (DSH) from WeChat, Feishu, DingTalk, WeCom, QQ, Telegram, D
 | --- | --- |
 | Standalone Web (`dsh web`) | `0.2.1-rc.5`, `0.2.2-rc.1`, `0.2.2-rc.2`, `0.2.2-rc.3`, `0.2.2-rc.5`, `0.2.3-alpha.2` |
 | Official macOS Desktop | Not tested |
-| Official Windows Desktop | Not tested |
+| Official Windows Desktop | `0.2.2-rc.5` |
+
+Standalone Web was tested on Ubuntu 24.04, Ubuntu 26.04 and Windows 11. The Windows desktop app is the installer from DeepSeek's website, which ships its own pnpm 11.
 
 From 0.4.0 on the package is `@timecatbit/dsh-im-gateway` (previously `dsh-im-gateway`, the same name as the original on npm). To upgrade from this project's 0.3.x or the npm original, remove the old package before installing the new one; channel settings, WeChat login and reminders are kept. See [Upgrading from the old package names](https://github.com/timecatbit/dsh-web-plugins/blob/main/README.en.md#upgrading-from-the-old-package-names). On DSH 0.2.x the original only loads with a compatibility exemption; after switching to this version you can revoke that exemption.
 

@@ -91,7 +91,11 @@ export class BrowserAuth {
     }
     try {
       const st = lstatSync(file)
-      if (!st.isFile() || (st.mode & 0o077) !== 0) throw new Error('auth store must be a private regular file')
+      // Unix permission bits say whether others can read the store. Windows reports every file as 0o666 and
+      // protects the user's profile with ACLs instead, so the bit check there refused every existing store and
+      // the proxy lost its sign-in page after the first DSH restart.
+      const othersCanRead = process.platform !== 'win32' && (st.mode & 0o077) !== 0
+      if (!st.isFile() || othersCanRead) throw new Error('auth store must be a private regular file')
       this.state = JSON.parse(readFileSync(file, 'utf8'))
       if (this.state.version !== 1 || !/^[\w-]{43}$/.test(this.state.secret) ||
         !Array.isArray(this.state.keys) || !this.state.sessions || typeof this.state.sessions !== 'object' ||

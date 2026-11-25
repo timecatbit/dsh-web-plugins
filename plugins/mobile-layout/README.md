@@ -26,7 +26,9 @@
 | --- | --- |
 | 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3`、`0.2.2-rc.5`、`0.2.3-alpha.2` |
 | 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1`；宽窗口没有手机布局变化属正常 |
-| 官方 Windows 桌面版 | 未测试 |
+| 官方 Windows 桌面版 | `0.2.2-rc.5` |
+
+独立 Web 版测过的系统：Ubuntu 24.04、Ubuntu 26.04、Windows 11。Windows 桌面版用的是 DeepSeek 官网的安装包，它自带 pnpm 11。
 
 从 0.2.0 起包名是 `@timecatbit/dsh-pocket-ui`（之前是 `dsh-ui-mobile`）。从 0.1.x 升级要先移除旧包再装新版，主屏幕图标需要重选一次，见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。
 

@@ -14,7 +14,9 @@
 | --- | --- |
 | 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3`、`0.2.2-rc.5`、`0.2.3-alpha.2` |
 | 官方 macOS 桌面版 | 未测试 |
-| 官方 Windows 桌面版 | 未测试 |
+| 官方 Windows 桌面版 | `0.2.2-rc.5` |
+
+独立 Web 版测过的系统：Ubuntu 24.04、Ubuntu 26.04、Windows 11。Windows 桌面版用的是 DeepSeek 官网的安装包，它自带 pnpm 11。
 
 从 0.4.0 起包名是 `@timecatbit/dsh-im-gateway`（之前和 npm 上的原版一样叫 `dsh-im-gateway`）。从本项目 0.3.x 或 npm 原版升级，要先移除旧包再装新版，渠道配置、微信登录状态和定时提醒都保留，见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。原版在 DSH 0.2.x 上要靠兼容豁免才能加载；换成本版后，旧豁免可以撤销。
 

@@ -14,7 +14,9 @@
 | --- | --- |
 | 独立 Web 版（`dsh web`） | `0.2.1-rc.5`、`0.2.2-rc.1`、`0.2.2-rc.2`、`0.2.2-rc.3`、`0.2.2-rc.5`、`0.2.3-alpha.2` |
 | 官方 macOS 桌面版（Apple Silicon） | `0.2.2-rc.1` |
-| 官方 Windows 桌面版 | 未测试 |
+| 官方 Windows 桌面版 | `0.2.2-rc.5` |
+
+独立 Web 版测过的系统：Ubuntu 24.04、Ubuntu 26.04、Windows 11。Windows 桌面版用的是 DeepSeek 官网的安装包，它自带 pnpm 11。
 
 从 0.2.0 起包名是 `@timecatbit/dsh-passkey-proxy`（之前是 `@smanx/dsh-proxy`）。从 0.1.x 升级要先移除旧包再装新版，账号密码、Passkey 和端口都保留，见[从旧包名升级](https://github.com/timecatbit/dsh-web-plugins#从旧包名升级)。
 
@@ -27,10 +29,10 @@
 
 3. 点 **DSH Passkey Proxy 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。
 
-**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.2.1 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.1/timecatbit-dsh-passkey-proxy-0.2.1.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
+**手动安装：** 官方 macOS 桌面 App 用左侧「插件 → 添加插件」，粘贴 [0.2.2 安装包下载地址](https://github.com/timecatbit/dsh-passkey-proxy/releases/download/v0.2.2/timecatbit-dsh-passkey-proxy-0.2.2.tgz) 或已下载文件的绝对路径；启用后按提示完全退出并重新打开 App。独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.1.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-passkey-proxy-0.2.2.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。不要用独立 CLI 安装到官方桌面 App 的 `desktop` profile。

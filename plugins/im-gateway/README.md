@@ -27,22 +27,25 @@
 
 3. 点 **DSH IM Gateway 的卡片标题 → 版本 → 安装**。更新也走这条路径，无需先卸载。安装后如有提示，启用插件并重启当前 DSH 实例。第一次安装要下载各平台的 SDK，可能需要一两分钟。
 
-**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.4.0 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.0/timecatbit-dsh-im-gateway-0.4.0.tgz)，在文件所在目录运行：
+用 pnpm 11 或更新版本安装时，DSH 会先报「需要允许安装脚本」（Baileys 和 protobufjs），点 **允许这些脚本并重试** 即可。
+
+**手动安装：** 独立 Web 版用运行 DSH 的同一个系统账号和 `DSH_HOME`，下载 [0.4.1 安装包](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.1/timecatbit-dsh-im-gateway-0.4.1.tgz)，在文件所在目录运行：
 
 ```bash
-dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.1.tgz"
 ```
 
 使用自定义 Web profile 时替换 `web`。装完重启该 `dsh web` 进程。
 
 ## 和原版 0.3.3 的区别
 
-- **支持 DSH 0.2.x，不再需要豁免。** 插件声明 `engines.dsh: >=0.2.1-rc.5`。DSH 把 agent preset 服务移到了 `@deepseek-ai/dsh-agent-preset-registry`，依赖随之更新；代码按 DSH `0.2.2-rc.3` 的接口重新做过类型检查。
+- **支持 DSH 0.2.x，不再需要豁免。** 插件声明 `engines.dsh: >=0.2.1-rc.5`。DSH 把 agent preset 服务移到了 `@deepseek-ai/dsh-agent-preset-registry`，依赖随之更新；代码按 DSH `0.2.2-rc.5` 的接口重新做过类型检查。
 - **微信登录二维码在本机生成。** 原版把登录链接交给第三方网站 `api.qrserver.com` 生成图片，而这个链接扫码就能登录。现在由插件自己画成图片，浏览器不再访问外部网站。
 - **点「连接（扫码）」后二维码会自动出现。** 原版此时停止刷新，要重新打开设置页才看得到二维码。
 - **重启 DSH 后微信自动重连。** 原版在设置页扫码连上的渠道（微信、WhatsApp）不会记下来，每次重启 DSH 都要回设置页重新点「连接」（0.3.5 修复）。
 - **设置页颜色跟随 DSH 主题。** 浅色模式下按钮文字不再看不见。
-- **WhatsApp 依赖固定在已修复漏洞的版本。** Baileys 限定为 6.7.24 及之后的 6.7 版本，原版的范围可能装上受消息伪造漏洞（GHSA-qvv5-jq5g-4cgg）影响的 6.17.16。
+- **WhatsApp 改用 Baileys 7，pnpm 11 及以上也能装。** 原版的 Baileys 6.7 要从 GitHub 拉取 libsignal，pnpm 11 起默认拒绝这种依赖，整个网关都装不上。现在固定为 Baileys 7.0.0-rc14：依赖都来自 npm，也已修复消息伪造漏洞（GHSA-qvv5-jq5g-4cgg）。
+- **WhatsApp 在设置页扫码，登录会保存下来。** 原版只把配对码写进服务器上的文件，也不保存扫码后的登录凭据，配对完成不了。WhatsApp 仍是实验性的：扫码之后的收发消息还没有用真实账号验证过。
 - **名称统一为 DSH IM Gateway。** 插件列表、设置导航和说明文档用同一个名字。
 
 ## 连接渠道
@@ -72,7 +75,7 @@ dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
 | LINE、Matrix、Mattermost、IRC、Twitch、Nextcloud Talk、Synology Chat、Zalo | ✅ | 各平台接口 | 卡片表单 |
 | Signal | ✅ | 本机 `signal-cli` | 需要先装 signal-cli |
 | iMessage | ✅ | `imsg` / osascript | 仅 macOS |
-| WhatsApp | ✅ | Baileys 设备扫码 | 设备扫码 |
+| WhatsApp | 实验性 | Baileys 7 关联设备 | 设置页扫码（手机「已关联的设备」） |
 | Nostr | 需另装依赖 | NIP-04 私信 | 在 profile 里另装 `@noble/curves` |
 | Teams、Google Chat | 🧪 实验性 | Bot Framework / webhook | 需要公网地址 |
 

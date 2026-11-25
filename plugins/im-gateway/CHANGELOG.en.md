@@ -6,6 +6,13 @@ All notable changes to DSH IM Gateway are listed here. The format follows [Keep 
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-25
+
+### Fixed
+
+- The plugin failed to install with pnpm 11 or later (`ERR_PNPM_EXOTIC_SUBDEP`). WhatsApp now uses Baileys 7.0.0-rc14, which no longer pulls libsignal from GitHub. DSH asks you to allow the install scripts of Baileys and protobufjs; click "Allow these scripts and retry".
+- WhatsApp pairs on the settings page: the QR code shows on the WhatsApp card, and the sign-in from the scan is saved, so a restart needs no new scan. After you remove this device on the phone, Connect shows a new code. WhatsApp is still experimental.
+
 ## [0.4.0] - 2026-11-16
 
 ### Changed
@@ -38,6 +45,7 @@ First release of this fork of [zhuiyueya/dsh-im-gateway](https://github.com/zhui
 - The WeChat login QR code is drawn locally. The original sent the login link to a third-party image service.
 - Baileys is limited to the patched 6.7 line (GHSA-qvv5-jq5g-4cgg).
 
-[Unreleased]: https://github.com/timecatbit/dsh-im-gateway/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/timecatbit/dsh-im-gateway/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.4.1
 [0.4.0]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.4.0
 [0.3.5]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.3.5

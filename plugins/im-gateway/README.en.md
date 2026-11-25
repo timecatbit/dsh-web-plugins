@@ -27,22 +27,25 @@ From 0.4.0 on the package is `@timecatbit/dsh-im-gateway` (previously `dsh-im-ga
 
 3. Click the **DSH IM Gateway** card title, then **Versions → Install**. Updates take the same path; there is no need to uninstall first. Enable the plugin and restart the DSH instance if prompted. The first install downloads the platform SDKs and can take a minute or two.
 
-**Manual install:** for standalone Web, use the same system account and `DSH_HOME` that run DSH. Download the [0.4.0 package](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.0/timecatbit-dsh-im-gateway-0.4.0.tgz) and run this in its folder:
+With pnpm 11 or later, DSH first reports that install scripts need your permission (Baileys and protobufjs); click **Allow these scripts and retry**.
+
+**Manual install:** for standalone Web, use the same system account and `DSH_HOME` that run DSH. Download the [0.4.1 package](https://github.com/timecatbit/dsh-im-gateway/releases/download/v0.4.1/timecatbit-dsh-im-gateway-0.4.1.tgz) and run this in its folder:
 
 ```bash
-dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.0.tgz"
+dsh plugin --profile web add "$PWD/timecatbit-dsh-im-gateway-0.4.1.tgz"
 ```
 
 Replace `web` if you use a custom web profile. Restart that `dsh web` process afterwards.
 
 ## Changes from the original 0.3.3
 
-- **Works on DSH 0.2.x without an exemption.** The plugin declares `engines.dsh: >=0.2.1-rc.5`. DSH moved the agent preset service to `@deepseek-ai/dsh-agent-preset-registry`, and the dependencies follow it; the code was type-checked again against the DSH `0.2.2-rc.3` interfaces.
+- **Works on DSH 0.2.x without an exemption.** The plugin declares `engines.dsh: >=0.2.1-rc.5`. DSH moved the agent preset service to `@deepseek-ai/dsh-agent-preset-registry`, and the dependencies follow it; the code was type-checked again against the DSH `0.2.2-rc.5` interfaces.
 - **The WeChat login QR code is drawn locally.** The original handed the login link to the third-party site `api.qrserver.com` to render the image, and scanning that link signs in. The plugin now draws the image itself, and the browser no longer contacts an outside site.
 - **The QR code appears after Connect (scan).** The original stopped refreshing at that point, so the code only showed after reopening Settings.
 - **WeChat reconnects after a DSH restart.** The original did not remember channels connected by scanning on the settings page (WeChat, WhatsApp), so every DSH restart left them disconnected until you clicked Connect again (fixed in 0.3.5).
 - **The settings page follows the DSH theme.** Button labels no longer disappear in light mode.
-- **WhatsApp uses a patched Baileys.** It is limited to 6.7.24 and later 6.7 releases; the original range could install 6.17.16, which is affected by a message-spoofing flaw (GHSA-qvv5-jq5g-4cgg).
+- **WhatsApp moves to Baileys 7, so pnpm 11 and later can install the gateway.** The original's Baileys 6.7 pulls libsignal from GitHub, which pnpm 11 and later refuse by default, so the whole gateway failed to install. It is now pinned to Baileys 7.0.0-rc14: every dependency comes from npm, and the message-spoofing flaw (GHSA-qvv5-jq5g-4cgg) is fixed.
+- **WhatsApp pairs on the settings page and stays signed in.** The original only wrote the pairing code to a file on the server and never saved the credentials from the scan, so pairing could not complete. WhatsApp is still experimental: sending and receiving after the scan has not been checked with a real account.
 - **One name everywhere: DSH IM Gateway.** The plugin list, the settings nav and these docs use the same name.
 
 ## Connect a channel
@@ -72,7 +75,7 @@ See [`docs/qr-login-matrix.en.md`](docs/qr-login-matrix.en.md) for why each plat
 | LINE, Matrix, Mattermost, IRC, Twitch, Nextcloud Talk, Synology Chat, Zalo | ✅ | Each platform's API | Card form |
 | Signal | ✅ | Local `signal-cli` | Install signal-cli first |
 | iMessage | ✅ | `imsg` / osascript | macOS only |
-| WhatsApp | ✅ | Baileys device scan | Device QR scan |
+| WhatsApp | Experimental | Baileys 7 linked device | Scan on the settings page (phone: Linked devices) |
 | Nostr | Extra dependency | NIP-04 direct messages | Install `@noble/curves` into the profile |
 | Teams, Google Chat | 🧪 Experimental | Bot Framework / webhook | Needs a public address |
 

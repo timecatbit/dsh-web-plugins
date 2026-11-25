@@ -161,7 +161,7 @@ window.__ModuleLoader__.load({
       if (ch.running) {
         children.push(
           h("div", { key: "actions", className: "imgw-card-row" },
-            ch.loginUrl &&
+            (ch.loginUrl || (ch.id === "whatsapp" && ch.status !== "已连接")) &&
               h("button", { key: "refresh", className: "imgw-btn ghost", disabled: isBusy, onClick: () => onAction(ch.id, "refresh") }, "刷新二维码"),
             h("button", { key: "disconnect", className: "imgw-btn ghost", disabled: isBusy, onClick: () => onAction(ch.id, "disconnect") }, "暂时断开"),
             h("button", {
@@ -177,8 +177,10 @@ window.__ModuleLoader__.load({
         if (ch.loginUrl) {
           children.push(
             h("div", { key: "qr", className: "imgw-qr" },
-              h("img", { src: loginQrSrc(ch), alt: "微信登录二维码", title: ch.loginUrl }),
-              h("div", { className: "imgw-qr-tip" }, "用手机微信扫一扫，确认登录后自动连接"),
+              h("img", { src: loginQrSrc(ch), alt: `${ch.label} 登录二维码`, title: ch.id === "whatsapp" ? undefined : ch.loginUrl }),
+              h("div", { className: "imgw-qr-tip" }, ch.id === "whatsapp"
+                ? "在手机 WhatsApp 里打开「设置 → 已关联的设备 → 关联新设备」扫码，确认后自动连接"
+                : "用手机微信扫一扫，确认登录后自动连接"),
             ),
           );
         }

@@ -6,6 +6,12 @@ Combined releases of DSH Web Plugins: which plugin versions each one bundles, an
 
 ## [Unreleased]
 
+## [1.5.2] - 2026-11-25
+
+Pocket UI 0.2.1, Passkey Proxy 0.2.1, IM Gateway 0.4.1.
+
+- IM Gateway installs with pnpm 11 or later; WhatsApp pairs on the settings page and stays signed in (experimental).
+
 ## [1.5.1] - 2026-11-22
 
 Pocket UI 0.2.1, Passkey Proxy 0.2.1, IM Gateway 0.4.0.
@@ -69,7 +75,8 @@ Pocket UI 0.1.16 to 0.1.18 and Passkey Proxy 0.1.9: every DSH release from 0.2.1
 
 Pocket UI 0.1.14 and 0.1.15 with Passkey Proxy 0.1.8: composer status bar and one-surface sidebar.
 
-[Unreleased]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.2...HEAD
+[1.5.2]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.2
 [1.5.1]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.1
 [1.5.0]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.0
 [1.4.22]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.4.22

@@ -43,11 +43,11 @@ From 0.2.0 on the package is `@timecatbit/dsh-pocket-ui` (previously `dsh-ui-mob
 
 ## Install manually
 
-- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.2.0 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.0/timecatbit-dsh-pocket-ui-0.2.0.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
+- **Official macOS desktop app:** Open **Plugins → Add plugin** in the app. Paste the [0.2.1 asset URL](https://github.com/timecatbit/dsh-pocket-ui/releases/download/v0.2.1/timecatbit-dsh-pocket-ui-0.2.1.tgz) or the absolute path of the downloaded file. Choose **Enable now**, then quit and reopen the app if asked. The desktop app manages its own profile.
 - **Standalone `dsh web`:** Download the `.tgz` from [Releases](https://github.com/timecatbit/dsh-pocket-ui/releases). Use the same system account and `DSH_HOME` as the running instance. From the directory containing the download, run:
 
   ```bash
-  dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.0.tgz"
+  dsh plugin --profile web add "$PWD/timecatbit-dsh-pocket-ui-0.2.1.tgz"
   ```
 
   Replace `web` if you use a custom profile, then restart that `dsh web` process.

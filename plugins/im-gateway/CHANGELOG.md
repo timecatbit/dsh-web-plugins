@@ -6,6 +6,13 @@ DSH IM Gateway 的重要改动都记在这里。格式参照 [Keep a Changelog](
 
 ## [未发布]
 
+## [0.4.1] - 2026-11-25
+
+### 修复
+
+- 用 pnpm 11 或更新版本时插件装不上（`ERR_PNPM_EXOTIC_SUBDEP`）。WhatsApp 依赖改用 Baileys 7.0.0-rc14，不再从 GitHub 拉取 libsignal。DSH 会请你允许 Baileys 和 protobufjs 的安装脚本，点「允许这些脚本并重试」即可。
+- WhatsApp 扫码在设置页完成：二维码显示在 WhatsApp 卡片上，扫码后的登录会保存下来，重启后不用再扫。在手机上移除这台设备后，再点「连接」会给出新的二维码。WhatsApp 仍是实验性的。
+
 ## [0.4.0] - 2026-11-16
 
 ### 变更
@@ -38,6 +45,7 @@ DSH IM Gateway 的重要改动都记在这里。格式参照 [Keep a Changelog](
 - 微信登录二维码在本机生成。原版会把登录链接发给第三方图片服务。
 - Baileys 限定在已修补的 6.7 系列（GHSA-qvv5-jq5g-4cgg）。
 
-[未发布]: https://github.com/timecatbit/dsh-im-gateway/compare/v0.4.0...HEAD
+[未发布]: https://github.com/timecatbit/dsh-im-gateway/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.4.1
 [0.4.0]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.4.0
 [0.3.5]: https://github.com/timecatbit/dsh-im-gateway/releases/tag/v0.3.5

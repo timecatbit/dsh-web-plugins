@@ -14,6 +14,8 @@ test('渠道状态统一为已连接、未连接、连接中、异常', () => {
   assert.equal(normalizeChannelStatus({ running: true, rawStatus: '已连接', loginUrl: 'https://example.test/qr' }), '连接中')
   assert.equal(normalizeChannelStatus({ running: true, rawStatus: '连接错误' }), '异常')
   assert.equal(normalizeChannelStatus({ running: true, rawStatus: '缺少依赖' }), '异常')
+  assert.equal(normalizeChannelStatus({ running: true, rawStatus: '二维码已过期' }), '异常')
+  assert.equal(normalizeChannelStatus({ running: true, rawStatus: '已登出' }), '异常')
   assert.equal(normalizeChannelStatus({ running: false, provisioningStatus: '等待扫码' }), '连接中')
   assert.equal(normalizeChannelStatus({ running: false, provisioningStatus: '扫码失败' }), '异常')
 })

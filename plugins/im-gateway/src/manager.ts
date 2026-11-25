@@ -38,7 +38,7 @@ export function normalizeChannelStatus(input: {
   if (!input.running) return '未连接'
 
   const raw = input.rawStatus ?? ''
-  if (/错误|失败|异常|缺少依赖|已断开|已停止|已登出|仅支持/.test(raw)) return '异常'
+  if (/错误|失败|异常|缺少依赖|已断开|已停止|已登出|已过期|仅支持/.test(raw)) return '异常'
   if (input.loginUrl || /等待|登录中|连接中|重连中|鉴权中|握手|未启动/.test(raw)) return '连接中'
   return '已连接'
 }

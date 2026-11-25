@@ -12,7 +12,7 @@ All notable changes to DSH Passkey Proxy are listed here. The format follows [Ke
 
 - On Windows, after a DSH restart the proxy answered "401 Unauthorized" instead of showing its sign-in page. The check on the sign-in store used Linux and macOS permission bits, so on Windows every file looked readable by others and the store was refused. Other systems are unaffected.
 
-## [0.2.1] - 2026-11-22
+## 0.2.1 - 2026-11-22
 
 ### Fixed
 
@@ -84,6 +84,5 @@ All notable changes to DSH Passkey Proxy are listed here. The format follows [Ke
 
 [Unreleased]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.2...HEAD
 [0.2.2]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.2
-[0.2.1]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.1
 [0.2.0]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.0
 [0.1.16]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.1.16

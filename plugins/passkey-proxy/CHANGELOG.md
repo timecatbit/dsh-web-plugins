@@ -12,7 +12,7 @@ DSH Passkey Proxy 的重要改动都记在这里。格式参照 [Keep a Changelo
 
 - Windows 上 DSH 重启后，通过代理打开只会看到「401 Unauthorized」，没有登录页。原因是检查登录数据文件时用了 Linux 和 macOS 的权限位，Windows 上的文件总被当成别人也能读，于是拒绝加载。其他系统不受影响。
 
-## [0.2.1] - 2026-11-22
+## 0.2.1 - 2026-11-22
 
 ### 修复
 
@@ -84,6 +84,5 @@ DSH Passkey Proxy 的重要改动都记在这里。格式参照 [Keep a Changelo
 
 [未发布]: https://github.com/timecatbit/dsh-passkey-proxy/compare/v0.2.2...HEAD
 [0.2.2]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.2
-[0.2.1]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.1
 [0.2.0]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.2.0
 [0.1.16]: https://github.com/timecatbit/dsh-passkey-proxy/releases/tag/v0.1.16

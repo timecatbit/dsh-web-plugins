@@ -12,7 +12,7 @@ Pocket UI 0.2.1、Passkey Proxy 0.2.2、IM Gateway 0.4.1。
 
 - Passkey Proxy 在 Windows 上 DSH 重启后仍能登录。三个插件在官方 Windows 桌面版上测过。
 
-## [1.5.2] - 2026-11-25
+## 1.5.2 - 2026-11-25
 
 Pocket UI 0.2.1、Passkey Proxy 0.2.1、IM Gateway 0.4.1。
 
@@ -83,6 +83,5 @@ Pocket UI 0.1.14、0.1.15 和 Passkey Proxy 0.1.8：输入框下方的状态栏�
 
 [未发布]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.3...HEAD
 [1.5.3]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.3
-[1.5.2]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.2
 [1.5.0]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.0
 [1.4.22]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.4.22

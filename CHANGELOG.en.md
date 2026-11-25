@@ -12,7 +12,7 @@ Pocket UI 0.2.1, Passkey Proxy 0.2.2, IM Gateway 0.4.1.
 
 - Passkey Proxy keeps its sign-in after a DSH restart on Windows. All three plugins were tested in the official Windows desktop app.
 
-## [1.5.2] - 2026-11-25
+## 1.5.2 - 2026-11-25
 
 Pocket UI 0.2.1, Passkey Proxy 0.2.1, IM Gateway 0.4.1.
 
@@ -83,6 +83,5 @@ Pocket UI 0.1.14 and 0.1.15 with Passkey Proxy 0.1.8: composer status bar and on
 
 [Unreleased]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.3...HEAD
 [1.5.3]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.3
-[1.5.2]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.2
 [1.5.0]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.0
 [1.4.22]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.4.22

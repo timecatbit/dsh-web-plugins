@@ -12,7 +12,7 @@ Pocket UI 0.2.1、Passkey Proxy 0.2.1、IM Gateway 0.4.1。
 
 - IM Gateway 用 pnpm 11 或更新版本也能安装；WhatsApp 改在设置页扫码，登录会保存下来（实验性）。
 
-## [1.5.1] - 2026-11-22
+## 1.5.1 - 2026-11-22
 
 Pocket UI 0.2.1、Passkey Proxy 0.2.1、IM Gateway 0.4.0。
 
@@ -77,6 +77,5 @@ Pocket UI 0.1.14、0.1.15 和 Passkey Proxy 0.1.8：输入框下方的状态栏�
 
 [未发布]: https://github.com/timecatbit/dsh-web-plugins/compare/v1.5.2...HEAD
 [1.5.2]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.2
-[1.5.1]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.1
 [1.5.0]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.5.0
 [1.4.22]: https://github.com/timecatbit/dsh-web-plugins/releases/tag/v1.4.22
